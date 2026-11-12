@@ -1,0 +1,74 @@
+{
+  "slug": "portfolio-v3",
+  "org": "nomadic-digital",
+  "kind": "Portfolio",
+  "role": "Designer and Engineer",
+  "period": { "start": "2026-09", "end": null },
+  "dek": "The third version of jodriscoll.com: an Astro 7 site on Cloudflare Workers, written for two readers at once, the person deciding whether to hire me and the AI agent screening the application first.",
+  "short": "The third and current version of my portfolio: an Astro 7 site on Cloudflare Workers. 94 pages render at build time and ship as static assets; a Worker answers the contact form and a JSON content API.",
+  "facts": [
+    { "label": "Framework", "value": "Astro 7.4" },
+    { "label": "Host", "value": "Cloudflare Workers" },
+    { "label": "Pages rendered at build", "value": "94" },
+    { "label": "Project pages", "value": "76" }
+  ],
+  "stack": [
+    {
+      "group": "Site",
+      "items": [
+        { "name": "Astro", "version": "7.4.0" },
+        { "name": "TypeScript" },
+        { "name": "CSS", "note": "hand-written, no framework" },
+        { "name": "Shiki", "version": "4.6.0", "note": "code blocks, light and dark" },
+        { "name": "View Transitions", "note": "cross-document, no client router" }
+      ]
+    },
+    {
+      "group": "Hosting",
+      "items": [
+        { "name": "Cloudflare Workers", "note": "static assets plus a Worker for /api" },
+        { "name": "@astrojs/cloudflare", "version": "14.4.7" },
+        { "name": "Wrangler", "version": "4.160.0" },
+        { "name": "Resend", "note": "contact form email" }
+      ]
+    },
+    {
+      "group": "Machine-readable",
+      "items": [
+        { "name": "JSON-LD", "note": "Person, BlogPosting and project nodes" },
+        { "name": "llms.txt", "note": "and llms-full.txt" },
+        { "name": "JSON Resume", "note": "/resume.json" },
+        { "name": "Content API", "note": "/api/content, JSON" },
+        { "name": "RSS and sitemap" }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [{ "name": "Node", "version": "24", "note": "pinned in .nvmrc and engines" }]
+    }
+  ],
+  "delivery": {
+    "built": true,
+    "summary": "The site builds and deploys from my machine with Wrangler. Pushing to GitHub doesn't deploy; a release is a build and one deploy command.",
+    "steps": [
+      { "name": "Build", "figure": "94", "detail": "astro build renders 94 routes to static HTML: every page, project, post, the feeds and the machine-readable files." },
+      { "name": "Assets", "detail": "The rendered pages, styles, fonts and screenshots upload to Workers static assets. Unchanged files are skipped." },
+      { "name": "Worker", "detail": "The /api routes (contact form, events and the content API) run on the Worker with nodejs_compat." },
+      { "name": "Secrets", "detail": "The Resend keys are Worker secrets, set with wrangler secret bulk. They never enter the repository." },
+      { "name": "Domain", "detail": "jodriscoll.com is a custom domain on the Worker. DNS stays on the Cloudflare zone it has used for years." }
+    ]
+  },
+  "hosting": [
+    { "label": "Site and API", "value": "Cloudflare Workers" },
+    { "label": "DNS", "value": "Cloudflare" },
+    { "label": "Email", "value": "Resend" }
+  ],
+  "highlights": [
+    { "title": "Written for the screener too", "text": "Applications are often read by an AI agent before a person. Every project, role and post is also published as JSON-LD, llms.txt, JSON Resume and a JSON content API, from the same content files the pages use." },
+    { "title": "One source of truth", "text": "Projects are one JSON spec each. The Work page, project pages, resume, feeds and API all read from them, so a fact changes in one place." },
+    { "title": "Static first", "text": "Every page is rendered at build time. The Worker only runs for the contact form and the API, so pages load as plain files from Cloudflare's network." },
+    { "title": "From Pages to Workers", "text": "Ver. 2 built on Cloudflare Pages from Git. Ver. 3 moved to Workers with static assets, which the Astro adapter now targets, and kept the domain, DNS and account where they were." },
+    { "title": "No client framework", "text": "Interactions (filters, the timeline, the contents bar, the contact sheet) are small inline scripts on top of HTML and CSS." }
+  ],
+  "images": []
+}

@@ -319,22 +319,40 @@
     }
   },
   {
-    "slug": "angular-portfolio",
+    "slug": "portfolio-v3",
     "title": "Portfolio ver. 3",
-    "summary": "The third version of my portfolio: jodriscoll.com as an Angular 13 single-page app, with every word of copy in ngx-translate files, a service worker, Animate on Scroll motion and Karma tests, deployed on Cloudflare Pages.",
+    "summary": "The third and current version of my portfolio: an Astro 7 site on Cloudflare Workers. 94 pages render at build time and ship as static assets; a Worker answers the contact form and a JSON content API. Built to be read by people and by the AI agents that screen résumés.",
+    "featured": false,
+    "technologies": [
+      "Astro 7",
+      "TypeScript",
+      "CSS",
+      "Cloudflare Workers",
+      "Resend",
+      "Node 24"
+    ],
+    "links": {
+      "demo": "https://jodriscoll.com/",
+      "source": "https://github.com/jodriscoll/astro_jodriscoll"
+    }
+  },
+  {
+    "slug": "angular-portfolio",
+    "title": "Portfolio ver. 2",
+    "summary": "The second version of my portfolio: jodriscoll.com as an Angular 13 single-page app on Cloudflare Pages, with every word of copy in ngx-translate files, a service worker, Bootstrap 4, Animate on Scroll motion and Karma tests. Replaced by ver. 3 in November 2026.",
     "featured": false,
     "technologies": [
       "Angular 13",
       "TypeScript",
-      "Karma",
       "SCSS",
-      "JavaScript ES6+",
+      "Bootstrap 4",
+      "ngx-translate",
       "AOS + CSS Animations",
-      "CloudFlare Pages"
+      "Karma",
+      "Cloudflare Pages"
     ],
     "links": {
-      "demo": "https://jodriscoll.com/",
-      "source": "https://github.com/jodriscoll/angular_jodriscoll"
+      "source": "https://github.com/jodriscoll/astro_jodriscoll/tree/d385d99"
     }
   },
   {

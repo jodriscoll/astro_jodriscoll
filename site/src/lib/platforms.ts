@@ -36,7 +36,10 @@ const RULES: Rule[] = [
   { id: 'gitlab', name: 'GitLab', test: includes(/gitlab/i) },
   { id: 'pantheon', name: 'Pantheon', test: includes(/pantheon/i) },
   { id: 'wp-engine', name: 'WP Engine', test: includes(/\bwp\s*engine\b/i) },
-  { id: 'cloudflare', name: 'Cloudflare', test: includes(/cloudflare/i) },
+  // Cloudflare's hosting products are named apart from Cloudflare itself (DNS, CDN).
+  { id: 'cloudflare-workers', name: 'Cloudflare Workers', test: includes(/cloudflare\s*workers/i) },
+  { id: 'cloudflare-pages', name: 'Cloudflare Pages', test: includes(/cloudflare\s*pages/i) },
+  { id: 'cloudflare', name: 'Cloudflare', test: includes(/cloudflare(?!\s*(pages|workers))/i) },
   { id: 'craft-cloud', name: 'Craft Cloud', test: includes(/craft cloud/i) },
   { id: 'kinsta', name: 'Kinsta', test: includes(/kinsta/i) },
   { id: 'lando', name: 'Lando', test: includes(/\blando\b/i) },
@@ -130,6 +133,8 @@ const USE: Record<string, string> = {
   craft: 'site',
   webflow: 'site',
   vercel: 'host',
+  'cloudflare-workers': 'host',
+  'cloudflare-pages': 'host',
   next: 'app',
   svelte: 'app',
   ember: 'app',
@@ -289,8 +294,11 @@ const MARKS: Record<string, string> = {
     '<path fill="#bc52ee" d="M8.4 18.4 4.8 6.2h2.3l2.6 8.4 2.3-8.4h2.3l2.6 8.4 2.6-8.4h2.3l-3.6 12.2h-2.2L12 12.1l-1.6 6.3H8.4z"/>',
 };
 
+// Cloudflare's hosting products wear the Cloudflare mark.
+const MARK_ALIAS: Record<string, string> = { 'cloudflare-workers': 'cloudflare', 'cloudflare-pages': 'cloudflare' };
+
 export function platformMarkup(id: string): string {
-  const mark = MARKS[id];
+  const mark = MARKS[id] ?? MARKS[MARK_ALIAS[id] ?? ''];
   if (!mark) return '';
   return `<svg viewBox="0 0 24 24" aria-hidden="true">${mark}</svg>`;
 }

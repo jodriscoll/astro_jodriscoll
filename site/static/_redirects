@@ -1,0 +1,5 @@
+# Old Angular site (ver. 2) URLs that may still be linked or indexed.
+/assets/resume/2023_RESUME.pdf /resume 301
+/assets/resume/* /resume 301
+/angular /  301
+/angular/* / 301

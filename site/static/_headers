@@ -1,0 +1,5 @@
+# Security headers for every static page (the Worker's middleware only covers /api).
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Gateway: jodriscoll

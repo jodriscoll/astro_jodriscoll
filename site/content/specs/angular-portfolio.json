@@ -3,64 +3,76 @@
   "org": "nomadic-digital",
   "kind": "Portfolio",
   "role": "Design and Engineering",
-  "dek": "The third version of jodriscoll.com: an Angular 13 single-page portfolio with every word of copy in ngx-translate files, an Angular service worker for offline loads, SCSS, Animate on Scroll motion and Karma unit tests, deployed on Cloudflare Pages.",
-  "short": "The third version of my portfolio: jodriscoll.com as an Angular 13 single-page app, with every word of copy in ngx-translate files, a service worker, Animate on Scroll motion and Karma tests, deployed on Cloudflare Pages.",
+  "period": { "start": "2023-07", "end": "2026-11" },
+  "dek": "The second version of jodriscoll.com: an Angular 13 single-page portfolio on Cloudflare Pages, with every word of copy in ngx-translate files, an Angular service worker for offline loads, Bootstrap 4, SCSS, Animate on Scroll motion and Karma unit tests.",
+  "short": "The second version of my portfolio: jodriscoll.com as an Angular 13 single-page app on Cloudflare Pages, with every word of copy in ngx-translate files, a service worker, Bootstrap 4, Animate on Scroll motion and Karma tests.",
   "facts": [
-    {
-      "label": "Framework",
-      "value": "Angular 13"
-    },
-    {
-      "label": "Host",
-      "value": "Cloudflare Pages"
-    }
+    { "label": "Framework", "value": "Angular 13.2" },
+    { "label": "Host", "value": "Cloudflare Pages" },
+    { "label": "Deploys", "value": "On every push to master" },
+    { "label": "Replaced by", "value": "Portfolio ver. 3, November 2026" }
   ],
   "stack": [
     {
       "group": "App",
       "items": [
-        {
-          "name": "Angular",
-          "version": "13"
-        },
-        {
-          "name": "TypeScript"
-        },
-        {
-          "name": "ngx-translate",
-          "note": "all copy in en.json"
-        },
-        {
-          "name": "Angular service worker"
-        },
-        {
-          "name": "SCSS"
-        },
-        {
-          "name": "Animate on Scroll"
-        }
+        { "name": "Angular", "version": "13.2" },
+        { "name": "TypeScript", "version": "4.5" },
+        { "name": "RxJS", "version": "6.5" },
+        { "name": "ngx-translate", "version": "13", "note": "all copy in en.json" },
+        { "name": "Angular service worker", "version": "13.2" }
+      ]
+    },
+    {
+      "group": "Interface",
+      "items": [
+        { "name": "Bootstrap", "version": "4.5" },
+        { "name": "ng-bootstrap", "version": "10" },
+        { "name": "SCSS" },
+        { "name": "Animate on Scroll", "version": "2.3" },
+        { "name": "ngx-owl-carousel-o", "version": "6", "note": "project carousels" },
+        { "name": "Font Awesome", "version": "5.14" }
       ]
     },
     {
       "group": "Quality",
       "items": [
-        {
-          "name": "Karma"
-        }
+        { "name": "Karma", "version": "6.3", "note": "with Jasmine" },
+        { "name": "Protractor", "version": "7", "note": "end-to-end" },
+        { "name": "TSLint", "version": "6.1", "note": "with Codelyzer" }
+      ]
+    },
+    {
+      "group": "Hosting",
+      "items": [
+        { "name": "Cloudflare Pages", "note": "Git integration" },
+        { "name": "Google Analytics", "note": "ngx-google-analytics" }
       ]
     }
   ],
+  "delivery": {
+    "built": true,
+    "summary": "Cloudflare Pages built the site straight from GitHub. A push to master shipped production; any other branch got its own preview URL.",
+    "steps": [
+      { "name": "Push", "detail": "Commits to the GitHub repository started a Cloudflare Pages build." },
+      { "name": "Build", "detail": "ng build --configuration production, run by Cloudflare Pages." },
+      { "name": "Preview", "detail": "Feature branches deployed to their own pages.dev URLs, such as the locomotive-scroll experiments." },
+      { "name": "Production", "detail": "master deployed to jodriscoll.com, a custom domain on the Pages project." }
+    ]
+  },
   "hosting": [
-    {
-      "label": "Host",
-      "value": "Cloudflare Pages"
-    }
+    { "label": "Host", "value": "Cloudflare Pages" },
+    { "label": "DNS", "value": "Cloudflare" }
   ],
-  "highlights": [],
+  "highlights": [
+    { "title": "Copy out of the templates", "text": "Every word lived in an ngx-translate en.json file, so text changes never touched a component." },
+    { "title": "Offline loads", "text": "The Angular service worker cached the app shell, so repeat visits opened without the network." },
+    { "title": "Preview per branch", "text": "Cloudflare Pages gave each branch its own URL, which is how motion experiments were reviewed before they reached master." }
+  ],
   "images": [
     {
       "src": "/work/angular-portfolio/home.webp",
-      "alt": "jodriscoll.com version 3: the Angular portfolio home page, introducing Joseph O'Driscoll over a soft portrait"
+      "alt": "jodriscoll.com version 2: the Angular portfolio home page, introducing Joseph O'Driscoll over a soft portrait"
     }
   ]
 }

@@ -3,7 +3,10 @@
 # /resume.json is JSON Resume v1, and /api/content is the canonical JSON.
 
 User-agent: *
+# The contact form and event beacon are for browsers, not crawlers.
 Allow: /
+Disallow: /api/contact
+Disallow: /api/events
 
 # Named explicitly so a blanket policy elsewhere never shuts them out.
 User-agent: GPTBot
@@ -19,5 +22,7 @@ User-agent: Applebot-Extended
 User-agent: CCBot
 User-agent: LinkedInBot
 Allow: /
+Disallow: /api/contact
+Disallow: /api/events
 
 Sitemap: https://jodriscoll.com/sitemap.xml

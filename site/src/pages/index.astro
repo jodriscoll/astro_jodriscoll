@@ -35,7 +35,7 @@ const headlineParts = profile.headline.split(/(content-heavy)/);
 
 <Base
   title={`${profile.name} · ${profile.role}`}
-  description={profile.summary}
+  description="I build and rescue content-heavy sites and apps: WordPress, Craft and Drupal on the server, React, Vue and Angular in the browser, Expo for phones."
   page={{ mainEntity: { '@id': ids.person(bundle.site) }, hasPart: { '@id': featuredList['@id'] } }}
   schema={[featuredList]}
 >
