@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel';
+import cloudflare from '@astrojs/cloudflare';
 import remarkFigures from './src/lib/figures.mjs';
 
 // Astro 7's default Markdown engine (Satteri) has no remark plugins. The figure
@@ -15,7 +15,9 @@ export default defineConfig({
   site: 'https://jodriscoll.com',
   output: 'static',
   publicDir: 'static',
-  adapter: vercel(),
+  // Cloudflare Workers (the domain and its DNS live on Cloudflare). Static pages
+  // prerender in Node at build time; the /api routes run on the Worker.
+  adapter: cloudflare({ prerenderEnvironment: 'node' }),
   // The Astro dev toolbar sits over the bottom of the page in dev and gets in
   // the way of the mobile Download bar; it never ships, so it's off.
   devToolbar: { enabled: false },

@@ -1,0 +1,8 @@
+{
+  // Cloudflare Worker for jodriscoll.com. The Astro adapter fills in the entry
+  // point and static assets at build time.
+  "name": "jodriscoll",
+  "compatibility_date": "2026-11-01",
+  // node:crypto in the content gateway, and process.env for the contact form keys
+  "compatibility_flags": ["nodejs_compat"]
+}
