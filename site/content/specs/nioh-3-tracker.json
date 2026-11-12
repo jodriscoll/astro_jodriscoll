@@ -1,0 +1,39 @@
+{
+  "slug": "nioh-3-tracker",
+  "org": "nomadic-digital",
+  "kind": "Hobby project",
+  "role": "Design and Engineering, Built with the Community",
+  "dek": "A tracker for Nioh 3, built alongside the game's community to fill a gap: the wikis fell short and strategy guides are no longer printed, so players had nowhere reliable to track their progress.",
+  "short": "A progress tracker for Nioh 3, built with the game's community where the wikis fell short and printed strategy guides no longer exist.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Hosting",
+      "items": [
+        {
+          "name": "Vercel"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Vercel"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Built with its users",
+      "text": "Shaped alongside the players who use it, where the wikis failed and printed strategy guides stopped."
+    }
+  ],
+  "overview": [],
+  "images": [
+    {
+      "src": "/work/nioh-3-tracker/home.webp",
+      "alt": "Nioh 3 Tracker: the Clans page, with rank pickers, blessings and base-to-max values per clan"
+    }
+  ],
+  "weight": 5
+}

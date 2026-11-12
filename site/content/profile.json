@@ -1,0 +1,66 @@
+{
+  "name": "Joseph O'Driscoll",
+  "role": "Web Application Consultant",
+  "headline": "Interfaces for content-heavy products.",
+  "summary": "I have spent the past decade reinventing how I understand and build web interfaces, while the platform underneath them kept changing. Keeping up has been a challenge. I still push the work in front of me, whichever layer of the stack it sits on, and the part I care about most is mentoring developers at any level so they can see where they fit in a field that does not sit still. I use AI to push how much can ship in a business day, but I never let it write code I couldn't read, explain and troubleshoot without it. If it went away tomorrow, the work would slow down, not stop. I own Nomadic Digital. Independent work goes back to 2010, and the practice has run since January 2016: on the side while I was full time at Jellyfish and Mindgrub, and full time since May 2023.",
+  "about": [
+    "I read code. Not only the code I write, but the framework underneath it, the library a team pulled in years ago, and the output of a build step nobody has opened. Over the past decade the platform of the moment has been WordPress, then Drupal, then Angular, then React and Vue, and these days whichever framework the internet has crowned this week. What carried across every one of them was knowing what the code actually does once it runs, not what its abstraction promises.",
+    "That's what makes me useful when something breaks. I troubleshoot at the level the problem lives: the request, the cache header, the file a function opens, the thread a phone is blocking. The cause is rarely in the code everyone is staring at, and I find it by measuring before I guess.",
+    "I use AI every day, and I use it to push how much can ship in a single business day. What I don't do is let it write code I couldn't read without it. Everything it produces, I can explain, change and debug myself, down to the language and the platform underneath. If AI went away tomorrow, the work would slow down, not stop. I want the same on any team I join, and it's why I mentor: developers who understand the code stay the source of truth for what they ship."
+  ],
+  "services": [
+    {
+      "title": "Web maintenance",
+      "text": "Keeping small sites and large ones running."
+    },
+    {
+      "title": "Front-end rebuilds",
+      "text": "From a single section through a full redesign."
+    },
+    {
+      "title": "Migrations",
+      "text": "Moving build pipelines and content platforms."
+    },
+    {
+      "title": "Front-end tooling",
+      "text": "Modernizing how the front end is built and shipped."
+    },
+    {
+      "title": "Coding standards",
+      "text": "Writing them, then implementing them."
+    },
+    {
+      "title": "Testing",
+      "text": "Checking the work before it ships."
+    }
+  ],
+  "skills": [
+    "Angular, React, Vue",
+    "HTML5, SASS",
+    "Node.JS",
+    "ExpressJS, NestJS",
+    "End-to-End Testing (E2E)",
+    "Bootstrap, Material UI, TailwindCSS",
+    "WordPress Development",
+    "Web Performance",
+    "Continuous Integration & Continuous Deployment (CI/CD)",
+    "JavaScript (ES5+)",
+    "TypeScript",
+    "Search Engine Optimization (SEO)",
+    "Test Driven Development (TDD)",
+    "ADA, 508, and WAI-ARIA Compliance",
+    "Management",
+    "Mentoring",
+    "Tutoring"
+  ],
+  "email": "joey@jodriscoll.com",
+  "links": {
+    "github": "https://github.com/jodriscoll",
+    "linkedin": "https://www.linkedin.com/in/jtodriscoll"
+  },
+  "contact": {
+    "title": "Let's build together",
+    "text": "I'm ready to hear your story.",
+    "action": "Start a Conversation"
+  }
+}

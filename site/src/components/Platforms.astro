@@ -1,0 +1,42 @@
+---
+import { platformMarkup, platformShortName, platformUse, platformsFor } from '../lib/platforms';
+
+interface Props {
+  items: string[];
+  summary?: string;
+  variant?: 'marks' | 'pills';
+}
+
+const { items, summary = '', variant = 'marks' } = Astro.props;
+const platforms = platformsFor(items, summary);
+---
+
+{
+  platforms.length > 0 && variant === 'pills' && (
+    <ul class="platforms platforms--pills">
+      {platforms.map((platform) => (
+        <li>
+          <span class="platform-pill">
+            <span set:html={platformMarkup(platform.id)} />
+            <span>
+              {platformShortName(platform.id, platform.name)} · {platformUse(platform.id, summary, items)}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+{
+  platforms.length > 0 && variant === 'marks' && (
+    <ul class="platforms">
+      {platforms.map((platform) => (
+        <li title={platform.name}>
+          <span set:html={platformMarkup(platform.id)} />
+          <span class="sr-only">{platform.name}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}

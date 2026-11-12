@@ -1,0 +1,385 @@
+[
+  {
+    "id": "nomadic-digital",
+    "org": "Nomadic Digital LLC",
+    "title": "Owner",
+    "start": "2016-01",
+    "end": null,
+    "employment": null,
+    "location": "Florida · Remote",
+    "bullets": [
+      "I own Nomadic Digital. It has run since January 2016: on the side while I worked full time at Jellyfish and Mindgrub, and full time since May 2023.",
+      "I use what I know of a client's current systems to improve them, and I build something custom when that is what they need.",
+      "I manage projects for manufacturing, technology, and B2B clients. The current client work is held inside this practice."
+    ],
+    "leader": true
+  },
+  {
+    "id": "taoti",
+    "org": "Taoti Creative",
+    "title": "Solutions Engineer",
+    "start": "2023-07",
+    "end": null,
+    "employment": "Contractor",
+    "relation": "Consultant",
+    "location": "Washington, DC · Remote",
+    "bullets": [
+      "I consult for Taoti Creative as a solutions engineer on the client work that studio delivers.",
+      "The contract is remote from Washington, DC, and it has been open since July 2023.",
+      "It is held under Nomadic Digital, at the same time as the other clients of the practice."
+    ],
+    "parent": "nomadic-digital",
+    "leader": true
+  },
+  {
+    "id": "sageworx",
+    "org": "Sageworx",
+    "title": "Solutions Architect",
+    "start": "2023-08",
+    "end": null,
+    "employment": "Contractor",
+    "relation": "Consultant",
+    "location": "New York, NY · Remote",
+    "bullets": [
+      "I consult for Sageworx as a solutions architect, remote from New York, NY.",
+      "The engagement started in August 2023 and is still open.",
+      "It is a contract under Nomadic Digital, carried alongside the other current clients rather than as a separate career."
+    ],
+    "parent": "nomadic-digital",
+    "leader": true
+  },
+  {
+    "id": "mindgrub-managed-services",
+    "org": "Mindgrub Technologies",
+    "title": "Managed Services Consultant",
+    "start": "2022-01",
+    "end": "2022-06",
+    "employment": "Contractor",
+    "relation": "Consultant",
+    "location": "Remote",
+    "bullets": [
+      "A short consulting contract through Nomadic Digital, separate from my earlier full-time role at Mindgrub.",
+      "I helped service and maintain Mindgrub's client web apps through its managed services team while I moved from Mindgrub to Rehab.",
+      "The contract ran from January to June 2022."
+    ],
+    "parent": "nomadic-digital",
+    "leader": true
+  },
+  {
+    "id": "millermedia7",
+    "org": "millermedia7",
+    "title": "Web Engineering Lead",
+    "start": "2023-06",
+    "end": null,
+    "employment": "Contractor",
+    "location": "Ithaca, NY · Remote",
+    "bullets": [
+      "I am the web engineering lead for millermedia7, on contract, remote from Ithaca, NY.",
+      "The role started in June 2023 and is still open.",
+      "I hold that lead seat inside Nomadic Digital while the rest of the client work runs with it."
+    ],
+    "parent": "nomadic-digital",
+    "leader": true
+  },
+  {
+    "id": "pda",
+    "org": "PDA.nyc",
+    "title": "Open Source Solutions Engineer",
+    "start": "2024-08",
+    "end": null,
+    "employment": "Contractor",
+    "location": "Brooklyn, NY · Remote",
+    "parent": "nomadic-digital",
+    "leader": true,
+    "bullets": [
+      "I am the open source solutions engineer for PDA.nyc, on contract, remote from Brooklyn, NY, and the public site is on Webflow.",
+      "The engagement started in August 2024 and is still open.",
+      "It sits under Nomadic Digital, concurrent with SAUCE.nyc, which shares this start."
+    ]
+  },
+  {
+    "id": "sauce",
+    "org": "SAUCE.nyc",
+    "title": "Open Source Solutions Engineer",
+    "start": "2024-08",
+    "end": null,
+    "employment": "Contractor",
+    "location": "Brooklyn, NY · Remote",
+    "parent": "nomadic-digital",
+    "leader": true,
+    "bullets": [
+      "I am the open source solutions engineer for SAUCE.nyc, on contract, remote from Brooklyn, NY, and the public site is on Webflow.",
+      "The engagement started in August 2024, the same month as PDA.nyc, and it is still open.",
+      "It is held under Nomadic Digital with that shared start, not a separate one."
+    ]
+  },
+  {
+    "id": "ancient",
+    "org": "Ancient LLC",
+    "title": "Ancient UI Architect Lead",
+    "start": "2026-07",
+    "end": null,
+    "employment": "Contractor",
+    "location": "Brooklyn, NY \u00b7 Remote",
+    "parent": "nomadic-digital",
+    "leader": true,
+    "bullets": [
+      "Through Ancient LLC I'm the UI architect lead on PepsiCo's Pepviz, the single client collaboration of the engagement.",
+      "I work with one international designer to build uniquely designed marketing landing pages for Pepviz's messaging and brand communications.",
+      "Each page is hand-authored semantic HTML, one SCSS file and a small vanilla JavaScript file, staged on CodePen so the client can paste it straight into their own CMS."
+    ]
+  },
+  {
+    "id": "zugu",
+    "org": "ZUGU",
+    "title": "Design and Implementation",
+    "start": null,
+    "end": null,
+    "location": "",
+    "parent": "pda",
+    "leader": true,
+    "bullets": [
+      "I assisted ZUGU with the product release of incaseofdeath, on the design and the implementation.",
+      "That release led me into supporting the go-live and the product branding.",
+      "ZUGU was a client of PDA.nyc, not of Nomadic Digital; I did this work through the PDA.nyc engagement."
+    ]
+  },
+  {
+    "id": "rehab-llc",
+    "org": "Rehab LLC",
+    "title": "Director of Web Operations",
+    "start": "2022-10",
+    "end": "2023-05",
+    "employment": "Contractor",
+    "location": "Remote",
+    "bullets": [
+      "Took charge of optimizing and streamlining a dated Symphony application, successfully reducing its codebase by over 60% through thorough cleanup and optimization measures.",
+      "Effectively oversaw the implementation of GitHub Actions and CloudFlare Pages technologies, enhancing our development workflow and optimizing the deployment of our website.",
+      "Played a crucial role in reducing AWS hosting costs for the business, resulting in a significant decrease of over 50% in monthly expenses.",
+      "Successfully eliminated a single point of failure in security across multiple web applications under my management at Rehab.com, enhancing their resilience and safeguarding them against potential vulnerabilities.",
+      "Managed multiple Vue.js applications, where I diligently implemented security enhancements, optimized code, and improved performance to deliver exceptional end-user experiences.",
+      "Responsible for overseeing an internal administrative platform, leveraging Vue.js, AWS Amplify, Lambda, Cognito, and GraphQL technologies, ensuring efficient operation and smooth functionality.",
+      "Played a pivotal role in facilitating the sale of an LLC by assisting in the seamless transition of several technical applications, ensuring a smooth handover and continuity of operations for the new owners.",
+      "I used Python to aggregate the data for the sale of the company, the domain, and its assets, and I replaced a pre-existing dashboard with a more modern automation and management system."
+    ],
+    "leader": true
+  },
+  {
+    "id": "rehab-com-performance",
+    "org": "Rehab.com",
+    "title": "Senior Performance Engineer",
+    "start": "2022-01",
+    "end": "2023-10",
+    "employment": "Contractor",
+    "location": "Remote",
+    "parent": "rehab-llc",
+    "bullets": [
+      "Collaborating closely with Core Web Vitals and performance auditing tools, I meticulously fine-tuned the performance of a Symphony web application, aiming to achieve a higher ranking for organic users by delivering an optimized and seamless user experience.",
+      "Led adoption and implementation of AGILE methodologies for a small business, driving efficient collaboration and adaptability in our processes.",
+      "Adeptly managed the day-to-day operations of multiple web applications, addressing a wide range of issues, including performance optimization, bug resolution, SEO enhancements, payment integration, content management, and many other challenges that arise, ensuring smooth and efficient functionality across all products.",
+      "Successfully developed and delivered a Vue.js application seamlessly integrated with Symphony, empowering patients to curate treatment providers tailored to their needs and preferences."
+    ],
+    "leader": true
+  },
+  {
+    "id": "mentalhealth",
+    "org": "MentalHealth.com",
+    "title": "MentalHealth.com",
+    "start": "2023-02",
+    "end": "2023-10",
+    "employment": null,
+    "location": "",
+    "bullets": [
+      "Part of the Rehab LLC work in this window."
+    ],
+    "parent": "rehab-llc",
+    "leader": false
+  },
+  {
+    "id": "cicada-capital",
+    "org": "Cicada Capital",
+    "title": "Cicada Capital",
+    "start": "2023-03",
+    "end": "2023-10",
+    "employment": null,
+    "location": "",
+    "bullets": [
+      "Part of the Rehab LLC work in this window."
+    ],
+    "parent": "rehab-llc",
+    "leader": false
+  },
+  {
+    "id": "mindgrub",
+    "org": "Mindgrub Technologies",
+    "title": "Senior Software Engineer",
+    "start": "2017-08",
+    "end": "2022-01",
+    "employment": "Full-Time",
+    "location": "Hybrid",
+    "bullets": [
+      "Responsible for building ground-up user interfaces within WordPress, Drupal, React, and Angular frameworks utilizing MySQL, LocalStorage, MongoDB, AWS, GitLab CI, and Composer configurations.",
+      "Leveraged RESTful API services leveraging JSON, AJAX, LocalStorage, and SessionStorage.",
+      "Utilized AGILE and Waterfall methodologies to accomplish a variety of project deliverables.",
+      "Conducted observational user testing, reviewed designs against usability heuristics, and performed performance audits on various web applications.",
+      "Collaborated on usability and accessibility best practices for WAI-ARIA, 508 compliance, and ADA/AODA standards.",
+      "Optimized web apps for maximum speed and scalability utilizing modern PaaS tools focused on end-user deliverability and search engine requirements (Core Web Vitals).",
+      "Oversaw the UI application shell and content management of multiple Progressive Web Applications (PWAs), employing Material Design principles, manifest.json configurations, and service workers for offline caching.",
+      "Delivered web applications utilizing coding best practices, code documentation, and effective source control management.",
+      "Supported the vision of projects and worked closely with team members to see it through to completion.",
+      "Participated in code reviews and implemented unit tests to reduce technical debt."
+    ],
+    "leader": true
+  },
+  {
+    "id": "jellyfish",
+    "org": "Jellyfish",
+    "title": "Senior Front-End Engineer",
+    "start": "2015-07",
+    "end": "2017-08",
+    "employment": "Full-Time",
+    "location": "On-site",
+    "bullets": [
+      "Developed web apps using HTML5, CSS3 (SASS & LESS), JavaScript ES5, Angular 3, Bootstrap, jQuery, WordPress, Drupal, Docker, and several other Front-End technologies.",
+      "Agile (SCRUM) team member delivering regular updates and participating in daily scrums, retrospectives, and backlog pruning.",
+      "Built and managed DoubleClick interactive ads.",
+      "Worked closely with graphic designers, UX designers, and interactive design specialists to create rich user experiences.",
+      "Introduced the adoption of CSS Flexbox and ES5 for improved user experiences and consolidated JavaScript composition.",
+      "Utilized JSON as a communication protocol between the front-end and back-end, enabling seamless data exchange and integration between the two components of the application.",
+      "Implemented and tested data management using MySQL, Postman, and API development/testing using Swagger.",
+      "Utilized jQuery extensively for event manipulation and employed various plugins to enhance and extend interactive functionalities across multiple web applications.",
+      "Efficiently managed code reviews and releases by utilizing GitHub and GitLab, ensuring smooth collaboration, version control, and quality assurance throughout the development process."
+    ],
+    "leader": true
+  },
+  {
+    "id": "kor-group",
+    "org": "kor group",
+    "title": "Lead Web Engineer",
+    "start": "2014-08",
+    "end": "2015-07",
+    "employment": "Full-Time",
+    "location": "On-site",
+    "bullets": [
+      "Collaborated as the front-end developer with the design team to establish workflows, user personas, and website content structure, ensuring a cohesive and user-friendly experience.",
+      "Applied UI and UX design expertise to contribute to the design and development process, effectively collaborating and presenting ideas to stakeholders.",
+      "Utilized knowledge of browser compatibilities and responsive site design to create visually appealing and functional web and mobile interfaces.",
+      "Conducted user research and user testing to gather insights and feedback, iteratively improving the user experience and optimizing website performance.",
+      "Managed multiple projects and time-sensitive deadlines.",
+      "Collaborated with the creative, technical, and client teams daily.",
+      "Translated Photoshop/Illustrator mockups into hand-coded HTML, CSS, and JS, ensuring pixel-perfect accuracy and attention to detail.",
+      "Efficiently manage multiple projects simultaneously, prioritizing tasks and meeting time-sensitive deadlines.",
+      "Fostered effective collaboration with creative, technical, and client teams, actively participating in discussions and providing valuable input to achieve project goals and client satisfaction."
+    ],
+    "leader": true
+  },
+  {
+    "id": "cogolabs",
+    "org": "CogoLabs",
+    "title": "Interactive Quantitative Producer",
+    "start": "2014-02",
+    "end": "2014-07",
+    "employment": "Contractor",
+    "location": "On-site",
+    "bullets": [
+      "Collaborated with a cross-functional team of engineers, designers, and product managers to ideate, build, and launch web-based startups from inception to deployment.",
+      "Demonstrated experience building responsive email templates that utilize A/B testing methodologies and have undergone rigorous HTML testing with Litmus.",
+      "Developed and maintain high-quality web applications using a variety of programming languages such as Python, Ruby, Ruby on Rails, PHP, and JavaScript.",
+      "Implemented engaging user interfaces and experiences through front-end development tasks, including responsive email development, HTML, CSS (SASS and Dart), and JavaScript.",
+      "Stayed current with industry trends, technologies, and best practices and leveraged this knowledge to propose innovative solutions and approaches.",
+      "Actively participated in agile development processes, including daily stand-ups, sprint planning, and retrospectives, to ensure efficient project execution and timely delivery.",
+      "I used Python to automate internal tools that called the Uber system and distributed email across target lists."
+    ],
+    "leader": false
+  },
+  {
+    "id": "shawmut-construction",
+    "org": "Shawmut Construction",
+    "title": "Interactive Multimedia Producer",
+    "start": "2013-08",
+    "end": "2014-02",
+    "employment": "Contractor",
+    "location": "On-site",
+    "bullets": [
+      "Executed daily web and email production for the company, located and resolved issues, conducted quality assurance, and tested the effectiveness of campaigns through A/B testing.",
+      "Performed regular updates on web pages using content management systems and standard HTML/CSS.",
+      "Worked with external web developers and the internal IS&T department to facilitate fixes of website and email platform bugs, enhancements, and new development.",
+      "Built, tested, and distributed emails using email management platforms, HTML/CSS editors, email service providers, and standard web browsers.",
+      "Created mock-ups and designs for web pages, email templates, banners, etc., using current industry best practices.",
+      "Worked collaboratively with marketing/creative departments to propose and deploy new creative/interactive marketing strategies, production methods, and design changes.",
+      "Expressed a solid grasp of online and offline direct response advertising principles and CRM."
+    ],
+    "leader": false
+  },
+  {
+    "id": "mass-general-hospital",
+    "org": "Mass General Hospital",
+    "title": "Interactive Web Producer",
+    "start": "2010-12",
+    "end": "2013-08",
+    "employment": "Contractor",
+    "location": "On-site",
+    "bullets": [
+      "Focused on producing web-ready assets and managing content across various websites using respective content management systems.",
+      "Creating front-end XHTML/CSS templates for CMSs and web-based applications using design files (e.g., Photoshop, Fireworks) and adapting/repurposing existing HTML/CSS.",
+      "Converting externally produced content to the appropriate electronic format and generating packages using supplied editorial content and visual assets.",
+      "Supported the Assistant Director of Communications for Electronic Communications and worked on assigned projects, including limited video and multimedia production, front-end web development and design, art direction, image cropping, optimization, e-mail template development, and other tasks.",
+      "Collaborated closely with the director to implement AWS hosting solutions for various web applications, ensuring optimal performance, scalability, and cost efficiency.",
+      "Provided technical troubleshooting support for the Department's applications and supported the Department's e-philanthropy platform, Blackbaud NetCommunity."
+    ],
+    "leader": false
+  },
+  {
+    "id": "aptima",
+    "org": "Aptima",
+    "title": "Creative Media Specialist",
+    "start": "2008-03",
+    "end": "2010-10",
+    "employment": "Full-Time",
+    "startedAs": {
+      "employment": "Internship",
+      "until": "2008-12"
+    },
+    "location": "On-site",
+    "bullets": [
+      "Served as a Creative Media Specialist, specializing in graphical design and multimedia training implementation.",
+      "Expertise in applications such as Adobe, Autodesk, Animation, and Broadcast Graphics allowed him to excel in various areas.",
+      "Successfully developed courseware for the Army and Air Force, including 40 hours of Interactive Multimedia Instruction (IMI) for the Combined Arms Support Command (CASCOM).",
+      "Played a vital role in converting existing CD-based training to a web-based format, contributing to the accessibility and scalability of the training materials."
+    ],
+    "leader": false
+  },
+  {
+    "id": "healthcaresource",
+    "org": "HealthcareSource",
+    "title": "Junior Web Developer",
+    "start": "2007-09",
+    "end": "2008-02",
+    "employment": "Internship",
+    "location": "On-site",
+    "bullets": [
+      "Developed and managed web applications using languages such as ColdFusion, JavaScript, CSS, HTML, PHP, XML, and Ajax.",
+      "Worked with high-fidelity graphics and created layout designs based on pre-existing web applications.",
+      "Used Visual Source Safe as a code management system.",
+      "Managed projects using the SalesForce.com CMS system.",
+      "Assisted in creating dynamic JavaScript PDF forms leveraged within proprietary web apps."
+    ],
+    "leader": false
+  },
+  {
+    "id": "earthbound-media-group",
+    "org": "Earthbound Media Group",
+    "title": "Junior Media Programmer",
+    "start": "2004-08",
+    "end": "2005-08",
+    "employment": "Full-Time",
+    "location": "On-site",
+    "bullets": [
+      "Contributed to the design of electronic media such as interactive CD-ROMs, Flash animations, website design and development, corporate branding, dynamic e-mail, and marketing campaigns.",
+      "Successfully managed multiple projects simultaneously in a fast-paced environment heavily involved in higher education.",
+      "Part of an award-winning design and interactive team playing the role of the Front-End Developer.",
+      "Introduced new technologies within the industry, such as CSS2 and JavaScript."
+    ],
+    "leader": false
+  }
+]

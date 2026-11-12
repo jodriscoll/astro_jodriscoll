@@ -1,0 +1,211 @@
+{
+  "slug": "zefr",
+  "org": "millermedia7",
+  "kind": "MillerMedia7",
+  "role": "Web Engineering Lead, through millermedia7",
+  "period": {
+    "start": "2026-03",
+    "end": "2026-07"
+  },
+  "dek": "Zefr classifies video content for brands and advertisers. Its public site was rebuilt on Craft CMS 5, with a component library editors assemble in Neo, and moved onto Craft Cloud.",
+  "short": "Zefr's marketing site rebuilt on Craft CMS 5 and moved onto Craft Cloud, with a Neo block library editors build pages from, SAML single sign-on, SEOmatic and a Vite build.",
+  "facts": [
+    {
+      "label": "CMS",
+      "value": "Craft CMS 5.8"
+    },
+    {
+      "label": "PHP",
+      "value": "8.4"
+    },
+    {
+      "label": "Commits on this machine",
+      "value": "77"
+    },
+    {
+      "label": "Window",
+      "value": "March 24 to July 17, 2026"
+    }
+  ],
+  "stack": [
+    {
+      "group": "CMS",
+      "items": [
+        {
+          "name": "Craft CMS",
+          "version": "5.8"
+        },
+        {
+          "name": "Neo",
+          "version": "5",
+          "note": "nested content blocks"
+        },
+        {
+          "name": "CKEditor",
+          "version": "5.3"
+        },
+        {
+          "name": "Navigation",
+          "version": "3",
+          "note": "Verbb"
+        }
+      ]
+    },
+    {
+      "group": "SEO and routing",
+      "items": [
+        {
+          "name": "SEOmatic",
+          "version": "5"
+        },
+        {
+          "name": "Retour",
+          "version": "5",
+          "note": "redirects"
+        }
+      ]
+    },
+    {
+      "group": "Sign-in",
+      "items": [
+        {
+          "name": "SAML SP",
+          "version": "5.1",
+          "note": "single sign-on (Flipbox Factory)"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "Vite",
+          "note": "built with craft-vite, synced to Cloud as web/dist"
+        },
+        {
+          "name": "Lottie",
+          "note": "animation files served from the asset filesystem"
+        }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [
+        {
+          "name": "PHP",
+          "version": "8.4"
+        },
+        {
+          "name": "nginx-fpm",
+          "note": "local, DDEV"
+        },
+        {
+          "name": "MySQL",
+          "version": "8.0"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Craft Cloud"
+    },
+    {
+      "label": "Domains",
+      "value": "www.zefr.com 301s to zefr.com at the gateway"
+    },
+    {
+      "label": "Assets",
+      "value": "/dist/* rewritten to the Cloud artifact CDN"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "A 500 that was really a missing rewrite",
+      "text": "On the preview host, /dist/* missed the CDN artifact bundle and returned 500s. One URLPattern rewrite per path fixed it, because a grouped wildcard did not match every asset."
+    },
+    {
+      "title": "A block library, not page templates",
+      "text": "Callouts, related resources and about-page components were added as Neo blocks, then regrouped in April so module groups matched their types."
+    },
+    {
+      "title": "Craft Cloud project config",
+      "text": "Early commits aligned Craft Cloud settings in project.yaml so local DDEV and Cloud environments built the same site."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Versions",
+      "rows": [
+        {
+          "label": "Craft CMS",
+          "value": "5.8",
+          "state": "ok"
+        },
+        {
+          "label": "PHP",
+          "value": "8.4",
+          "state": "ok"
+        },
+        {
+          "label": "MySQL",
+          "value": "8.0",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Plugins",
+      "rows": [
+        {
+          "label": "SEOmatic",
+          "value": "5",
+          "state": "ok"
+        },
+        {
+          "label": "Retour",
+          "value": "5",
+          "state": "ok"
+        },
+        {
+          "label": "Neo",
+          "value": "5",
+          "state": "ok"
+        },
+        {
+          "label": "SAML SP",
+          "value": "5.1",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Hosting",
+      "rows": [
+        {
+          "label": "Platform",
+          "value": "Craft Cloud",
+          "state": "ok"
+        },
+        {
+          "label": "www → apex",
+          "value": "301 at gateway",
+          "state": "ok"
+        },
+        {
+          "label": "/dist rewrite",
+          "value": "In place",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/zefr/home.webp",
+      "alt": "The zefr.com homepage hero, \"Be Fearless in the Feed.\", over a blue gradient, with social platform logos below.",
+      "caption": "The zefr.com homepage."
+    }
+  ]
+}

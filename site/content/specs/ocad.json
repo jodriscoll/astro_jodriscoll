@@ -1,0 +1,27 @@
+{
+  "slug": "ocad",
+  "org": "taoti",
+  "kind": "Taoti Creative",
+  "dek": "Work on the public Drupal site for OCAD University, Canada's university of art and design.",
+  "short": "Development on the public Drupal site for OCAD University, Canada's largest university of art and design.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Platform",
+      "items": [
+        {
+          "name": "Drupal"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": [
+    {
+      "src": "/work/ocad/home.webp",
+      "alt": "OCAD U home page: Become a Student, with admissions buttons"
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "slug": "aami",
+  "org": "taoti",
+  "kind": "Taoti Creative",
+  "role": "Solutions Engineer, through Taoti Creative",
+  "dek": "The Association for the Advancement of Medical Instrumentation runs its member community on WordPress and BuddyBoss. The homepage mixes curated stories with the community’s activity stream.",
+  "short": "AAMI's member community on Bedrock WordPress and BuddyBoss, with a Timber theme and a homepage feed that blends curated stories with the live activity stream, cached in Redis and behind SAML single sign-on.",
+  "facts": [
+    {
+      "label": "WordPress",
+      "value": "7.1 (Bedrock)"
+    },
+    {
+      "label": "PHP",
+      "value": "8.3"
+    },
+    {
+      "label": "Server",
+      "value": "Apache 2.4"
+    },
+    {
+      "label": "Cache",
+      "value": "Redis"
+    },
+    {
+      "label": "Theme",
+      "value": "BuddyBoss child theme, Timber and Twig"
+    }
+  ],
+  "stack": [
+    {
+      "group": "WordPress",
+      "items": [
+        {
+          "name": "Bedrock",
+          "note": "Composer-managed core and plugins"
+        },
+        {
+          "name": "BuddyBoss Theme",
+          "version": "2.20",
+          "note": "parent"
+        },
+        {
+          "name": "Timber",
+          "version": "2.3"
+        },
+        {
+          "name": "Twig",
+          "version": "3.19"
+        }
+      ]
+    },
+    {
+      "group": "Content",
+      "items": [
+        {
+          "name": "ACF Pro",
+          "version": "6.8"
+        },
+        {
+          "name": "ACF Extended"
+        },
+        {
+          "name": "ACF Table Field",
+          "version": "1.3.35"
+        },
+        {
+          "name": "Gravity Forms add-on for ACF"
+        },
+        {
+          "name": "Permalink Manager"
+        },
+        {
+          "name": "Redirection",
+          "version": "5.7"
+        },
+        {
+          "name": "Members",
+          "version": "3.2"
+        }
+      ]
+    },
+    {
+      "group": "Performance",
+      "items": [
+        {
+          "name": "WP Rocket",
+          "version": "3.20"
+        },
+        {
+          "name": "Redis Object Cache",
+          "version": "2.5"
+        },
+        {
+          "name": "EWWW Image Optimizer"
+        }
+      ]
+    },
+    {
+      "group": "Security",
+      "items": [
+        {
+          "name": "miniOrange SAML SSO",
+          "version": "5.4.3"
+        },
+        {
+          "name": "WP 2FA",
+          "version": "4.1.0"
+        },
+        {
+          "name": "WP Activity Log",
+          "version": "5.6"
+        },
+        {
+          "name": "Solid Security"
+        },
+        {
+          "name": "Taoti Security Scanner",
+          "version": "1.2"
+        }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [
+        {
+          "name": "PHP",
+          "version": "8.3"
+        },
+        {
+          "name": "Apache",
+          "version": "2.4"
+        },
+        {
+          "name": "MySQL",
+          "version": "8.0"
+        },
+        {
+          "name": "Redis"
+        },
+        {
+          "name": "Node",
+          "version": "22",
+          "note": "theme build"
+        },
+        {
+          "name": "Gulp",
+          "version": "4",
+          "note": "theme build"
+        },
+        {
+          "name": "Webpack",
+          "version": "5.91"
+        }
+      ]
+    }
+  ],
+  "delivery": {
+    "built": false,
+    "summary": "GitHub Actions deploy every environment branch to AWS. A separate Security Update workflow is dispatched from QA Pulse: it detects the PHP version, runs Composer updates, bumps git-tracked core, themes and plugins, and makes sure the Taoti Security Scanner loader is committed.",
+    "steps": [
+      {
+        "name": "Lint",
+        "detail": "PHP_CodeSniffer and Sass checks on push"
+      },
+      {
+        "name": "Deploy",
+        "detail": "taoti/actions-deploy-aws: build WordPress, back up, deploy, update the database, clear WordPress and CDN caches"
+      },
+      {
+        "name": "Promote",
+        "detail": "A confirmed promotion from one AWS environment to the next"
+      },
+      {
+        "name": "Security update",
+        "detail": "Dispatched from QA Pulse with a correlation id, pushed to a security-update branch"
+      }
+    ]
+  },
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "AWS, through Taoti’s deploy actions"
+    },
+    {
+      "label": "Local",
+      "value": "Lando: PHP 8.3, Apache 2.4, MySQL 8.0, Redis, Xdebug"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Curated first, then automatic",
+      "text": "Admins drag curated items into order. The feed then fills from Events, Flagship Events, News, Certifications, Focus Areas and Standards, 15 items a page."
+    },
+    {
+      "title": "One post, two places",
+      "text": "Each WordPress post is synced to a BuddyBoss activity, so it appears on the homepage and in the community stream. Curated posts from private groups show on the homepage and stay private in their group."
+    },
+    {
+      "title": "Cached, de-duplicated, invalidated",
+      "text": "Feed data is cached, duplicates are detected across posts and activities, and the cache clears when the curated list changes. Admin tools backfill activities and clean up duplicates."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Versions",
+      "rows": [
+        {
+          "label": "WordPress",
+          "value": "7.1.4",
+          "state": "ok"
+        },
+        {
+          "label": "PHP",
+          "value": "8.3",
+          "state": "warn"
+        },
+        {
+          "label": "Node",
+          "value": "22",
+          "state": "warn"
+        },
+        {
+          "label": "ACF Pro",
+          "value": "6.8.4",
+          "state": "ok"
+        },
+        {
+          "label": "Timber",
+          "value": "2.3.1",
+          "state": "warn"
+        },
+        {
+          "label": "Gulp",
+          "value": "4.0.2",
+          "state": "warn"
+        }
+      ]
+    },
+    {
+      "group": "Security",
+      "rows": [
+        {
+          "label": "Security Scanner",
+          "value": "1.2.3",
+          "state": "ok"
+        },
+        {
+          "label": "2FA",
+          "value": "Yes",
+          "state": "ok"
+        },
+        {
+          "label": "SSO",
+          "value": "miniOrange SAML",
+          "state": "ok"
+        },
+        {
+          "label": "AppPass Removal",
+          "value": "Missing",
+          "state": "warn"
+        }
+      ]
+    },
+    {
+      "group": "Repo & Build",
+      "rows": [
+        {
+          "label": "CI",
+          "value": "GitHub Actions",
+          "state": "ok"
+        },
+        {
+          "label": "Deploy",
+          "value": "AWS",
+          "state": "ok"
+        },
+        {
+          "label": "Security update",
+          "value": "Merged",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/aami/home.webp",
+      "alt": "AAMI member community: training hero, communities list and the activity feed"
+    }
+  ]
+}

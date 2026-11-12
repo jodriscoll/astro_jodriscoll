@@ -1,0 +1,121 @@
+---
+interface Props {
+  variant?: 'pill' | 'display';
+  title?: string;
+}
+
+const { variant = 'display' } = Astro.props;
+
+const titles = [
+  'Web Application Consultant',
+  'Web Solutions Architect',
+  'Web Vibe Coder',
+  'Web Prompt Engineer',
+  'Web UX Engineer',
+  'Web Conversion Specialist',
+  'Web Analytics Engineer',
+  'Web Team Lead, WordPress',
+  'Web Senior Developer, Drupal',
+  'Web MEAN Stack Engineer',
+  'Web Diagnostic Engineer',
+  'Web Solutions Consultant',
+  'Web QA Engineer',
+  'Web Test Automation Engineer',
+  'Web Release Engineer',
+];
+---
+
+<p class:list={['roleline', variant === 'pill' && 'pill', `roleline--${variant}`]} data-roleline>
+  {variant === 'pill' && <i aria-hidden="true"></i>}
+  <span class="roleline__titles">
+    {
+      titles.map((title, index) => (
+        <span class:list={['roleline__title', index === 0 && 'is-on']} aria-hidden={index === 0 ? undefined : 'true'}>
+          {title.split(' ').map((word, wordIndex) => (
+            <span class="roleline__word" style={`--w: ${wordIndex}`}>
+              {word}
+            </span>
+          ))}
+        </span>
+      ))
+    }
+  </span>
+</p>
+
+<script is:inline>
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hold = 4800;
+    document.querySelectorAll('[data-roleline]').forEach(function (root) {
+      if (root.getAttribute('data-ready') === 'true') return;
+      root.setAttribute('data-ready', 'true');
+      var titles = root.querySelectorAll('.roleline__title');
+      var box = root.querySelector('.roleline__titles');
+      var pill = root.classList.contains('roleline--pill');
+      if (reduce || titles.length < 2) return;
+
+      function words(title) {
+        return title.querySelectorAll('.roleline__word');
+      }
+
+      function measure(title) {
+        var range = document.createRange();
+        range.selectNodeContents(title);
+        return Math.ceil(range.getBoundingClientRect().width);
+      }
+
+      function sizeTo(title) {
+        if (!pill || !box) return;
+        box.style.width = measure(title) + 'px';
+      }
+
+      function enterMs(title) {
+        var count = words(title).length;
+        return Math.max(0, count - 1) * 75 + 460;
+      }
+
+      function show(title) {
+        var list = words(title);
+        list.forEach(function (word, i) {
+          word.style.animation = 'none';
+          word.style.opacity = '0';
+          word.style.transition = 'opacity 220ms ease';
+          word.style.transitionDelay = i * 75 + 'ms';
+        });
+        void title.offsetWidth;
+        title.classList.add('is-on');
+        title.removeAttribute('aria-hidden');
+        list.forEach(function (word) {
+          word.style.opacity = '1';
+        });
+      }
+
+      function hide(title) {
+        title.classList.remove('is-on');
+        title.setAttribute('aria-hidden', 'true');
+        words(title).forEach(function (word) {
+          word.style.transitionDelay = '0ms';
+          word.style.opacity = '0';
+        });
+      }
+
+      if (pill) {
+        sizeTo(titles[0]);
+        root.classList.add('is-sized');
+      }
+
+      var index = 0;
+
+      function step() {
+        if (!root.isConnected) return;
+        hide(titles[index]);
+        index = (index + 1) % titles.length;
+        sizeTo(titles[index]);
+        show(titles[index]);
+        window.setTimeout(step, hold + enterMs(titles[index]));
+      }
+
+      window.setTimeout(step, hold + enterMs(titles[0]));
+    });
+  })();
+</script>

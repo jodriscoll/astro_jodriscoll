@@ -1,0 +1,29 @@
+{
+  "slug": "channel-5",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "Channel 5’s WordPress site, maintained from Jellyfish’s repository on AWS.",
+  "short": "WordPress for the UK broadcaster Channel 5, maintained from Jellyfish's repository and hosted on AWS.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "AWS"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,152 @@
+{
+  "slug": "iwf",
+  "org": "taoti",
+  "kind": "Taoti Creative",
+  "role": "WordPress Development",
+  "dek": "The International Women's Forum runs its public site on WordPress: a custom Taoti theme, Advanced Custom Fields and Gravity Forms, built and deployed to Pantheon by GitHub Actions.",
+  "short": "The International Women's Forum's public site: a custom Taoti theme on Composer-managed WordPress with ACF and Gravity Forms, built and deployed to Pantheon by GitHub Actions on every push.",
+  "facts": [
+    {
+      "label": "Theme",
+      "value": "iwf-wp, on the Taoti WordPress base"
+    },
+    {
+      "label": "Deploys",
+      "value": "GitHub Actions to Pantheon, with multidev builds"
+    }
+  ],
+  "stack": [
+    {
+      "group": "CMS",
+      "items": [
+        {
+          "name": "WordPress",
+          "note": "Composer-managed, plugins from WPackagist"
+        },
+        {
+          "name": "Advanced Custom Fields",
+          "note": "with ACF Extended and Admin Columns"
+        },
+        {
+          "name": "Gravity Forms",
+          "note": "ACF add-on"
+        },
+        {
+          "name": "Yoast SEO",
+          "version": "22"
+        },
+        {
+          "name": "Solid Security",
+          "note": "better-wp-security"
+        }
+      ]
+    },
+    {
+      "group": "Theme build",
+      "items": [
+        {
+          "name": "Gulp",
+          "version": "4"
+        },
+        {
+          "name": "Sass"
+        },
+        {
+          "name": "webpack",
+          "version": "5"
+        },
+        {
+          "name": "Babel"
+        },
+        {
+          "name": "PostCSS",
+          "note": "Autoprefixer and cssnano"
+        },
+        {
+          "name": "Accessible Slick",
+          "note": "carousels"
+        },
+        {
+          "name": "AOS",
+          "note": "scroll animation"
+        }
+      ]
+    },
+    {
+      "group": "Quality",
+      "items": [
+        {
+          "name": "PHP_CodeSniffer",
+          "note": "WordPress Coding Standards and PHPCompatibility"
+        },
+        {
+          "name": "Stylelint"
+        },
+        {
+          "name": "Prettier"
+        }
+      ]
+    },
+    {
+      "group": "Delivery",
+      "items": [
+        {
+          "name": "GitHub Actions"
+        },
+        {
+          "name": "Pantheon",
+          "note": "Advanced Page Cache, native PHP sessions"
+        },
+        {
+          "name": "Lando",
+          "note": "local Pantheon recipe"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Pantheon"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Built on deploy, not committed",
+      "text": "The Pantheon workflow runs composer build-assets on every push to main: Composer installs, then npm ci and a Gulp build in the theme, then the result is pushed to Pantheon."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Platform",
+      "rows": [
+        {
+          "label": "CMS",
+          "value": "WordPress",
+          "state": "ok"
+        },
+        {
+          "label": "Host",
+          "value": "Pantheon",
+          "state": "ok"
+        },
+        {
+          "label": "CI",
+          "value": "GitHub Actions",
+          "state": "ok"
+        },
+        {
+          "label": "Domain",
+          "value": "iwforum.org",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/iwf/home.webp",
+      "alt": "International Women's Forum home page: We Lead, with event cards and member photos"
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+---
+/**
+ * The contribution plot from the old site, as a backdrop for the resume
+ * masthead: the year's cells drop in column by column, then a slow light
+ * keeps sweeping through them. It sits on the right and fades out under the
+ * name and summary, so the words always win. Decorative only: hidden from
+ * assistive tech and print, and still under reduced motion.
+ */
+import { contributionCells, level } from '../../lib/contributions';
+
+const cells = contributionCells();
+---
+
+<div class="plotfield" aria-hidden="true" data-print="hide">
+  <div class="plotfield__grid">
+    {
+      cells.map((cell, index) => {
+        // Two weeks per column, so the year folds into a taller field.
+        const week = Math.floor(index / 14);
+        const day = index % 14;
+        return <i data-l={level(cell.private)} style={`--w: ${week}; --d: ${day}`} />;
+      })
+    }
+  </div>
+</div>
+
+<style>
+  .plotfield {
+    position: absolute;
+    z-index: 0;
+    top: calc(var(--ds-page-top, 80px) + 8px);
+    right: 0;
+    width: min(62%, 720px);
+    pointer-events: none;
+    /* Strong on the right, gone by the time it reaches the words on the left,
+       and softened top and bottom so it never reads as a box. */
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.18) 38%, rgb(0 0 0 / 0.75) 72%, #000 100%),
+      linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 0.18) 38%, rgb(0 0 0 / 0.75) 72%, #000 100%),
+      linear-gradient(180deg, transparent 0%, #000 22%, #000 70%, transparent 100%);
+    mask-composite: intersect;
+  }
+
+  .plotfield__grid {
+    display: grid;
+    grid-template-columns: repeat(27, 1fr);
+    grid-template-rows: repeat(14, auto);
+    grid-auto-flow: column;
+    gap: 6px;
+  }
+
+  .plotfield i {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 3px;
+    --o: 0.05;
+    background: var(--ds-accent);
+    opacity: var(--o);
+  }
+
+  .plotfield i[data-l='1'] { --o: 0.16; }
+  .plotfield i[data-l='2'] { --o: 0.3; }
+  .plotfield i[data-l='3'] { --o: 0.48; }
+  .plotfield i[data-l='4'] { --o: 0.7; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Drop in by week, then a light that keeps sweeping left to right. */
+    .plotfield i {
+      opacity: 0;
+      transform: scale(0.4);
+      animation:
+        plot-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--w) * 40ms + var(--d) * 30ms) forwards,
+        plot-sweep 7s ease-in-out calc(2s + var(--w) * 120ms + var(--d) * 40ms) infinite;
+    }
+  }
+
+  @keyframes plot-in {
+    to {
+      opacity: var(--o);
+      transform: none;
+    }
+  }
+
+  @keyframes plot-sweep {
+    0%, 16%, 100% {
+      opacity: var(--o);
+      transform: none;
+    }
+    6% {
+      opacity: calc(var(--o) + 0.35);
+      transform: scale(1.08);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .plotfield { display: none; }
+  }
+</style>

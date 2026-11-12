@@ -1,0 +1,474 @@
+---
+/**
+ * Every dated role on one calendar axis. Engagements held inside an
+ * employer or practice sit indented under it. Open roles end in the accent.
+ * A role that ran on the side first (row.side) gets a dashed lead-in that
+ * brightens toward the solid bar, so part-time years never read as full time.
+ * Internship time draws as a hollow bar; a role that began as one (row.phaseUntil)
+ * runs hollow until that month, then solid.
+ */
+import type { TimelineRow } from '../../lib/resume';
+
+interface Props {
+  rows: TimelineRow[];
+  start: string;
+  end: string;
+  step?: number;
+}
+
+const { rows, start, end, step = 2 } = Astro.props;
+
+const ym = (value: string) => {
+  const [year, month] = value.split('-').map(Number);
+  return year * 12 + month - 1;
+};
+const from = ym(start);
+const to = ym(end) + 1;
+const span = Math.max(1, to - from);
+const pct = (value: number) => `${Math.round(((value - from) / span) * 10000) / 100}%`;
+
+const firstYear = Math.floor(from / 12);
+const lastYear = Math.floor((to - 1) / 12);
+const ticks: number[] = [];
+for (let year = firstYear; year <= lastYear; year += step) ticks.push(year);
+
+// Phones label only four points: the first year, "Today" at the right edge,
+// and the two ticks nearest a third and two thirds of the way along.
+const nearest = (target: number) =>
+  ticks.slice(1).reduce((best, year) => (Math.abs(year * 12 - target) < Math.abs(best * 12 - target) ? year : best), ticks[1] ?? ticks[0]);
+const phoneTicks = new Set([nearest(from + span / 3), nearest(from + (span * 2) / 3)]);
+
+const w = (a: number, b: number) => `${Math.max(0.6, Math.round(((b - a) / span) * 10000) / 100)}%`;
+const bars = rows.map((row) => {
+  const phaseEnd = row.phaseUntil ? Math.min(ym(row.phaseUntil) + 1, ym(row.end)) : null;
+  const barStart = phaseEnd ?? ym(row.start);
+  return {
+  ...row,
+  intern: row.mix === 'Internship',
+  phase: phaseEnd ? { left: pct(ym(row.start)), width: w(ym(row.start), phaseEnd) } : null,
+  left: pct(barStart),
+  width: w(barStart, ym(row.end) + 1),
+  lead: row.side
+    ? { left: pct(ym(row.side)), width: `${Math.round(((ym(row.start) - ym(row.side)) / span) * 10000) / 100}%`, year: row.side.slice(0, 4) }
+    : null,
+  };
+});
+---
+
+<figure class="tl">
+  <div class="tl__frame" style={`--rows: ${bars.length}`}>
+    <div class="tl__axis" aria-hidden="true">
+      {
+        ticks.map((year) => (
+          <span style={`left: ${pct(year * 12)}`} data-phone={phoneTicks.has(year) ? '' : undefined}>
+            <b>{year}</b>
+          </span>
+        ))
+      }
+      <span class="tl__end tl__end--start">
+        <b>{firstYear}</b>
+      </span>
+      <span class="tl__end tl__end--today">
+        <b>Today</b>
+      </span>
+    </div>
+    <ol class="tl__rows">
+      {
+        bars.map((bar) => (
+          <li
+            class:list={['tl__row', bar.depth === 1 && 'tl__row--child', bar.kind === 'education' && 'tl__row--edu', bar.intern && 'tl__row--intern', bar.current && 'is-open']}
+            data-mix={bar.mix || undefined}
+            data-track="role-bar"
+            data-track-label={bar.label}
+          >
+            <span class="tl__label">
+              {bar.label}
+            </span>
+            <span class="tl__lane">
+              {bar.lead && (
+                <span class="tl__lead" style={`left: ${bar.lead.left}; width: ${bar.lead.width}`} title={bar.sideNote}>
+                  <i class="tl__lead-dash" />
+                  <b class="tl__lead-year">{bar.lead.year}</b>
+                </span>
+              )}
+              {bar.phase && (
+                <span class="tl__phase" style={`left: ${bar.phase.left}; width: ${bar.phase.width}`} title={`${bar.label}: ${bar.phaseKind === 'Internship' ? 'intern' : bar.phaseKind} through ${bar.phaseUntil}`} />
+              )}
+              <span class="tl__bar" style={`left: ${bar.left}; width: ${bar.width}`} title={`${bar.label}: ${bar.duration}`} />
+            </span>
+            <span class="tl__dur">{bar.duration}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <figcaption class="tl__key">
+    <span><i class="tl__swatch" aria-hidden="true" />Closed</span>
+    <span><i class="tl__swatch tl__swatch--open" aria-hidden="true" />Open now</span>
+    <span><i class="tl__swatch tl__swatch--child" aria-hidden="true" />Held inside the employer above</span>
+    {bars.some((bar) => bar.intern || bar.phase) && (
+      <span><i class="tl__swatch tl__swatch--intern" aria-hidden="true" />Internship</span>
+    )}
+    {bars.some((bar) => bar.lead) && (
+      <span><i class="tl__swatch tl__swatch--side" aria-hidden="true" />On the side, before full focus</span>
+    )}
+    {bars.some((bar) => bar.kind === 'education') && (
+      <span><i class="tl__swatch tl__swatch--edu" aria-hidden="true" />Education</span>
+    )}
+  </figcaption>
+</figure>
+
+<style>
+  .tl {
+    --tl-label: 240px;
+    --tl-dur: 84px;
+    margin: 0;
+  }
+
+  .tl__frame {
+    position: relative;
+    padding-top: var(--ds-space-6);
+  }
+
+  .tl__axis {
+    position: absolute;
+    inset: 0 var(--tl-dur) 0 var(--tl-label);
+    pointer-events: none;
+  }
+
+  .tl__axis span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  .tl__axis b {
+    position: absolute;
+    top: 0;
+    left: 6px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-fg-faint);
+  }
+
+  .tl__end {
+    display: none;
+  }
+
+  .tl__rows {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tl__row {
+    display: grid;
+    grid-template-columns: var(--tl-label) minmax(0, 1fr) var(--tl-dur);
+    align-items: center;
+    min-height: 30px;
+    transition: background-color var(--ds-dur-fast);
+  }
+
+  .tl__row:hover {
+    background: var(--ds-ink-5);
+  }
+
+  .tl__label {
+    overflow: hidden;
+    padding-right: var(--ds-space-3);
+    font-size: var(--ds-text-sm);
+    color: var(--ds-fg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Education: an outlined bar, so study reads differently from paid work. */
+  .tl__row--edu .tl__label {
+    color: var(--ds-fg-muted);
+  }
+
+  .tl__row--edu .tl__bar {
+    background: repeating-linear-gradient(135deg, var(--ds-ink-35) 0 2px, transparent 2px 5px);
+    box-shadow: inset 0 0 0 1px var(--ds-ink-50);
+  }
+
+  .tl__row--child .tl__label {
+    padding-left: var(--ds-space-4);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-muted);
+  }
+
+  .tl__row--child .tl__label::before {
+    content: "└ ";
+    color: var(--ds-fg-faint);
+  }
+
+  .tl__lane {
+    position: relative;
+    height: 100%;
+    min-height: 30px;
+  }
+
+  .tl__bar {
+    position: absolute;
+    top: calc(50% - 3px);
+    height: 6px;
+    background: var(--ds-fg);
+  }
+
+  /* Side years: dashed, faint at the start and brightening into the solid bar. */
+  .tl__lead {
+    position: absolute;
+    top: calc(50% - 2px);
+    height: 4px;
+  }
+
+  .tl__lead-dash {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(90deg, var(--ds-fg) 0 6px, transparent 6px 10px);
+    -webkit-mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.95));
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.95));
+  }
+
+  .tl__lead::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 2px;
+    height: 10px;
+    background: var(--ds-fg);
+  }
+
+  .tl__lead-year {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-fg);
+    white-space: nowrap;
+  }
+
+  .tl__row--child .tl__bar {
+    top: calc(50% - 1px);
+    height: 2px;
+    background: var(--ds-ink-50);
+  }
+
+  .is-open .tl__bar {
+    background: linear-gradient(90deg, var(--ds-fg) 0 calc(100% - 6px), var(--ds-accent) calc(100% - 6px));
+  }
+
+  .tl__row--child.is-open .tl__bar {
+    background: linear-gradient(90deg, var(--ds-ink-50) 0 calc(100% - 6px), var(--ds-accent) calc(100% - 6px));
+  }
+
+  .tl__dur {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .tl__key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-2) var(--ds-space-6);
+    margin-top: var(--ds-space-4);
+    padding-left: var(--tl-label);
+    color: var(--ds-fg-faint);
+    font-size: var(--ds-text-xs);
+  }
+
+  .tl__key span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-2);
+  }
+
+  .tl__swatch {
+    width: 16px;
+    height: 6px;
+    background: var(--ds-fg);
+  }
+
+  .tl__swatch--open {
+    background: linear-gradient(90deg, var(--ds-fg) 0 10px, var(--ds-accent) 10px);
+  }
+
+  .tl__swatch--edu {
+    background: repeating-linear-gradient(135deg, var(--ds-ink-35) 0 2px, transparent 2px 5px);
+    box-shadow: inset 0 0 0 1px var(--ds-ink-50);
+  }
+
+  .tl__swatch--side {
+    height: 4px;
+    background: repeating-linear-gradient(90deg, var(--ds-ink-50) 0 4px, transparent 4px 6px);
+  }
+
+  /* Internship: hollow, the same height as a role, so it reads as time held but not yet staff. */
+  .tl__row--intern .tl__bar,
+  .tl__phase,
+  .tl__swatch--intern {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--ds-fg);
+  }
+
+  .tl__phase {
+    position: absolute;
+    top: calc(50% - 3px);
+    height: 6px;
+  }
+
+  /* The month the internship turned full-time: a small tick where hollow meets solid. */
+  .tl__phase::after {
+    content: '';
+    position: absolute;
+    top: -3px;
+    right: -1px;
+    width: 1px;
+    height: 12px;
+    background: var(--ds-fg);
+  }
+
+  .tl__swatch--child {
+    height: 2px;
+    background: var(--ds-ink-50);
+  }
+
+  @media (max-width: 720px) {
+    .tl {
+      --tl-label: 120px;
+      --tl-dur: 0px;
+    }
+
+    .tl__dur {
+      display: none;
+    }
+
+    .tl__key {
+      padding-left: 0;
+    }
+  }
+
+  /* Phones only (tablet and desktop untouched): each role becomes two lines.
+     The full name and its duration on top, its bar across the whole width
+     underneath, so names aren't cut off and bars aren't squeezed into a sliver.
+     The axis spans the full width too and labels every sixth year. */
+  @media screen and (max-width: 640px) {
+    .tl {
+      --tl-label: 0px;
+      --tl-dur: 0px;
+    }
+
+    .tl__frame {
+      padding-top: var(--ds-space-6);
+    }
+
+    .tl__axis b {
+      display: none;
+      left: 4px;
+    }
+
+    .tl__axis span[data-phone] b {
+      display: block;
+    }
+
+    /* The ends are pinned to the chart's edges: the first year at the left
+       (the chart starts partway through it) and "Today" at the right. */
+    .tl__axis .tl__end {
+      display: block;
+      border-left: 0;
+    }
+
+    .tl__axis .tl__end--start {
+      left: 0;
+    }
+
+    .tl__axis .tl__end--today {
+      right: 0;
+    }
+
+    .tl__axis .tl__end b {
+      display: block;
+      left: 0;
+    }
+
+    .tl__axis .tl__end--today b {
+      left: auto;
+      right: 0;
+      text-transform: uppercase;
+      letter-spacing: var(--ds-tracking-caps);
+    }
+
+    .tl__row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas:
+        'label dur'
+        'lane lane';
+      align-items: baseline;
+      gap: 0 var(--ds-space-3);
+      min-height: 0;
+      padding: 3px 0 2px;
+      line-height: 1.25;
+    }
+
+    /* Roles held inside an employer: a shade smaller and tighter still. */
+    .tl__row--child {
+      padding: 1px 0;
+    }
+
+    .tl__label {
+      grid-area: label;
+      position: relative;
+      z-index: 1;
+      justify-self: start;
+      max-width: 100%;
+      padding-right: 6px;
+      background: var(--ds-bg);
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .tl__dur {
+      grid-area: dur;
+      display: block;
+      position: relative;
+      z-index: 1;
+      padding-left: 6px;
+      background: var(--ds-bg);
+    }
+
+    .tl__lane {
+      grid-area: lane;
+      height: 10px;
+      min-height: 10px;
+    }
+
+    /* Child bars stay on the shared axis; only the name is indented. */
+    .tl__row:hover {
+      background: transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tl__bar,
+    .tl__lead {
+      transform-origin: left;
+      animation: tl-in var(--ds-dur-slow) var(--ds-ease-out) both;
+    }
+  }
+
+  @keyframes tl-in {
+    from {
+      transform: scaleX(0);
+    }
+  }
+</style>

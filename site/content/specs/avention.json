@@ -1,0 +1,29 @@
+{
+  "slug": "avention",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "A Jellyfish-authored WordPress theme for Avention, on AWS.",
+  "short": "A Jellyfish-built WordPress theme for Avention, the business-data company, hosted on AWS.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "AWS"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

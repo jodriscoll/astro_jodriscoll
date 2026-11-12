@@ -1,0 +1,81 @@
+{
+  "path": "/weaknesses",
+  "kicker": "Known issues",
+  "title": "Weaknesses",
+  "description": "Known issues in how I build a career and work with people: keeping up with a moving stack, staying in the code, caution where the field is loud about AI, the hours mentoring loses, and a practice that is wide and thin in places.",
+  "lastReviewed": "2026-11",
+  "intro": [
+    "Everything else on this site is the work. This page is the fine print: the patterns in how I build a career and work with people that cost something.",
+    "Better you read them here, in full sentences, than discover them in week three."
+  ],
+  "sections": [
+    {
+      "id": "keeping-up",
+      "title": "The stack never stops moving",
+      "tags": ["Career"],
+      "status": "Ongoing since 2004",
+      "pull": "Keeping up has been harder than any single launch.",
+      "workaround": "I take the layer that is actually in front of me and relearn it inside the work, not around it.",
+      "art": "conveyor",
+      "paragraphs": [
+        "For two decades the ground under the work has kept shifting: WordPress, then Drupal, then a JavaScript framework, then the next one, then whatever the client already had running in production. Keeping up has been harder than any single launch, and it is not going away.",
+        "A stack I once knew well enough to lead becomes one I relearn at the edges, and the relearning is slower than the industry's appetite for the next thing. The page became components, components became a design system, and the same job picked up a new name. I still take the layer in front of me. I just feel the lag while I do."
+      ]
+    },
+    {
+      "id": "implementation",
+      "title": "I don't let go of the keyboard",
+      "tags": ["Career", "Collaboration"],
+      "status": "By design",
+      "pull": "I would rather stay with a change until I can account for it.",
+      "workaround": "I say early which layers I am still learning, so nobody mistakes staying close for stalling.",
+      "art": "terminal",
+      "paragraphs": [
+        "When a client needs their system improved, or something built because the current one cannot do the job, I take the layer that is actually there, including the ones I am still learning. The work gets finished. It also means I stay in the implementation longer than someone whose only job is to direct it.",
+        "At the hour a director would have handed it off, I am still in the theme, the migration, the performance budget or the failing test. That can look like a ceiling. It is also how I trust what ships: I would rather stay with a change until I can account for it than speak over a layer I have not touched."
+      ]
+    },
+    {
+      "id": "caution",
+      "title": "Slow to be dazzled by AI",
+      "tags": ["Collaboration"],
+      "status": "Working as intended",
+      "pull": "A draft from a model is a draft.",
+      "workaround": "I use the tools every day, and keep the review and the final call with the specialist.",
+      "art": "pipeline",
+      "paragraphs": [
+        "Right now the industry mostly wants to talk about AI. I use the tools every day and I am glad to have the conversation. But I want specialists to stay the source of truth for what their users receive, and to be able to explain why it shipped.",
+        "A draft from a model is a draft. The review, and the call about what a person actually gets, stay with a human. That can read as caution or as being hard to impress, and honestly, it is caution. Holding that line makes some rooms impatient. I have made peace with the impatience more easily than I could with handing over the accountability."
+      ]
+    },
+    {
+      "id": "mentoring",
+      "title": "Mentoring loses the hours",
+      "tags": ["Collaboration"],
+      "status": "Open",
+      "pull": "Wanting to fix it has not fixed it.",
+      "workaround": "When someone is learning beside me, I explain why a thing shipped, not just that it did.",
+      "art": "week",
+      "paragraphs": [
+        "Mentoring is the part I care about most. I want developers, early on or well along, to see where they fit when the field will not hold still. But these consulting years are one practice serving several clients at once, and that spread is the job. It leaves less time for mentoring than I want, and I notice the gap in a busy month long before the resume does.",
+        "Developers learn the shape of this work by sitting near someone who will explain why a thing shipped. When the week is split across studios, that nearness wears thin. Wanting to fix it has not fixed it."
+      ]
+    },
+    {
+      "id": "wide",
+      "title": "Wide, and thin in places",
+      "tags": ["Career"],
+      "status": "Known shape",
+      "pull": "The resume is the record of the work. This page is what it cost.",
+      "workaround": "I name the thin places up front, so a team can plan around them instead of finding them.",
+      "art": "depth",
+      "paragraphs": [
+        "JavaScript and WordPress are where the years went. Python and Ruby are real, but small beside them. A practice spread across many clients can start a great many things and still run thin where a long stay matters: the apprenticeship inside one team, the hour that should have gone to teaching, the platform I am still catching up on.",
+        "So here is the shape, said plainly. The resume is the record of the work. This page is what it cost to do it this way."
+      ]
+    }
+  ],
+  "close": [
+    "If any of these sound like a dealbreaker, better to know now. If they sound familiar, we will probably work well together."
+  ]
+}

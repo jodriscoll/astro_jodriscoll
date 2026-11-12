@@ -1,0 +1,26 @@
+{
+  "slug": "alive-and-thrive",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "The nutrition initiative’s WordPress site. The theme is GMMB’s; I maintained the site.",
+  "short": "Ongoing development and upkeep of the WordPress site for Alive & Thrive, the global maternal and child nutrition initiative, on GMMB's theme and hosted on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

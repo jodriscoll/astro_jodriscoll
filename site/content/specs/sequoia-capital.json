@@ -1,0 +1,90 @@
+{
+  "slug": "sequoia-capital",
+  "kind": "Mindgrub Technologies",
+  "role": "WordPress Engineer, through Mindgrub Technologies",
+  "dek": "A WordPress theme for Sequoia Capital, built around Gutenberg blocks and hosted on WordPress VIP, with CSS animation, Animate on Scroll and Lottie.",
+  "short": "A custom Gutenberg block theme for Sequoia Capital on WordPress VIP, with motion from CSS animation, Animate on Scroll and Lottie.",
+  "facts": [
+    {
+      "label": "Host",
+      "value": "WordPress VIP"
+    },
+    {
+      "label": "Editor",
+      "value": "Gutenberg blocks"
+    }
+  ],
+  "stack": [
+    {
+      "group": "WordPress",
+      "items": [
+        {
+          "name": "Custom block theme",
+          "note": "Gutenberg"
+        },
+        {
+          "name": "WordPress VIP"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "Bootstrap",
+          "version": "5"
+        },
+        {
+          "name": "Animate on Scroll"
+        },
+        {
+          "name": "Lottie"
+        },
+        {
+          "name": "CSS animations"
+        }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "MySQL"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "WordPress VIP"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/sequoia-capital/home.webp",
+      "alt": "Sequoia Capital homepage",
+      "tall": true
+    },
+    {
+      "src": "/work/sequoia-capital/companies.webp",
+      "alt": "Companies index",
+      "tall": true
+    },
+    {
+      "src": "/work/sequoia-capital/founders.webp",
+      "alt": "Founders page",
+      "tall": true
+    },
+    {
+      "src": "/work/sequoia-capital/bio.webp",
+      "alt": "A partner bio page",
+      "tall": true
+    }
+  ],
+  "org": "mindgrub"
+}

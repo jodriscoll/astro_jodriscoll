@@ -1,0 +1,26 @@
+{
+  "slug": "mindbuzz",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A WordPress site on a Themify theme. The theme is Themify’s; I maintained the site.",
+  "short": "Upkeep and development of the MindBuzz WordPress site on a Themify theme, hosted on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

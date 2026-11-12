@@ -1,0 +1,509 @@
+/*
+ * Design tokens. The only values a ui/ component is allowed to read.
+ *
+ * Layering:
+ *   1. Theme layer (global.css + shell.css) owns the raw palette per theme.
+ *   2. This file maps it to semantic --ds-* tokens, plus scales that the
+ *      theme layer never defined (type, space, motion, print).
+ *   3. Components in src/components/ui and src/components/<feature> read
+ *      --ds-* only. No hex values, no px outside these scales.
+ *
+ * Because the aliases resolve on <html>, which is also where data-theme
+ * lives, light/dark switching flows through without extra rules.
+ */
+
+:root {
+  /* ---- Color: semantic ---- */
+  --ds-bg: var(--bg);
+  --ds-surface: var(--panel);
+  --ds-fg: var(--text);
+  --ds-fg-muted: var(--muted);
+  --ds-fg-faint: var(--faint);
+  --ds-rule: var(--line);
+  --ds-rule-strong: var(--line-strong);
+  --ds-accent: var(--accent-red, #e5484d);
+  --ds-positive: var(--positive, #3cb87a);
+  --ds-on-fg: var(--bg);
+
+  /* Monochrome ramp for data marks (bars, heatmaps, split bars). */
+  --ds-ink-90: color-mix(in srgb, var(--ds-fg) 90%, transparent);
+  --ds-ink-70: color-mix(in srgb, var(--ds-fg) 70%, transparent);
+  --ds-ink-50: color-mix(in srgb, var(--ds-fg) 50%, transparent);
+  --ds-ink-35: color-mix(in srgb, var(--ds-fg) 35%, transparent);
+  --ds-ink-20: color-mix(in srgb, var(--ds-fg) 20%, transparent);
+  --ds-ink-10: color-mix(in srgb, var(--ds-fg) 10%, transparent);
+  --ds-ink-5: color-mix(in srgb, var(--ds-fg) 5%, transparent);
+
+  /* ---- Type ---- */
+  --ds-font-sans: var(--sans, ui-sans-serif, system-ui, sans-serif);
+  --ds-font-mono: var(--mono, ui-monospace, monospace);
+
+  --ds-text-2xs: 11px;
+  --ds-text-xs: 12px;
+  --ds-text-sm: 14px;
+  --ds-text-md: 16px;
+  --ds-text-lg: 18px;
+  --ds-text-xl: 22px;
+  --ds-text-2xl: clamp(1.6rem, 2.6vw, 2.1rem);
+  --ds-text-3xl: clamp(1.8rem, 3.4vw, 2.6rem);
+  --ds-text-display: clamp(2.6rem, 6.4vw, 5.6rem);
+
+  --ds-weight-regular: 400;
+  --ds-weight-medium: 500;
+  --ds-weight-bold: 600;
+
+  --ds-leading-tight: 1.05;
+  --ds-leading-snug: 1.3;
+  --ds-leading-body: 1.55;
+
+  --ds-tracking-display: -0.045em;
+  --ds-tracking-tight: -0.03em;
+  --ds-tracking-caps: 0.06em;
+
+  /* ---- Space: 4px base ---- */
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+  /* Section rhythm, shared by every page (home, work, writing, resume, case pages).
+     section: between top-level sections. section-sm: between sub-sections inside a
+     page (case-study parts, a post's pager). head: from a section title to its content. */
+  --ds-space-section: clamp(112px, 10vw, 160px);
+  --ds-space-section-sm: clamp(64px, 6vw, 96px);
+  --ds-space-head: 40px;
+
+  /* ---- Shape ---- */
+  --ds-radius-sm: 6px;
+  --ds-radius-pill: 999px;
+  --ds-hairline: 1px;
+
+  /* ---- Layout ---- */
+  --ds-measure: 68ch;
+  --ds-control-h: 40px;
+  --ds-control-h-sm: 32px;
+
+  /* ---- Motion ---- */
+  --ds-ease: cubic-bezier(0.5, 0, 0.2, 1);
+  --ds-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ds-dur-fast: 0.15s;
+  --ds-dur: 0.35s;
+  --ds-dur-slow: 0.9s;
+}
+
+/*
+ * Print. Specificity beats the theme layer's :root rules (shell.css loads
+ * after global.css's print block and would otherwise put a black page back).
+ */
+@media print {
+  html:root,
+  html[data-theme] {
+    --ds-bg: #fff;
+    --ds-surface: #fff;
+    --ds-fg: #111;
+    --ds-fg-muted: #2b2b2b;
+    --ds-fg-faint: #555;
+    --ds-rule: #d9d9d9;
+    --ds-rule-strong: #9a9a9a;
+    /* A resume prints in black and greys only: tones collapse to ink. */
+    --ds-accent: #111;
+    --ds-positive: #111;
+    --ds-on-fg: #fff;
+
+    --ds-text-2xs: 7pt;
+    --ds-text-xs: 7.75pt;
+    --ds-text-sm: 9pt;
+    --ds-text-md: 9.5pt;
+    --ds-text-lg: 10pt;
+    --ds-text-xl: 11pt;
+    --ds-text-2xl: 12pt;
+    --ds-text-3xl: 13.5pt;
+    --ds-text-display: 22pt;
+
+    /* Print rhythm: room to read, the way a designed document breathes. */
+    --ds-space-1: 2pt;
+    --ds-space-2: 4pt;
+    --ds-space-3: 6pt;
+    --ds-space-4: 9pt;
+    --ds-space-5: 10pt;
+    --ds-space-6: 12pt;
+    --ds-space-8: 16pt;
+    --ds-space-10: 18pt;
+    --ds-space-12: 20pt;
+    --ds-space-16: 24pt;
+    --ds-space-section: 16pt;
+
+    --ds-leading-body: 1.45;
+    --ds-leading-snug: 1.35;
+  }
+}
+
+/*
+ * The print contract. Any element can opt in or out of the PDF with one
+ * attribute, so components never need to know about each other's print rules.
+ *   data-print="hide"  on screen only
+ *   data-print="only"  in the PDF only
+ */
+[data-print="only"] { display: none !important; }
+
+@media print {
+  [data-print="hide"] { display: none !important; }
+  [data-print="only"] { display: revert !important; }
+}
+
+/*
+ * Links, the Home treatment. A faint resting hairline; on hover the line
+ * draws in, then a light runs along it once (shell.css does the same for
+ * .text-link). Hovering any .ds-link-host ancestor (a table row, a card)
+ * triggers its link too. .ds-link--quiet has no resting line.
+ */
+.ds-link {
+  --ds-link-rest: 100%;
+  color: inherit;
+  text-decoration: none !important;
+  background-image:
+    linear-gradient(90deg, transparent, var(--ds-fg), transparent),
+    linear-gradient(color-mix(in srgb, currentColor 70%, transparent), color-mix(in srgb, currentColor 70%, transparent)),
+    linear-gradient(var(--ds-rule-strong), var(--ds-rule-strong));
+  background-repeat: no-repeat;
+  background-size: 0 1px, 0 1px, var(--ds-link-rest) 1px;
+  background-position: -40% 100%, 0 100%, 0 100%;
+  padding-bottom: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition:
+    background-size 0.35s cubic-bezier(0.5, 0, 0.2, 1),
+    color var(--ds-dur-fast) var(--ds-ease);
+}
+
+.ds-link--quiet {
+  --ds-link-rest: 0%;
+}
+
+.ds-link:is(:hover, :focus-visible),
+.ds-link-host:is(:hover, :focus-within) .ds-link {
+  color: var(--ds-fg);
+  background-size: 35% 1px, 100% 1px, var(--ds-link-rest) 1px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ds-link:is(:hover, :focus-visible),
+  .ds-link-host:is(:hover, :focus-within) .ds-link {
+    animation: ds-link-pulse 0.9s cubic-bezier(0.5, 0, 0.2, 1) 0.3s 1 both;
+  }
+}
+
+@keyframes ds-link-pulse {
+  from { background-position: -40% 100%, 0 100%, 0 100%; }
+  to { background-position: 140% 100%, 0 100%, 0 100%; }
+}
+
+/*
+ * Hairline pulse, the Home treatment: a light crosses an element's top rule
+ * once as it scrolls in. Base.astro's observer adds .is-lit.
+ */
+.ds-pulse {
+  position: relative;
+}
+
+.ds-pulse::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ds-fg) 85%, transparent) 50%, transparent);
+  background-size: 30% 100%;
+  background-repeat: no-repeat;
+  background-position: -40% 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ds-pulse.is-lit::before {
+    animation: ds-rule-pulse 2.6s cubic-bezier(0.5, 0, 0.2, 1) var(--pulse-delay, 0s) 1;
+  }
+}
+
+@keyframes ds-rule-pulse {
+  0% { opacity: 0; background-position: -40% 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; background-position: 140% 0; }
+}
+
+/* .ds-pulse--center: instead of the sweep, the top and bottom rules light up
+   once from the centre outward. Use next to a sweeping rule so they don't race. */
+.ds-pulse--center::before,
+.ds-pulse--center::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ds-fg) 85%, transparent) 50%, transparent);
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.ds-pulse--center::before { top: -1px; }
+.ds-pulse--center::after { bottom: -1px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ds-pulse--center.is-lit::before,
+  .ds-pulse--center.is-lit::after {
+    animation: ds-center-pulse 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) 0.6s 1 both;
+  }
+}
+
+@keyframes ds-center-pulse {
+  0% { transform: scaleX(0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+@media print {
+  .ds-link {
+    background: none;
+    padding-bottom: 0;
+    transition: none;
+  }
+
+  .ds-pulse::before,
+  .ds-pulse--center::after {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * .ds-seg: the standard segmented switch (Grid/Table, Public/Private/Both).
+ * Put .ds-seg on the pill; mark the chosen item with aria-pressed, aria-selected,
+ * aria-checked or a checked radio before it. Base.astro adds one thumb and moves
+ * it with two springs, one per edge: the leading edge is quick, the trailing edge
+ * is softer, so the thumb stretches toward the choice like a drop of water and
+ * settles with no snap. It can be redirected mid-move and keeps its momentum.
+ * Each label's colour follows how much of the thumb covers it (--seg-cover).
+ * Without script the items keep their own selected fill.
+ * ------------------------------------------------------------------------- */
+.ds-seg {
+  position: relative;
+  isolation: isolate;
+}
+
+.ds-seg__thumb {
+  position: absolute;
+  z-index: 0;
+  top: 3px;
+  bottom: 3px;
+  left: 0;
+  width: 0;
+  border-radius: var(--ds-radius-pill, 999px);
+  background: var(--ds-fg);
+  pointer-events: none;
+  will-change: transform, width;
+}
+
+.ds-seg.is-liquid > :not(.ds-seg__thumb, legend, .sr-only) {
+  position: relative;
+  z-index: 1;
+}
+
+.ds-seg.is-liquid :is([aria-pressed], [aria-selected], [aria-checked], input + *) {
+  --seg-cover: 0;
+  background: transparent !important;
+  color: color-mix(in srgb, var(--ds-bg) calc(var(--seg-cover) * 100%), var(--ds-fg-muted, var(--muted))) !important;
+  transition: none !important;
+}
+
+@media print {
+  .ds-seg__thumb { display: none; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Page start: every top-level page sets its first line (the eyebrow) at the
+ * same height. Put .ds-page on the page's first block; it owns the top space.
+ * ------------------------------------------------------------------------- */
+:root { --ds-page-top: 80px; }
+
+main .ds-page {
+  padding-top: var(--ds-page-top);
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  :root { --ds-page-top: 48px; }
+}
+
+/* ---------------------------------------------------------------------------
+ * Display face: Doto, an open-source dot-matrix type (SIL OFL, Google Fonts).
+ * Used only for the big page headings and the wordmark; body text stays sans.
+ * Dots need room, so the tight negative tracking the sans headings use is
+ * reset. Print falls back to the sans heading, which reads cleaner on paper.
+ * ------------------------------------------------------------------------- */
+:root {
+  --ds-font-display: "Doto", var(--sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+:root :is(h1.display, .mast__name, .case__title, .post__title, .weakness__title, .mark__name) {
+  font-family: var(--ds-font-display);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.04;
+}
+
+/* Doto is monospaced and wide, so each heading is set about a third smaller
+   than its sans size to keep the same line breaks and presence. */
+:root h1.display { font-size: clamp(1.8rem, 4.1vw, 3.6rem); }
+/* Home hero: larger and tighter, reaching into the gap toward the portrait. */
+@media screen and (min-width: 961px) {
+  :root .home-hero h1.display {
+    position: relative;
+    z-index: 1;
+    width: calc(100% + 160px);
+    font-size: clamp(3.2rem, 5vw, 4.6rem);
+    line-height: 0.98;
+  }
+
+  /* Work and Writing heroes: the same step up, within their narrower columns. */
+  :root :is(.workhero, .writehero) h1.display {
+    font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+    line-height: 0.98;
+  }
+}
+:root .display__accent { color: var(--ds-accent); }
+:root .mast__name { font-size: calc(var(--ds-text-display) * 0.68); }
+:root .case__title { font-size: clamp(2rem, 5vw, 4.2rem); }
+:root .post__title { font-size: clamp(1.6rem, 3vw, 2.4rem); }
+:root .weakness__title { font-size: clamp(2.2rem, 4.6vw, 4.2rem); }
+
+@media print {
+  :root :is(h1.display, .mast__name, .case__title, .post__title, .weakness__title, .mark__name) {
+    font-family: var(--sans, ui-sans-serif, system-ui, sans-serif);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  :root .mast__name { font-size: var(--ds-text-display); }
+}
+
+/* ---------------------------------------------------------------------------
+ * Previous / Next pagers (blog posts and case studies). At rest they stay
+ * clean. On hover the link leans toward where it goes: an arrow slides out of
+ * the label, the title glides a few pixels that way, a light runs along the
+ * top rule in that direction and an underline draws in from the outer edge.
+ * The other link steps back. Pressing gives a small squash.
+ * ------------------------------------------------------------------------- */
+:is(.post__pager, .case__pager) a {
+  --dir: -1;
+  position: relative;
+  isolation: isolate;
+}
+
+:is(.post__pager, .case__pager) a { justify-self: start; }
+:is(.post__pager, .case__pager) a.is-next { --dir: 1; justify-self: end; }
+
+:is(.post__pager, .case__pager) a > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  transition: color 0.3s ease, gap 0.45s cubic-bezier(0.3, 1.5, 0.5, 1), letter-spacing 0.45s ease;
+}
+
+/* The arrow lives in the label: before "Previous", after "Next". */
+:is(.post__pager, .case__pager) a:not(.is-next) > span::before,
+:is(.post__pager, .case__pager) a.is-next > span::after {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  color: var(--accent-red, #e5484d);
+  transition: width 0.4s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.25s ease, transform 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+
+:is(.post__pager, .case__pager) a:not(.is-next) > span::before { content: "←"; transform: translateX(8px); }
+:is(.post__pager, .case__pager) a.is-next > span::after { content: "→"; transform: translateX(-8px); }
+
+/* Light along the top rule, running the way the link goes. */
+:is(.post__pager, .case__pager) a::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--text, #fff), transparent) no-repeat;
+  background-size: 40% 100%;
+  background-position: calc(50% - var(--dir) * 120%) 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Underline that draws in from the outer edge, under the title. */
+:is(.post__pager, .case__pager) a::after {
+  content: "";
+  position: absolute;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: transform 0.5s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+:is(.post__pager, .case__pager) a.is-next::after { transform-origin: right; }
+
+:is(.post__pager, .case__pager) a:is(:hover, :focus-visible) > span {
+  gap: 8px;
+  color: var(--text);
+  letter-spacing: 0.14em;
+}
+
+:is(.post__pager, .case__pager) a:is(:hover, :focus-visible) > span::before,
+:is(.post__pager, .case__pager) a:is(:hover, :focus-visible) > span::after {
+  width: 1em;
+  opacity: 1;
+  transform: none;
+}
+
+:is(.post__pager, .case__pager) a:is(:hover, :focus-visible)::after { transform: scaleX(1); }
+
+/* The other link steps back while one is chosen. */
+:is(.post__pager, .case__pager) a { transition: opacity 0.3s ease, translate 0.45s cubic-bezier(0.3, 1.5, 0.5, 1), scale 0.15s ease; }
+:is(.post__pager, .case__pager):has(a:hover) a:not(:hover) { opacity: 0.4; }
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(.post__pager, .case__pager) a:is(:hover, :focus-visible) { translate: calc(var(--dir) * 6px) 0; }
+  :is(.post__pager, .case__pager) a:is(:hover, :focus-visible)::before { animation: pager-run 0.9s cubic-bezier(0.5, 0, 0.2, 1) 1; }
+  :is(.post__pager, .case__pager) a:active { scale: 0.98; }
+
+  /* The arrow nudges again every so often while you linger. */
+  :is(.post__pager, .case__pager) a:not(.is-next):hover > span::before { animation: pager-nudge-left 1.4s ease-in-out 0.6s infinite; }
+  :is(.post__pager, .case__pager) a.is-next:hover > span::after { animation: pager-nudge-right 1.4s ease-in-out 0.6s infinite; }
+}
+
+@keyframes pager-run {
+  0% { opacity: 0; background-position: calc(50% - var(--dir) * 120%) 0; }
+  20%, 80% { opacity: 1; }
+  100% { opacity: 0; background-position: calc(50% + var(--dir) * 120%) 0; }
+}
+
+@keyframes pager-nudge-left { 0%, 100% { transform: none; } 50% { transform: translateX(-4px); } }
+@keyframes pager-nudge-right { 0%, 100% { transform: none; } 50% { transform: translateX(4px); } }
+
+@media print {
+  :is(.post__pager, .case__pager) a::before,
+  :is(.post__pager, .case__pager) a::after { display: none; }
+}

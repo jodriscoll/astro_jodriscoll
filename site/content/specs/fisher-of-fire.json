@@ -1,0 +1,254 @@
+{
+  "slug": "fisher-of-fire",
+  "org": "nomadic-digital",
+  "kind": "Creator",
+  "role": "Reverse Engineering, Design and Engineering",
+  "period": {
+    "start": "2026-11",
+    "end": null
+  },
+  "dek": "Since I was a kid, I've wanted to rebuild the fishing game from Breath of Fire III as a mobile app, and expand on an experience I was so attached to. The game came out on PlayStation in 1997. I decrypted the program on a disc I own, decompiled all of it, and rebuilt Fishing Mode in TypeScript and Phaser 4 rather than emulating it. The rebuild runs in a browser at the game's native 480×272, and once it matched the original I built on top of it: save files, four playable fishers, a shop, a jukebox and support for any screen and any controller.",
+  "short": "Breath of Fire III's fishing mode, decrypted from a disc I own, decompiled with Ghidra (11,676 functions) and rebuilt in TypeScript and Phaser 4 rather than emulated, then extended with save files, four fishers and a 128-track jukebox.",
+  "facts": [
+    {
+      "label": "Functions decompiled",
+      "value": "11,676 (48 MB of C)"
+    },
+    {
+      "label": "Port source",
+      "value": "About 6,900 lines of TypeScript and tools"
+    },
+    {
+      "label": "TypeScript modules",
+      "value": "57"
+    },
+    {
+      "label": "Game-rule modules",
+      "value": "11, no rendering: state machine, fish AI, saves"
+    },
+    {
+      "label": "Phaser scenes",
+      "value": "13, one per screen"
+    },
+    {
+      "label": "Typed data tables",
+      "value": "9 (spots, fish, gear, music and more)"
+    },
+    {
+      "label": "Runtime dependencies",
+      "value": "1 (Phaser)"
+    },
+    {
+      "label": "Extractor dependencies",
+      "value": "0, plain Node.js"
+    },
+    {
+      "label": "Fishing spots",
+      "value": "17"
+    },
+    {
+      "label": "Music player",
+      "value": "128 tracks"
+    },
+    {
+      "label": "Native resolution",
+      "value": "480×272"
+    },
+    {
+      "label": "Empty folder to 0.1.0 Beta",
+      "value": "About 14 hours, November 2–3, 2026"
+    },
+    {
+      "label": "Input methods",
+      "value": "4 (keyboard, mouse, controllers and touch)"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Reverse engineering",
+      "items": [
+        {
+          "name": "pspdecrypt",
+          "note": "EBOOT.BIN to a relocatable MIPS (Allegrex) PRX"
+        },
+        {
+          "name": "Ghidra",
+          "version": "12.2",
+          "note": "headless, with ghidra-allegrex"
+        },
+        {
+          "name": "Java",
+          "note": "a custom Ghidra export script"
+        },
+        {
+          "name": "llvm-objdump",
+          "note": "quick disassembly"
+        }
+      ]
+    },
+    {
+      "group": "Extraction",
+      "items": [
+        {
+          "name": "Node.js",
+          "note": "7 zero-dependency scripts: textures, palettes, terrain, objects, sound, music",
+          "version": "20+"
+        },
+        {
+          "name": "ffmpeg",
+          "note": "ATRAC3+ jingles and the jukebox"
+        }
+      ]
+    },
+    {
+      "group": "Game",
+      "items": [
+        {
+          "name": "TypeScript",
+          "version": "5.9.3",
+          "note": "strict, ES2022 target, bundler module resolution"
+        },
+        {
+          "name": "Phaser",
+          "version": "4.2.1"
+        },
+        {
+          "name": "Vite",
+          "version": "6.4.5"
+        }
+      ]
+    },
+    {
+      "group": "Browser",
+      "items": [
+        {
+          "name": "WebGL",
+          "note": "Phaser 4 renderer"
+        },
+        {
+          "name": "Gamepad API",
+          "note": "controllers, with an on-screen pad for touch"
+        },
+        {
+          "name": "Web Audio API",
+          "note": "sound banks and the 128-track jukebox"
+        }
+      ]
+    },
+    {
+      "group": "Toolchain",
+      "items": [
+        {
+          "name": "npm",
+          "note": "lockfile v3: 3 direct dependencies, 68 packages in the tree"
+        },
+        {
+          "name": "Vercel CLI",
+          "note": "prebuilt production and preview deploys"
+        }
+      ]
+    }
+  ],
+  "delivery": {
+    "built": true,
+    "summary": "From an encrypted disc image to a playable, extended browser port. The repository holds no game data: the extractors read it from the owner's own disc.",
+    "steps": [
+      {
+        "name": "Decrypt",
+        "figure": "4.9 MB",
+        "detail": "pspdecrypt turns the encrypted EBOOT.BIN into a relocatable MIPS (Allegrex) program."
+      },
+      {
+        "name": "Decompile",
+        "figure": "11,676",
+        "detail": "Ghidra 12.2 headless with ghidra-allegrex and a custom export script writes every function out as C."
+      },
+      {
+        "name": "Trace",
+        "figure": "0x2EDDE8",
+        "detail": "The fish table, matched against a PS1 speedrun's star table, located the fishing logic. Fishing turned out to run on world-map areas."
+      },
+      {
+        "name": "Extract",
+        "figure": "592",
+        "detail": "Node tools decode tiled textures, per-strip palettes, terrain meshes, sound banks and music: about 830 files."
+      },
+      {
+        "name": "Rebuild",
+        "figure": "9 scenes",
+        "detail": "Phaser 4 and TypeScript, with a PSX-style affine triangle renderer for the terrain. Every layout measured against reference screenshots."
+      },
+      {
+        "name": "Extend",
+        "figure": "128 tracks",
+        "detail": "Three save files, four fishers, a shop, a gallery, a jukebox, cheats, a CRT mode, 1–4× scaling and any input."
+      }
+    ]
+  },
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Vercel, prebuilt deploys"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Rebuilt, not emulated",
+      "text": "No emulator runs the original code. The port re-implements the fishing rules, casting, the lure rhythm and the fights in TypeScript, read from the decompiled program."
+    },
+    {
+      "title": "Measured against the original",
+      "text": "Six screenshots from the real hardware set every layout, so sprite positions and window sizes were measured rather than guessed."
+    },
+    {
+      "title": "Past the original",
+      "text": "Three save files, Young Ryu, Ryu, Young Nina and Nina as playable fishers, the Manillo shop, a gallery, a 128-track music player, cheats, a CRT TV mode and any screen at 1–4× or fill."
+    },
+    {
+      "title": "Any input",
+      "text": "Keyboard, mouse, game controllers, touch and an on-screen pad, with a controls screen in PlayStation symbols."
+    },
+    {
+      "title": "Tooling for the next one",
+      "text": "An animation viewer and sheet editor, URL flags for testing, and a porting playbook written up so the method carries to other games."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Runtime",
+      "rows": [
+        {
+          "label": "Phaser",
+          "value": "4.2.1",
+          "state": "ok"
+        },
+        {
+          "label": "TypeScript",
+          "value": "5.9.3",
+          "state": "ok"
+        },
+        {
+          "label": "Vite",
+          "value": "6.4.5",
+          "state": "ok"
+        },
+        {
+          "label": "Node.js",
+          "value": "20+",
+          "state": "ok"
+        },
+        {
+          "label": "Version",
+          "value": "0.2.0",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/fisher-of-fire/home.webp",
+      "alt": "Fisher of Fire in its CRT TV mode, with the on-screen PlayStation-style pad below"
+    }
+  ]
+}

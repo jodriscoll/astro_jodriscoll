@@ -1,0 +1,92 @@
+{
+  "slug": "i6tix",
+  "kind": "Mindgrub Technologies",
+  "role": "React Engineer, through Mindgrub Technologies",
+  "dek": "A React and Redux app for making event posters in the browser: users upload artwork to a canvas editor, review, and pay.",
+  "short": "A browser-based poster maker for events: a React 16 and Redux app with a canvas editor, uploads held in LocalStorage between steps, review and checkout, tested with Jest and served from CloudFront.",
+  "facts": [
+    {
+      "label": "App",
+      "value": "React 16 and Redux"
+    },
+    {
+      "label": "Host",
+      "value": "AWS CloudFront"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "React",
+          "version": "16"
+        },
+        {
+          "name": "Redux"
+        },
+        {
+          "name": "Canvas",
+          "note": "poster editor"
+        },
+        {
+          "name": "LocalStorage",
+          "note": "holds uploads between steps"
+        }
+      ]
+    },
+    {
+      "group": "Quality",
+      "items": [
+        {
+          "name": "ESLint"
+        },
+        {
+          "name": "Jest"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "SCSS"
+        },
+        {
+          "name": "JavaScript",
+          "version": "ES6"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "AWS CloudFront"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/i6tix/home.webp",
+      "alt": "Storefront"
+    },
+    {
+      "src": "/work/i6tix/editor.webp",
+      "alt": "Poster editor"
+    },
+    {
+      "src": "/work/i6tix/review.webp",
+      "alt": "Review step"
+    },
+    {
+      "src": "/work/i6tix/confirm.webp",
+      "alt": "Confirmation"
+    },
+    {
+      "src": "/work/i6tix/payment.webp",
+      "alt": "Payment"
+    }
+  ],
+  "org": "mindgrub"
+}

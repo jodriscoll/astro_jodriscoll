@@ -1,0 +1,196 @@
+---
+import Base from '../../layouts/Base.astro';
+import Isometric from '../../components/Isometric.astro';
+import BlockCity from '../../components/BlockCity.astro';
+import '../../styles/tags.css';
+import { formatLongDate, listPosts } from '../../gateway';
+import { blogNode } from '../../agent';
+import { loadBundle } from '../../agent/site';
+
+// The tag filter is hidden while there are only a handful of posts; set true to bring it back.
+const SHOW_TAGS = false;
+const posts = await listPosts();
+const tagKey = (tag: string) => tag.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const postTags = (post: (typeof posts)[number]) => (post.data as { tags?: string[] }).tags ?? [];
+const tagList = new Map<string, { name: string; count: number }>();
+for (const post of posts) for (const tag of postTags(post)) {
+  const hit = tagList.get(tagKey(tag)) ?? { name: tag, count: 0 };
+  hit.count++;
+  tagList.set(tagKey(tag), hit);
+}
+const tagsSorted = [...tagList.entries()].sort((a, b) => b[1].count - a[1].count || a[1].name.localeCompare(b[1].name));
+const share = (count: number) => (posts.length ? count / posts.length : 0).toFixed(3);
+const pad = (n: number) => String(n).padStart(2, '0');
+const bundle = await loadBundle(Astro.site);
+const blog = blogNode(bundle.site, bundle.posts);
+---
+
+<Base
+  title="Writing · Joseph O'Driscoll"
+  description="Engineering notes: what broke, what I measured, and what changed."
+  pageType="CollectionPage"
+  page={{ mainEntity: { '@id': blog['@id'] } }}
+  schema={[blog]}
+  crumbs={[{ name: 'Home', path: '/' }, { name: 'Writing', path: '/blog' }]}
+>
+  <section class="wrap ds-page">
+    <div class="writehero">
+      <div class="writehero__text">
+        <p class="eyebrow">Writing</p>
+        <h1 class="display" style="margin-bottom: 20px;">What broke, what I <span class="display__accent">measured</span>, what changed.</h1>
+        <p class="home-hero__lede" style="margin: 0;">
+          Now and then I indulge the conceit that I can write. What follows is the evidence: engineering notes from
+          client work and my own products, in which every figure traces to a commit, a log, or a doc.
+        </p>
+      </div>
+      <BlockCity seed="writing" class="writehero__art" />
+    </div>
+    {
+      posts.length === 0 ? (
+        <p class="quiet">Notes are on the way.</p>
+      ) : (
+        <>
+        {SHOW_TAGS && tagsSorted.length > 0 && (
+          <>
+          <nav class="tagbar" aria-label="Filter by tag" data-tagbar>
+            <span class="tagbar__beam" aria-hidden="true" data-tagbar-beam></span>
+            <a href="/blog" data-tag="" aria-current="true" style="--share:1"><span>#</span><b data-label="all">all</b><em>{pad(posts.length)}</em></a>
+            {tagsSorted.map(([key, t]) => (
+              <a href={`/blog?tag=${key}`} data-tag={key} style={`--share:${share(t.count)}`}><span>#</span><b data-label={t.name}>{t.name}</b><em>{pad(t.count)}</em></a>
+            ))}
+          </nav>
+          <p class="tagbar__readout" aria-live="polite" data-tagbar-readout>
+            <span>showing</span> <strong data-tagbar-shown>{pad(posts.length)}</strong><span>/{pad(posts.length)}</span>
+            <span class="tagbar__filter" data-tagbar-filter></span>
+          </p>
+          </>
+        )}
+        <div class="postgrid">
+          {posts.map((post) => (
+            <a href={`/blog/${post.id}`} data-tags={postTags(post).map(tagKey).join(' ')}>
+              <Isometric seed={post.id} size={9} count={6} tall={4} />
+              <time datetime={post.data.date.toISOString()}>{formatLongDate(post.data.date)}</time>
+              <strong>{post.data.title}</strong>
+              <span>{post.data.description}</span>
+            </a>
+          ))}
+        </div>
+        </>
+      )
+    }
+  </section>
+  <script is:inline>
+    (function () {
+      var bar = document.querySelector('[data-tagbar]');
+      if (!bar) return;
+      var cards = document.querySelectorAll('.postgrid > a');
+      var links = bar.querySelectorAll('a');
+      var beam = bar.querySelector('[data-tagbar-beam]');
+      var shown = document.querySelector('[data-tagbar-shown]');
+      var filterOut = document.querySelector('[data-tagbar-filter]');
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var GLYPHS = '▖▘▝▗▚▞░▒/\\_<>';
+      var activeLink = null;
+
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+      // One beam glides between tags and rests on the active one.
+      function moveTo(el) {
+        if (!beam || !el) return;
+        beam.style.setProperty('--x', el.offsetLeft + 'px');
+        beam.style.setProperty('--y', el.offsetTop + 'px');
+        beam.style.setProperty('--w', el.offsetWidth + 'px');
+        beam.style.setProperty('--h', el.offsetHeight + 'px');
+        beam.style.opacity = '1';
+      }
+
+      // Letters resolve out of block glyphs, left to right.
+      function decode(label) {
+        var text = label.getAttribute('data-label') || '';
+        if (reduce || !text) return;
+        if (!label.style.minWidth) label.style.minWidth = Math.ceil(label.getBoundingClientRect().width) + 'px';
+        cancelAnimationFrame(label._raf || 0);
+        var start = performance.now();
+        (function tick(now) {
+          var done = Math.min(1, (now - start) / 260);
+          var settled = Math.floor(done * text.length);
+          var out = text.slice(0, settled);
+          for (var i = settled; i < text.length; i++) out += GLYPHS[(Math.random() * GLYPHS.length) | 0];
+          label.textContent = out;
+          if (done < 1) label._raf = requestAnimationFrame(tick);
+          else label.textContent = text;
+        })(start);
+      }
+
+      function apply(tag, animate) {
+        links.forEach(function (a) {
+          if (a.getAttribute('data-tag') === tag) {
+            a.setAttribute('aria-current', 'true');
+            activeLink = a;
+          } else a.removeAttribute('aria-current');
+        });
+        var count = 0;
+        cards.forEach(function (card) {
+          var on = !tag || (' ' + card.getAttribute('data-tags') + ' ').indexOf(' ' + tag + ' ') > -1;
+          card.hidden = !on;
+          card.classList.remove('is-entering');
+          if (on) {
+            if (animate && !reduce) {
+              card.style.setProperty('--enter-delay', count * 70 + 'ms');
+              void card.offsetWidth;
+              card.classList.add('is-entering');
+            }
+            count++;
+          }
+        });
+        if (shown) shown.textContent = pad(count);
+        if (filterOut) {
+          var b = activeLink && activeLink.querySelector('b');
+          filterOut.textContent = tag && b ? '#' + b.getAttribute('data-label') : '';
+        }
+        moveTo(activeLink);
+      }
+
+      apply(new URLSearchParams(location.search).get('tag') || '', false);
+      requestAnimationFrame(function () { bar.classList.add('is-ready'); });
+
+      links.forEach(function (a) {
+        var label = a.querySelector('b');
+        function enter() {
+          moveTo(a);
+          if (label && a !== activeLink) decode(label);
+        }
+        a.addEventListener('pointerenter', enter);
+        a.addEventListener('focus', enter);
+        a.addEventListener('blur', function () { moveTo(activeLink); });
+      });
+      bar.addEventListener('pointerleave', function () { moveTo(activeLink); });
+      addEventListener('resize', function () { moveTo(activeLink); }, { passive: true });
+
+      bar.addEventListener('click', function (event) {
+        var a = event.target.closest('a');
+        if (!a) return;
+        event.preventDefault();
+        var tag = a.getAttribute('data-tag');
+        history.replaceState(null, '', tag ? '/blog?tag=' + tag : '/blog');
+        apply(tag, true);
+      });
+    })();
+  </script>
+</Base>
+
+<style>
+  /* Hero: words left, a line drawing of measured blocks right. */
+  .writehero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+    gap: 48px;
+    align-items: start;
+    margin-bottom: var(--ds-space-head, 40px);
+  }
+
+  @media (max-width: 1000px) {
+    .writehero { grid-template-columns: 1fr; }
+    .writehero :global(.writehero__art) { display: none; }
+  }
+</style>

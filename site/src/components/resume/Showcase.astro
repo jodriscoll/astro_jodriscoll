@@ -1,0 +1,415 @@
+---
+/**
+ * A single project given room inside its employer's block: the method as a
+ * pipeline of stages, each with one headline figure, then the facts that
+ * carry the result. Data comes from the project's spec (delivery.steps,
+ * facts, highlights), so the case study and the resume tell the same story.
+ *
+ * Screen: a numbered stage rail that lights stage by stage as it scrolls in.
+ * Print: left out. The group summary and its Work line carry the project, so
+ * the PDF keeps its page count.
+ */
+import Marks from '../ui/Marks.astro';
+import Button from '../ui/Button.astro';
+import type { FeatureView } from '../../lib/resume';
+
+interface Props {
+  feature: FeatureView;
+}
+
+const { feature } = Astro.props;
+const headline = feature.facts.slice(0, 3);
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<article class="show" data-print="hide" aria-labelledby={`show-${feature.slug}`} data-track="project" data-track-label={feature.title}>
+  <header class="show__head">
+    <p class="show__kicker">
+      <span class="show__dot" aria-hidden="true"></span>
+      Showcase · {feature.kind}
+    </p>
+    <h4 class="show__title" id={`show-${feature.slug}`}>
+      <a class="ds-link ds-link--quiet" href={feature.href}>{feature.title}</a>
+    </h4>
+    <p class="show__dek">{feature.dek}</p>
+    <Button class="show__cta" href={feature.href} variant="ghost" data-track="project-open" data-track-label={feature.title}>
+      Read the Case Study <span aria-hidden="true">→</span>
+    </Button>
+  </header>
+
+  <ol class="show__rail" aria-label={`${feature.title}, step by step`}>
+    {
+      feature.steps.map((step, index) => (
+        <li class="show__step" style={`--i:${index}`}>
+          <span class="show__node" aria-hidden="true">
+            {pad(index + 1)}
+          </span>
+          <p class="show__name">{step.name}</p>
+          {step.figure && <p class="show__figure">{step.figure}</p>}
+          <p class="show__detail">{step.detail}</p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="show__foot ds-pulse">
+    <dl class="show__facts">
+      {
+        headline.map((fact) => (
+          <div>
+            <dt>{fact.label}</dt>
+            <dd>{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+    <div class="show__side">
+      {feature.stack.length > 0 && <Marks names={feature.stack} size="sm" label={`${feature.title} stack`} max={8} />}
+    </div>
+  </div>
+
+</article>
+
+<style>
+  .show {
+    position: relative;
+    display: grid;
+    gap: var(--ds-space-6);
+    margin-top: var(--ds-space-4);
+    padding: var(--ds-space-8);
+    background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--ds-accent) 9%, transparent), transparent 60%),
+      repeating-linear-gradient(0deg, transparent 0 3px, color-mix(in srgb, var(--ds-fg) 2.5%, transparent) 3px 4px),
+      var(--ds-surface);
+    overflow: hidden;
+  }
+
+  /* Text runs the card's width, stopping short of the button top right. */
+  .show__head {
+    display: grid;
+    gap: var(--ds-space-2);
+    padding-right: calc(220px + var(--ds-space-6));
+  }
+
+  /* The way into the full case study: a real button, top right of the card */
+  .show :global(.show__cta) {
+    position: absolute;
+    top: var(--ds-space-8);
+    right: var(--ds-space-8);
+  }
+
+  @media (max-width: 900px) {
+    .show__head {
+      padding-right: 0;
+    }
+
+    .show :global(.show__cta) {
+      position: static;
+      justify-self: start;
+      margin-top: var(--ds-space-2);
+    }
+  }
+
+  .show__kicker {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-2);
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .show__dot {
+    width: 6px;
+    height: 6px;
+    background: var(--ds-accent);
+    animation: show-blink 1.6s steps(2, jump-none) infinite;
+  }
+
+  .show__title {
+    margin: 0;
+    font-size: var(--ds-text-2xl);
+    font-weight: var(--ds-weight-medium);
+    letter-spacing: var(--ds-tracking-tight);
+    line-height: var(--ds-leading-tight);
+  }
+
+  .show__title a {
+    color: var(--ds-fg);
+    text-decoration: none;
+  }
+
+  .show__dek {
+    margin: 0;
+    font-size: var(--ds-text-md);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  /* The rail: six stages joined by short connectors that stop clear of each
+     node, so no line runs behind a number. Each connector fills in turn. */
+  .show__rail {
+    --stages: 6;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--stages), minmax(0, 1fr));
+    gap: var(--ds-space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .show__step:not(:last-child)::before,
+  .show__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: calc(28px + 8px);
+    width: calc(100% + var(--ds-space-4) - 28px - 16px);
+    height: 2px;
+    background: var(--ds-rule);
+  }
+
+  .show__step:not(:last-child)::after {
+    background: var(--ds-accent);
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+
+  .show__step {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-1);
+    min-width: 0;
+  }
+
+  .show__node {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: var(--ds-space-3);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-on-fg);
+    background: var(--ds-fg);
+    clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+  }
+
+  .show__name {
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .show__figure {
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-lg);
+    font-weight: var(--ds-weight-medium);
+    color: var(--ds-fg);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--ds-leading-tight);
+  }
+
+  .show__detail {
+    margin: 0;
+    font-size: var(--ds-text-xs);
+    line-height: var(--ds-leading-snug);
+    color: var(--ds-fg-muted);
+  }
+
+  @supports (animation-timeline: view()) {
+    .show__rail {
+      view-timeline: --rail block;
+    }
+
+    .show__step::after {
+      animation: show-fill linear both;
+      animation-timeline: --rail;
+      animation-range: cover calc(17% + var(--i) * 7%) cover calc(22% + var(--i) * 7%);
+    }
+
+    .show__node {
+      animation: show-node linear both;
+      animation-timeline: --rail;
+      animation-range: cover calc(15% + var(--i) * 7%) cover calc(17% + var(--i) * 7%);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (max-width: 560px) {
+      .show__step::after {
+        animation-name: show-fill-y;
+      }
+    }
+  }
+
+  @keyframes show-fill-y {
+    from {
+      transform: scaleY(0);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes show-fill {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @keyframes show-node {
+    from {
+      background: var(--ds-ink-20);
+      color: var(--ds-fg-faint);
+    }
+    to {
+      background: var(--ds-accent);
+      color: var(--ds-on-fg);
+    }
+  }
+
+  @keyframes show-blink {
+    to {
+      opacity: 0.2;
+    }
+  }
+
+  .show__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: var(--ds-space-6);
+    padding-top: var(--ds-space-5);
+    border-top: var(--ds-hairline) dashed var(--ds-rule);
+  }
+
+  .show__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-4) var(--ds-space-10);
+    margin: 0;
+  }
+
+  .show__facts dt {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .show__facts dd {
+    margin: var(--ds-space-1) 0 0;
+    font-size: var(--ds-text-sm);
+    color: var(--ds-fg);
+  }
+
+  .show__side {
+    display: grid;
+    justify-items: end;
+    gap: var(--ds-space-3);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Cap the icon strip at the card width so its lane overflows and
+     marquees (with the edge fade) instead of running off the card. */
+  .show__side > :global(*) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .show__more {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg);
+    text-decoration: none;
+  }
+
+  .show__more:hover {
+    color: var(--ds-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .show__dot,
+    .show__step::after,
+    .show__node {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .show__rail {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: var(--ds-space-8);
+    }
+
+    /* Three per row: connectors stay, but only between stages on the same
+       row, so no line runs off the end of a row into empty space. */
+    .show__step:nth-child(3n)::before,
+    .show__step:nth-child(3n)::after {
+      display: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .show {
+      padding: var(--ds-space-5);
+    }
+
+    .show__rail {
+      grid-template-columns: 1fr;
+      row-gap: var(--ds-space-5);
+    }
+
+    .show__step {
+      grid-template-columns: 28px 1fr;
+      column-gap: var(--ds-space-4);
+    }
+
+    .show__node {
+      grid-row: span 3;
+      margin: 0;
+    }
+
+    /* One per row: the rail turns vertical. Each connector drops from below
+       its node to just above the next one and fills downward. */
+    .show__step:nth-child(3n):not(:last-child)::before,
+    .show__step:nth-child(3n):not(:last-child)::after {
+      display: block;
+    }
+
+    .show__step:not(:last-child)::before,
+    .show__step:not(:last-child)::after {
+      top: calc(28px + 8px);
+      left: 13px;
+      width: 2px;
+      height: calc(100% + var(--ds-space-5) - 28px - 16px);
+      transform-origin: top;
+    }
+
+    .show__step:not(:last-child)::after {
+      transform: scaleY(1);
+    }
+
+    .show__side {
+      justify-items: start;
+    }
+  }
+</style>

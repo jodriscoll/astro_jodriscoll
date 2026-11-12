@@ -1,0 +1,37 @@
+{
+  "slug": "check-to-protect",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A national campaign site urging drivers to check and fix open vehicle recalls.",
+  "short": "A 2018 national campaign site urging drivers to look up and fix open vehicle recalls: a custom WordPress theme on Bootstrap 4, hosted on Pantheon.",
+  "facts": [
+    {
+      "label": "Year",
+      "value": "2018"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

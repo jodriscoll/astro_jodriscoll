@@ -1,0 +1,35 @@
+{
+  "slug": "volexity",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress theme for the security firm, built with Gulp and deployed by GitLab CI.",
+  "short": "A custom WordPress theme for Volexity, the security firm, built with Gulp and jQuery and deployed by GitLab CI to Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Gulp"
+        },
+        {
+          "name": "jQuery"
+        },
+        {
+          "name": "GitLab CI"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

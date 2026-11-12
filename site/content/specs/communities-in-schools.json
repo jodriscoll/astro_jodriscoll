@@ -1,0 +1,37 @@
+{
+  "slug": "communities-in-schools",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom 2018 WordPress theme for the national nonprofit.",
+  "short": "A custom 2018 WordPress theme for Communities In Schools, the national dropout-prevention nonprofit, built on Bootstrap 4 for Pantheon.",
+  "facts": [
+    {
+      "label": "Year",
+      "value": "2018"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,104 @@
+/* Project Snapshot: the case-study side panel, drawn in the same language
+   as the facts grid beside it: hairline cells on a framed panel, a dotted
+   header cell with the red accent bar, and a tint on hover.
+   Scoped to .ov.is-snapshot so case.css stays the base. */
+
+.ov.is-snapshot .ov__inner {
+  display: grid;
+  gap: 1px;
+  border: 1px solid var(--line-strong);
+  background: var(--line);
+}
+
+/* Each block is a cell on the panel, like a facts card. */
+.ov.is-snapshot .ov__head,
+.ov.is-snapshot section {
+  position: relative;
+  background: var(--bg);
+  border: 0;
+  transition: background-color .2s;
+}
+.ov.is-snapshot section:hover { background: color-mix(in srgb, var(--text) 3%, var(--bg)); }
+
+/* ---------- Header cell: dotted, with the accent bar ---------- */
+
+.ov.is-snapshot .ov__head {
+  display: grid;
+  gap: 18px;
+  padding: 20px 20px 18px;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text) 10%, transparent) 1px, transparent 0) 0 0 / 16px 16px,
+    var(--bg);
+}
+
+.ov.is-snapshot .ov__head::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 64px;
+  height: 2px;
+  background: var(--case-accent);
+}
+
+.ov.is-snapshot .ov__title {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.ov.is-snapshot .ov__role {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--text);
+}
+.ov.is-snapshot .ov__role span {
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* ---------- Group cells ---------- */
+
+.ov.is-snapshot section { padding: 16px 20px 14px; }
+
+.ov.is-snapshot h2 {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.ov.is-snapshot dl > div {
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13.5px;
+}
+
+/* A dotted leader runs from each label to its value. */
+.ov.is-snapshot dt {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.ov.is-snapshot dt::after {
+  content: "";
+  flex: 1;
+  min-width: 12px;
+  height: 1px;
+  background: repeating-linear-gradient(to right, var(--line-strong) 0 1px, transparent 1px 4px);
+}
+
+.ov.is-snapshot dd { flex: none; }

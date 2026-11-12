@@ -1,0 +1,62 @@
+{
+  "slug": "trinity-cyber",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "Trinity Cyber is a cybersecurity startup. Mindgrub built its customer dashboard in React with Redux-Saga and D3 visualizations, shipped in containers, against an API documented as an API Blueprint and published to Apiary.",
+  "short": "The customer dashboard for Trinity Cyber, a cybersecurity startup: React with Redux-Saga and D3 visualizations, shipped in containers against an API documented in API Blueprint. One of my first React applications.",
+  "facts": [
+    {
+      "label": "Kind",
+      "value": "Startup customer dashboard + API"
+    },
+    {
+      "label": "Note",
+      "value": "One of my first React applications"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "React"
+        },
+        {
+          "name": "Redux"
+        },
+        {
+          "name": "Redux-Saga"
+        },
+        {
+          "name": "D3"
+        },
+        {
+          "name": "react-vis"
+        },
+        {
+          "name": "styled-components"
+        },
+        {
+          "name": "Express"
+        },
+        {
+          "name": "Docker"
+        },
+        {
+          "name": "GitLab CI"
+        },
+        {
+          "name": "API Blueprint"
+        },
+        {
+          "name": "Apiary"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,35 @@
+{
+  "slug": "relief-wizard",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A Drupal 8.8 site on Pantheon built around Webform.",
+  "short": "A Drupal 8.8 site on Pantheon built around Webform, with Lando locally and a Bootstrap theme.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 8"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Lando"
+        },
+        {
+          "name": "Webform"
+        },
+        {
+          "name": "Bootstrap"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

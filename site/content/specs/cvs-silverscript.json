@@ -1,0 +1,38 @@
+{
+  "slug": "cvs-silverscript",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "The SilverScript Call Center Application is a Laravel and Vue app for CVS Health’s Medicare Part D plan, with CSV import and seeding, PHPUnit tests and AWS CodeDeploy.",
+  "short": "The call-center application for SilverScript, CVS Health's Medicare Part D plan: Laravel and Vue, with CSV import and seeding, PHPUnit tests and AWS CodeDeploy releases.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Laravel"
+        },
+        {
+          "name": "Vue"
+        },
+        {
+          "name": "Bootstrap"
+        },
+        {
+          "name": "Laravel Mix"
+        },
+        {
+          "name": "PHPUnit"
+        },
+        {
+          "name": "AWS CodeDeploy"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,140 @@
+{
+  "slug": "cascade-space",
+  "org": "nomadic-digital",
+  "kind": "Client",
+  "role": "Design System and Front-End Engineering",
+  "period": {
+    "start": "2025-11",
+    "end": "2025-12"
+  },
+  "dek": "Cascade Space builds technology for beyond low Earth orbit. Its site is a Next.js static export with a block library: every block ships with a typed interface, a Storybook story and unit tests, and every word lives in content files, ready for a CMS.",
+  "short": "A Next.js 14 static site for a space-technology company, assembled from a typed block library: every block has a TypeScript interface, a Storybook story and Vitest tests, and every word lives in content files ready for a CMS.",
+  "facts": [
+    {
+      "label": "Commits",
+      "value": "36"
+    },
+    {
+      "label": "Window",
+      "value": "November 6 to December 15, 2025"
+    },
+    {
+      "label": "Output",
+      "value": "Static export"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Next.js",
+          "version": "14",
+          "note": "App Router, static export"
+        },
+        {
+          "name": "React",
+          "version": "18.2"
+        },
+        {
+          "name": "TypeScript",
+          "version": "5.3",
+          "note": "strict"
+        },
+        {
+          "name": "Tailwind CSS",
+          "version": "3.4",
+          "note": "brand palette"
+        },
+        {
+          "name": "Framer Motion",
+          "version": "12"
+        }
+      ]
+    },
+    {
+      "group": "Content",
+      "items": [
+        {
+          "name": "MDX",
+          "note": "blog and resources, paginated"
+        },
+        {
+          "name": "JSON content files",
+          "note": "global, pages and legal"
+        },
+        {
+          "name": "Vimeo Player",
+          "note": "video blocks with a loader"
+        }
+      ]
+    },
+    {
+      "group": "Quality",
+      "items": [
+        {
+          "name": "Storybook",
+          "version": "10",
+          "note": "a story for every block"
+        },
+        {
+          "name": "Vitest",
+          "version": "4",
+          "note": "with React Testing Library and coverage"
+        },
+        {
+          "name": "ESLint and Prettier"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Vercel"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Every block, three ways",
+      "text": "Each block carries a data-module attribute, a TypeScript props interface, a Storybook story and unit tests: heroes, info-bubble hotspots, a beamforming visual, a reservation calculator, timelines and careers."
+    },
+    {
+      "title": "Content outside the code",
+      "text": "Navigation, pages, blog posts, resources and legal copy live in content files, so a CMS can take them over without touching a component."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Runtime",
+      "rows": [
+        {
+          "label": "Next.js",
+          "value": "14",
+          "state": "ok"
+        },
+        {
+          "label": "Output",
+          "value": "Static export",
+          "state": "ok"
+        },
+        {
+          "label": "Tests",
+          "value": "Vitest",
+          "state": "ok"
+        },
+        {
+          "label": "Docs",
+          "value": "Storybook",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/cascade-space/home.webp",
+      "alt": "Cascade Space: The Array page, a dish array silhouetted against a blue night sky"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+---
+import type { PublicProject } from '../gateway';
+
+interface Props {
+  project: PublicProject;
+}
+
+const { project } = Astro.props;
+const mode = project.availability === 'offline' ? 'offline' : project.links.demo ? 'online' : '';
+const label = mode === 'online' ? 'Online' : mode === 'offline' ? 'Offline' : '';
+---
+
+{
+  mode && (
+    <p class:list={['status', `status--${mode}`]}>
+      <i aria-hidden="true" />
+      <span>{label}</span>
+    </p>
+  )
+}

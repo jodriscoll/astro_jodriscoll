@@ -1,0 +1,26 @@
+{
+  "slug": "iamcatholic",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A campaign microsite for the Archdiocese of Baltimore, with Sizeable.",
+  "short": "#iamcatholic, a campaign microsite for the Archdiocese of Baltimore built with Sizeable, on WordPress and Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

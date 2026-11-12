@@ -1,0 +1,363 @@
+---
+/**
+ * One client engagement. variant="card" is the full block (figures,
+ * paragraph, stack, work, full record); "line" is a single compact row.
+ * Marked up as an h-event inside the page's h-resume for parsers.
+ */
+import Stat from '../ui/Stat.astro';
+import StatGrid from '../ui/StatGrid.astro';
+import Marks from '../ui/Marks.astro';
+import type { RoleView } from '../../lib/resume';
+
+interface Props {
+  role: RoleView;
+  variant?: 'card' | 'line';
+  /** false for a duplicate rendering (print-only copy), so parsers count the role once. */
+  record?: boolean;
+}
+
+const { role, variant = 'card', record = true } = Astro.props;
+// Split on the dots too (location carries its own "City · Remote"), so mobile can break there.
+const eyebrow = [role.kind, role.via, role.location].filter(Boolean).join(' · ').split(' · ');
+const when = [role.when, role.duration].filter(Boolean).join(' · ');
+---
+
+{
+  variant === 'line' ? (
+    <li class:list={['eng-line', record && 'p-experience h-event']} data-track="role" data-track-label={role.org}>
+      <span class:list={['eng-line__org', record && 'p-name']}>{role.orgName}{role.suffix && <span class="eng__llc">{role.suffix}</span>}</span>
+      <span class="eng-line__title">{role.title}</span>
+      <span class="eng-line__when">
+        {role.start && <time class:list={[record && 'dt-start']} datetime={role.start}>{role.when}</time>}
+        {!role.start && role.when}
+      </span>
+      {role.summary && <p class:list={['eng-line__summary', record && 'p-summary']}>{role.summary}</p>}
+    </li>
+  ) : (
+    <article class="eng p-experience h-event" data-track="role" data-track-label={role.org}>
+      <header class="eng__head">
+        <p class="eng__eyebrow">
+          <span class="eng__where">
+            {eyebrow.map((part, i) => (
+              <span class="eng__bit">{i > 0 && <span class="eng__sep" aria-hidden="true">·</span>}{part}</span>
+            ))}
+          </span>
+          {role.current && (
+            <span class="eng__open" aria-label="Open contract">
+              <i aria-hidden="true" />
+              Open
+            </span>
+          )}
+          {!role.current && role.end && (
+            <span class="eng__open eng__open--done" aria-label="Contract concluded">
+              <i aria-hidden="true" />
+              Concluded
+            </span>
+          )}
+        </p>
+        <h3 class="eng__org p-name">
+          {role.orgName}
+          {role.suffix && <span class="eng__llc">{role.suffix}</span>}
+        </h3>
+        <p class="eng__meta">
+          {role.title && <span class="eng__title">{role.title}</span>}
+          {role.start ? (
+            <time class="dt-start" datetime={role.start}>
+              {when}
+            </time>
+          ) : (
+            <span>{when}</span>
+          )}
+          {role.end && <time class="dt-end" datetime={role.end} hidden />}
+        </p>
+      </header>
+
+      {role.metrics.length > 0 && (
+        <StatGrid size="sm" label={`${role.orgName} figures`}>
+          {role.metrics.map((metric) => (
+            <Stat value={metric.value} label={metric.label} tone={metric.tone} />
+          ))}
+        </StatGrid>
+      )}
+
+      {role.summary && <p class="eng__summary p-summary">{role.summary}</p>}
+
+      {(role.stack.length > 0 || role.work.length > 0) && (
+        <footer class="eng__foot">
+          {role.work.length > 0 && (
+            <p class="eng__work">
+              <span class="eng__label">Work</span>
+              {role.work.map((item, index) => (
+                <>
+                  {index > 0 && <span aria-hidden="true">, </span>}
+                  {item.href ? (
+                    <a
+                      class="ds-link"
+                      href={item.href}
+                      target={item.slug ? undefined : '_blank'}
+                      rel={item.slug ? undefined : 'noopener noreferrer'}
+                      data-track="project"
+                      data-track-label={item.title}
+                    >
+                      {item.title}
+                    </a>
+                  ) : (
+                    <span class="eng__work-plain">{item.title}</span>
+                  )}
+                </>
+              ))}
+            </p>
+          )}
+          {role.stack.length > 0 && <Marks names={role.stack} size="sm" label={`${role.orgName} stack`} max={8} />}
+        </footer>
+      )}
+    </article>
+  )
+}
+
+<style>
+  .eng {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-4);
+    min-width: 0;
+    height: 100%;
+    padding: var(--ds-space-6) var(--ds-space-6) var(--ds-space-6) 0;
+  }
+
+  .eng__head {
+    display: grid;
+    gap: var(--ds-space-1);
+  }
+
+  .eng__eyebrow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ds-space-1) var(--ds-space-3);
+    margin: 0 0 var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .eng__sep {
+    margin: 0 1ch;
+  }
+
+  .eng__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ds-positive);
+  }
+
+  .eng__open i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* Dark orange: a finished contract, distinct from the green "open" one. */
+  .eng__open--done {
+    color: #b4530f;
+  }
+
+  :global([data-theme="dark"]) .eng__open--done {
+    color: #e0823a;
+  }
+
+  .eng__open--done i {
+    background: none;
+    border: 1px solid currentColor;
+  }
+
+  .eng__org {
+    margin: 0;
+    font-size: var(--ds-text-2xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: var(--ds-leading-tight);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-fg);
+  }
+
+  .eng__llc {
+    color: var(--ds-fg-faint);
+  }
+
+  .eng__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--ds-space-3);
+    margin: 0;
+    font-size: var(--ds-text-sm);
+    color: var(--ds-fg-muted);
+  }
+
+  .eng__title {
+    color: var(--ds-fg);
+  }
+
+  .eng__meta time {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+    line-height: 1.7;
+  }
+
+  .eng__summary {
+    max-width: 66ch;
+    margin: 0;
+    font-size: var(--ds-text-md);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  .eng__foot {
+    display: grid;
+    gap: var(--ds-space-3);
+    margin-top: auto;
+  }
+
+  .eng__label {
+    margin-right: var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .eng__work {
+    margin: 0;
+    font-size: var(--ds-text-sm);
+    color: var(--ds-fg-muted);
+  }
+
+  .eng__work a {
+    color: var(--ds-fg);
+  }
+
+  .eng__bullets {
+    display: grid;
+    gap: var(--ds-space-2);
+    margin: 0;
+    padding-left: var(--ds-space-4);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-body);
+  }
+
+  /* Line variant: org | title | dates, summary underneath. */
+  .eng-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+    align-items: baseline;
+    gap: var(--ds-space-1) var(--ds-space-4);
+    padding: var(--ds-space-3) 0;
+  }
+
+  .eng-line__org {
+    color: var(--ds-fg);
+    font-size: var(--ds-text-md);
+  }
+
+  .eng-line__title {
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+  }
+
+  .eng-line__when {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+    white-space: nowrap;
+  }
+
+  .eng-line__summary {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-snug);
+  }
+
+  @media (max-width: 720px) {
+    .eng-line {
+      grid-template-columns: 1fr;
+    }
+
+    /* One fact per line: break before each dot instead of wrapping mid-run. */
+    .eng__where {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Keep the dots: each new line leads with its "·". */
+    .eng__sep {
+      margin: 0 1ch 0 0;
+    }
+
+    /* On the timeline card the status rides the date line (top-left, the
+       date sits top-right), freeing the eyebrow for the facts alone. */
+    .eng__org {
+      font-size: 22px;
+    }
+
+    :global(.tl__card) .eng {
+      position: relative;
+    }
+
+    :global(.tl__card) .eng__open {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 18px;
+    }
+  }
+
+  @media print {
+    .eng {
+      gap: var(--ds-space-2);
+      padding: var(--ds-space-4) var(--ds-space-4) var(--ds-space-4) 0;
+      break-inside: avoid;
+    }
+
+    .eng__eyebrow {
+      margin: 0;
+    }
+
+    .eng__open {
+      color: var(--ds-fg-faint);
+    }
+
+    .eng__open::before {
+      content: "· ";
+    }
+
+    .eng__open i {
+      display: none;
+    }
+
+    .eng__summary {
+      font-size: var(--ds-text-sm);
+    }
+
+    .eng__work a {
+      text-decoration: none;
+    }
+
+    .eng-line {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto;
+      padding: var(--ds-space-2) 0;
+      break-inside: avoid;
+    }
+
+    .eng-line__summary {
+      font-size: var(--ds-text-xs);
+    }
+  }
+</style>

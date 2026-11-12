@@ -1,0 +1,1087 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import TimeOnRecord from '../../components/resume/TimeOnRecord.astro';
+import ActivityPanel from '../../components/resume/ActivityPanel.astro';
+import InMyWords from '../../components/InMyWords.astro';
+import { buildResume } from '../../lib/resume';
+import { listProjects, listRoles } from '../../gateway';
+import { codeGraphSvg, languageMix } from '../../lib/isometric';
+import { platformMarks } from '../../lib/platforms';
+import { itemListNode } from '../../agent';
+import { loadBundle } from '../../agent/site';
+
+const specs = new Map((await getCollection('specs')).map((entry) => [entry.data.slug, entry.data]));
+// Weighted order: a spec's `weight` (default 50, higher first); ties keep projects.json order.
+// Jellyfish work never ranks above Mindgrub, Rehab LLC or Taoti Creative work: its weight is
+// capped just under the lowest of theirs, whatever an individual spec says.
+const OUTRANK_JELLYFISH = new Set(['mindgrub', 'mindgrub-managed-services', 'rehab-llc', 'rehab-com-performance', 'mentalhealth', 'taoti']);
+const baseWeight = (slug: string) => specs.get(slug)?.weight ?? 50;
+const jellyfishCap = Math.min(
+  ...listProjects().filter((p) => OUTRANK_JELLYFISH.has(specs.get(p.slug)?.org ?? '')).map((p) => baseWeight(p.slug)),
+) - 0.5;
+const weight = (slug: string) =>
+  specs.get(slug)?.org === 'jellyfish' ? Math.min(baseWeight(slug), jellyfishCap) : baseWeight(slug);
+const projects = [...listProjects()].sort((a, b) => weight(b.slug) - weight(a.slug));
+const roles = listRoles();
+const bundle = await loadBundle(Astro.site);
+const workList = itemListNode(
+  bundle.site,
+  `${bundle.site.origin}/things-built`,
+  'Things built',
+  bundle.works.map((work) => ({ url: work.url, name: work.title })),
+);
+
+const rows = projects.map((project, i) => {
+  const spec = specs.get(project.slug);
+  const names = [...project.technologies, ...(spec?.stack.flatMap((g) => g.items.map((item) => item.name)) ?? [])];
+  const marks = platformMarks(names);
+  return {
+    project,
+    index: i + 1,
+    spec,
+    marks,
+    org: spec?.org ?? '',
+    orgName: roles.find((role) => role.id === spec?.org)?.org ?? '—',
+    mix: languageMix({ measured: spec?.languages?.items, technologies: names }).items,
+    hosts: platformMarks((spec?.hosting ?? []).filter((row) => !/local/i.test(row.label)).map((row) => row.value)).filter((m, _, all) => !(m.id === 'craft' && all.some((x) => x.id === 'craft-cloud')) && !(m.id === 'wordpress' && all.some((x) => x.id === 'wordpress-vip'))),
+  };
+});
+
+// Platform filter: every platform that appears, most-used first.
+const tally = new Map<string, { id: string; name: string; svg: string; count: number }>();
+for (const row of rows) for (const mark of row.marks) {
+  const hit = tally.get(mark.id) ?? { ...mark, count: 0 };
+  hit.count++;
+  tally.set(mark.id, hit);
+}
+const filters = [...tally.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+
+// Employers: top-level roles with their children, and how many projects each holds.
+const counts = new Map<string, number>();
+for (const row of rows) if (row.org) counts.set(row.org, (counts.get(row.org) ?? 0) + 1);
+const maxMonths = Math.max(...roles.map((role) => role.months || 0), 1);
+const employers = roles.filter((role) => role.months > 0 || role.end === null).slice(0, 12);
+
+// Time on record, the same view as /resume.
+const resume = await buildResume([...specs.values()]);
+const mix = resume.stats.employment.map((item) => ({ id: item.id, label: item.label, value: item.months }));
+---
+
+<Base
+  title="Work · Joseph O'Driscoll"
+  description="Every project, what it's built on, and who it was built with."
+  pageType="CollectionPage"
+  page={{ mainEntity: { '@id': workList['@id'] } }}
+  schema={[workList]}
+  crumbs={[{ name: 'Home', path: '/' }, { name: 'Work', path: '/things-built' }]}
+>
+  <section class="wrap ds-page">
+    <div class="workhero">
+      <div class="workhero__title">
+        <p class="eyebrow">Work · {projects.length} projects</p>
+        <h1 class="display" style="margin-bottom: 0; max-width: 22ch; text-wrap: balance;">Work that <span class="display__accent">shipped</span>, and what it runs on.</h1>
+      </div>
+      <ActivityPanel contributions={resume.contributions} id="work-hm" class="workhero__activity" />
+      <p class="home-hero__lede workhero__lede">Filter by platform to see the work built on it.</p>
+    </div>
+
+    {/* Employer ledger: hidden in favour of the timeline above. Kept in the markup (and its
+        filter script still works); remove `hidden` to bring it back. */}
+    <div class="employers" data-employers hidden>
+      <div class="rule-head"><p class="eyebrow">Where</p><button type="button" class="linkish" data-org-clear hidden>Show Every Employer</button></div>
+      <table class="ledger">
+        <thead>
+          <tr><th>Employer</th><th>Role</th><th>When</th><th class="ledger__bar">Time</th><th>Projects</th></tr>
+        </thead>
+        <tbody>
+          {
+            employers.map((role) => (
+              <tr class:list={[role.parent && 'is-child', counts.get(role.id) && 'is-pick']} data-org={role.id} tabindex={counts.get(role.id) ? 0 : undefined}>
+                <td><strong>{role.org}</strong></td>
+                <td>{role.title}</td>
+                <td class="mono">{role.displayDate}</td>
+                <td class="ledger__bar"><span style={`width: ${((role.months || 0) / maxMonths) * 100}%`} /></td>
+                <td class="mono">{counts.get(role.id) ?? '—'}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- The toolbar pins while the list is on screen (narrow screens), then fades out with it. -->
+    <div class="worklist" data-worklist data-bleed-host>
+    <div class="workbar" data-workbar data-bleed>
+      <div class="filters" role="group" aria-label="Filter by platform">
+        <button type="button" class="filter is-on" data-stack="">All <span>{rows.length}</span></button>
+        {
+          filters.map((f, n) => (
+            <button type="button" class:list={['filter', n >= 12 && 'is-extra']} data-stack={f.id}>
+              <i set:html={f.svg} />
+              {f.name} <span>{f.count}</span>
+            </button>
+          ))
+        }
+        {filters.length > 12 && <button type="button" class="filter filter--more" data-more>+{filters.length - 12} More</button>}
+      </div>
+      <!-- Narrow screens: one Filter button opens a sheet with every platform. -->
+      <div class="wfilter">
+        <button type="button" class="wfilter__open" data-filter-open aria-haspopup="dialog" aria-controls="platform-sheet">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M2 4h12M4.5 8h7M7 12h2" /></svg>
+          <span class="wfilter__key">Platform</span>
+          <strong data-filter-label>Filter</strong>
+          <em data-filter-count>{rows.length}</em>
+        </button>
+        <button type="button" class="wfilter__clear" data-stack="" data-filter-clear aria-label="Clear the platform filter" hidden>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="m4.5 4.5 7 7m0-7-7 7" /></svg>
+        </button>
+      </div>
+      <div class="viewswitch ds-seg" role="group" aria-label="View">
+        <button type="button" data-view="grid" aria-pressed="true">Grid</button>
+        <button type="button" data-view="table" aria-pressed="false">Table</button>
+      </div>
+    </div>
+
+    <dialog id="platform-sheet" class="psheet" aria-labelledby="psheet-title" data-filter-sheet>
+      <div class="psheet__inner">
+        <span class="psheet__grip" aria-hidden="true" data-sheet-drag></span>
+        <header class="psheet__head" data-sheet-drag>
+          <h2 id="psheet-title">Filter by platform</h2>
+          <button type="button" class="psheet__close" data-filter-close aria-label="Close">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="m4 4 8 8m0-8-8 8" /></svg>
+          </button>
+        </header>
+        <label class="psheet__search">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.5" /><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="m10.5 10.5 3 3" /></svg>
+          <span class="sr-only">Search platforms</span>
+          <input type="search" placeholder={`Search ${filters.length} platforms`} autocomplete="off" spellcheck="false" data-filter-search />
+        </label>
+        <ul class="psheet__list" data-filter-list>
+          <li data-name="all projects">
+            <button type="button" class="psheet__opt" data-stack="" data-label="Filter">
+              <i class="psheet__all" aria-hidden="true"><svg viewBox="0 0 16 16"><path fill="currentColor" d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z" /></svg></i>
+              <span class="psheet__name">All projects</span>
+              <span class="psheet__n">{rows.length}</span>
+            </button>
+          </li>
+          {
+            filters.map((f) => (
+              <li data-name={f.name.toLowerCase()}>
+                <button type="button" class="psheet__opt" data-stack={f.id} data-label={f.name}>
+                  <i set:html={f.svg} />
+                  <span class="psheet__name">{f.name}</span>
+                  <b class="psheet__bar" style={`--share:${(f.count / Math.max(rows.length, 1)).toFixed(3)}`} aria-hidden="true" />
+                  <span class="psheet__n">{f.count}</span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="psheet__none" data-filter-none hidden>No platform matches that.</p>
+      </div>
+    </dialog>
+
+    <div class="workgrid" data-pane="grid">
+      {rows.map((row) => <div class="workcell" data-org={row.org} data-stacks={row.marks.map((m) => m.id).join(' ')}><WorkCard project={row.project} index={row.index} /></div>)}
+    </div>
+
+    <div class="tablewrap" data-pane="table" hidden>
+      <table class="ledger ledger--work">
+        <thead>
+          <tr><th>Project</th><th>Employer</th><th>Platforms</th><th>Languages</th><th>Host</th></tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((row) => (
+              <tr data-org={row.org} data-stacks={row.marks.map((m) => m.id).join(' ')}>
+                <td><a href={`/things-built/${row.project.slug}`}><strong>{row.project.title}</strong></a><small>{row.spec?.kind ?? 'Project'}</small></td>
+                <td>{row.orgName}</td>
+                <td><span class="ledger__marks">{row.marks.slice(0, 6).map((m) => <i title={m.name} set:html={m.svg} />)}{row.marks.length > 6 && <em>+{row.marks.length - 6}</em>}</span></td>
+                <td><span class="ledger__langs">{row.mix.map((l) => <i style={`flex-basis:${l.share * 100}%;background:${l.color}`} title={l.name} />)}</span><small>{row.mix.slice(0, 2).map((l) => l.name).join(', ')}</small></td>
+                <td><span class="ledger__marks">{row.hosts.length ? row.hosts.map((m) => <i title={m.name} set:html={m.svg} />) : <em>—</em>}</span></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="quiet" data-empty hidden>No project matches that combination yet.</p>
+    </div>
+
+    <div class="loadbar" data-loadbar hidden>
+      <button type="button" class="loadbar__btn" data-load data-track="load-more">Show <span data-load-next>10</span> More</button>
+      <p class="loadbar__left" data-load-left></p>
+    </div>
+
+    <!-- In my words: moved here from /resume, above Time on record. -->
+    <InMyWords />
+
+    <!-- Time on record: the same view as /resume, after the work. -->
+    <div class="record">
+      <div class="rule-head" style="margin-bottom: var(--ds-space-head);"><p class="eyebrow">Time on record · {resume.stats.spanYears} years</p></div>
+      <TimeOnRecord rows={resume.timeline} start={resume.timelineStart} end={resume.now} mix={mix} />
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var state = { stack: params.get('stack') || '', org: params.get('org') || '', view: params.get('view') || 'grid' };
+      var cells = document.querySelectorAll('[data-pane] .workcell, [data-pane] tbody tr');
+      var empty = document.querySelector('[data-empty]');
+      var clear = document.querySelector('[data-org-clear]');
+
+      // Show a page of projects at a time, so the timeline below stays within reach.
+      var PAGE = 10;
+      var viewTimer = 0;
+      var limit = PAGE;
+      var loadBar = document.querySelector('[data-loadbar]');
+      var loadBtn = document.querySelector('[data-load]');
+
+      function apply() {
+        var shown = 0;
+        var matches = { grid: 0, table: 0 };
+        cells.forEach(function (cell) {
+          var okStack = !state.stack || (' ' + cell.getAttribute('data-stacks') + ' ').indexOf(' ' + state.stack + ' ') > -1;
+          var okOrg = !state.org || cell.getAttribute('data-org') === state.org;
+          var pane = cell.closest('[data-pane]').getAttribute('data-pane');
+          var match = okStack && okOrg;
+          if (match) matches[pane]++;
+          cell.hidden = !match || matches[pane] > limit;
+          if (!cell.hidden && pane === state.view) shown++;
+        });
+        var left = matches[state.view] - shown;
+        if (loadBar) loadBar.hidden = left <= 0;
+        if (loadBtn && left > 0) {
+          loadBtn.querySelector('[data-load-next]').textContent = String(Math.min(PAGE, left));
+          loadBar.querySelector('[data-load-left]').textContent = left + ' left';
+        }
+        document.querySelectorAll('[data-stack]').forEach(function (b) {
+          b.classList.toggle('is-on', b.getAttribute('data-stack') === state.stack);
+        });
+        document.querySelectorAll('[data-employers] tr[data-org]').forEach(function (tr) {
+          tr.classList.toggle('is-on', tr.getAttribute('data-org') === state.org);
+        });
+        document.querySelectorAll('[data-pane]').forEach(function (pane) {
+          pane.hidden = pane.getAttribute('data-pane') !== state.view;
+        });
+        document.querySelectorAll('[data-view]').forEach(function (b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-view') === state.view ? 'true' : 'false');
+        });
+        if (clear) clear.hidden = !state.org;
+        if (empty) empty.hidden = shown > 0;
+        var q = new URLSearchParams();
+        if (state.stack) q.set('stack', state.stack);
+        if (state.org) q.set('org', state.org);
+        if (state.view !== 'grid') q.set('view', state.view);
+        history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : ''));
+      }
+
+      document.addEventListener('click', function (event) {
+        var more = event.target.closest('[data-more]');
+        if (more) {
+          more.closest('.filters').classList.add('is-open');
+          more.remove();
+          return;
+        }
+        if (event.target.closest('[data-load]')) {
+          limit += PAGE;
+          apply();
+          return;
+        }
+        var t = event.target.closest('[data-stack],[data-view],[data-org-clear],tr.is-pick');
+        if (!t) return;
+        // A new filter or view starts again from the first page.
+        if (!t.hasAttribute('data-view')) limit = PAGE;
+        if (t.hasAttribute('data-view')) {
+          // Swapping 76 cards for a table is the heaviest thing on the page. Mark
+          // the button now, and swap once the switch has finished most of its move,
+          // so the layout work never lands in the middle of the animation.
+          state.view = t.getAttribute('data-view');
+          document.querySelectorAll('[data-view]').forEach(function (b) {
+            b.setAttribute('aria-pressed', b === t ? 'true' : 'false');
+          });
+          clearTimeout(viewTimer);
+          viewTimer = setTimeout(apply, 220);
+          return;
+        }
+        if (t.hasAttribute('data-stack')) state.stack = t.getAttribute('data-stack');
+        else if (t.hasAttribute('data-org-clear')) state.org = '';
+        else state.org = state.org === t.getAttribute('data-org') ? '' : t.getAttribute('data-org');
+        apply();
+      });
+      document.addEventListener('keydown', function (event) {
+        var t = event.target.closest && event.target.closest('tr.is-pick');
+        if (t && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); t.click(); }
+      });
+      apply();
+    })();
+  </script>
+
+  <script is:inline>
+    // Platform sheet (narrow screens). Its options are ordinary [data-stack] buttons,
+    // so the script above filters and marks them; this only opens, searches and labels.
+    (function () {
+      var sheet = document.querySelector('[data-filter-sheet]');
+      var open = document.querySelector('[data-filter-open]');
+      if (!sheet || !open || typeof sheet.showModal !== 'function') return;
+      var label = open.querySelector('[data-filter-label]');
+      var count = open.querySelector('[data-filter-count]');
+      var clear = document.querySelector('[data-filter-clear]');
+      var search = sheet.querySelector('[data-filter-search]');
+      var none = sheet.querySelector('[data-filter-none]');
+      var items = sheet.querySelectorAll('[data-filter-list] li');
+
+      function sync() {
+        var on = sheet.querySelector('.psheet__opt.is-on') || sheet.querySelector('.psheet__opt[data-stack=""]');
+        var picked = on.getAttribute('data-stack') !== '';
+        label.textContent = on.getAttribute('data-label');
+        count.textContent = on.querySelector('.psheet__n').textContent;
+        open.classList.toggle('is-set', picked);
+        clear.hidden = !picked;
+      }
+
+      function filter() {
+        var q = search.value.trim().toLowerCase();
+        var hits = 0;
+        items.forEach(function (li) {
+          var hit = !q || li.getAttribute('data-name').indexOf(q) > -1;
+          li.hidden = !hit;
+          if (hit) hits++;
+        });
+        none.hidden = hits > 0;
+      }
+
+      var phone = matchMedia('(max-width: 560px)');
+      var still = matchMedia('(prefers-reduced-motion: reduce)');
+      var closing = false;
+
+      // One way out, whichever way the person leaves: Close, the backdrop, Esc, a pick,
+      // or a drag. Phones slide the sheet down (from wherever a drag left it); tablets fade.
+      function dismiss(from) {
+        if (!sheet.open || closing) return;
+        closing = true;
+        var done = function () {
+          sheet.style.transform = '';
+          sheet.close();
+          closing = false;
+          open.focus({ preventScroll: true });
+        };
+        if (still.matches || !sheet.animate) return done();
+        var y = from || 0;
+        var frames = phone.matches
+          ? [{ transform: 'translateY(' + y + 'px)' }, { transform: 'translateY(100%)' }]
+          : [{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(8px) scale(0.98)' }];
+        var anim = sheet.animate(frames, { duration: phone.matches ? 260 : 180, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' });
+        var dim = null;
+        try { dim = sheet.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 240, fill: 'forwards', pseudoElement: '::backdrop' }); } catch (e) {}
+        anim.onfinish = function () {
+          done();
+          // Drop the held end states so the next open starts clean.
+          anim.cancel();
+          if (dim) dim.cancel();
+        };
+      }
+
+      open.addEventListener('click', function () {
+        search.value = '';
+        filter();
+        sheet.showModal(); // modal: everything behind is inert, so Tab stays in the sheet
+        var on = sheet.querySelector('.psheet__opt.is-on');
+        if (on) on.scrollIntoView({ block: 'nearest' });
+      });
+
+      // Esc: the same animated exit instead of an instant cut.
+      sheet.addEventListener('cancel', function (event) {
+        event.preventDefault();
+        dismiss();
+      });
+
+      // Backdrop: only a press that starts and ends outside the panel closes it, so a drag
+      // or a text selection that wanders off the edge doesn't.
+      var downOnBackdrop = false;
+      sheet.addEventListener('pointerdown', function (event) { downOnBackdrop = event.target === sheet; });
+      sheet.addEventListener('click', function (event) {
+        if (event.target === sheet && downOnBackdrop) return dismiss();
+        if (event.target.closest('[data-filter-close]')) return dismiss();
+        if (event.target.closest('.psheet__opt')) setTimeout(dismiss, 140);
+      });
+
+      // Drag to dismiss (phones): the grip and header follow the finger; let go past a
+      // quarter of the sheet or with a quick flick and it leaves, otherwise it springs back.
+      var drag = null;
+      sheet.querySelectorAll('[data-sheet-drag]').forEach(function (zone) {
+        zone.addEventListener('pointerdown', function (event) {
+          if (!phone.matches || closing || event.button !== 0 || event.target.closest('button, input, a')) return;
+          drag = { id: event.pointerId, y0: event.clientY, y: 0, t: event.timeStamp, v: 0, h: sheet.getBoundingClientRect().height };
+          zone.setPointerCapture(event.pointerId);
+          sheet.classList.add('is-dragging');
+        });
+        zone.addEventListener('pointermove', function (event) {
+          if (!drag || event.pointerId !== drag.id) return;
+          var raw = event.clientY - drag.y0;
+          var y = raw > 0 ? raw : raw * 0.15; // a little give upwards, then it resists
+          var dt = Math.max(1, event.timeStamp - drag.t);
+          drag.v = (y - drag.y) / dt;
+          drag.y = y;
+          drag.t = event.timeStamp;
+          sheet.style.transform = 'translateY(' + y + 'px)';
+        });
+        var end = function (event) {
+          if (!drag || event.pointerId !== drag.id) return;
+          var d = drag;
+          drag = null;
+          sheet.classList.remove('is-dragging');
+          if (d.y > d.h * 0.25 || d.v > 0.6) return dismiss(d.y);
+          if (d.y === 0) { sheet.style.transform = ''; return; }
+          var back = sheet.animate([{ transform: 'translateY(' + d.y + 'px)' }, { transform: 'translateY(0)' }], { duration: 220, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+          sheet.style.transform = '';
+          back.onfinish = null;
+        };
+        zone.addEventListener('pointerup', end);
+        zone.addEventListener('pointercancel', end);
+      });
+
+      search.addEventListener('input', filter);
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('[data-stack]')) requestAnimationFrame(sync);
+      });
+      sync();
+    })();
+
+    // Grid/Table: each label's colour follows the pill under it, frame by frame, while
+    // the pill moves. A label is light when the pill covers most of it, dark otherwise.
+    (function () {
+      var sw = document.querySelector('.viewswitch');
+      if (!sw) return;
+      var buttons = sw.querySelectorAll('button');
+      var raf = 0, until = 0;
+      sw.classList.add('is-tracked');
+
+      function paint() {
+        var box = sw.getBoundingClientRect();
+        var pill = getComputedStyle(sw, '::before');
+        var left = box.left + parseFloat(pill.left);
+        var right = box.right - parseFloat(pill.right);
+        buttons.forEach(function (b) {
+          var r = b.getBoundingClientRect();
+          var cover = Math.max(0, Math.min(right, r.right) - Math.max(left, r.left)) / r.width;
+          b.classList.toggle('is-lit', cover > 0.55);
+        });
+      }
+
+      function run(now) {
+        paint();
+        raf = now < until ? requestAnimationFrame(run) : 0;
+      }
+
+      function track() {
+        until = performance.now() + 900; // longer than the pill's slowest edge
+        if (!raf) raf = requestAnimationFrame(run);
+      }
+
+      sw.addEventListener('click', track);
+      sw.addEventListener('transitionrun', track);
+      addEventListener('resize', paint, { passive: true });
+      paint();
+    })();
+
+    // Sticky toolbar (narrow screens): marks itself stuck once it reaches the top, and
+    // fades out over the last 120px of the visible cards.
+    (function () {
+      var bar = document.querySelector('[data-workbar]');
+      var list = document.querySelector('[data-worklist]');
+      if (!bar || !list) return;
+      var narrow = matchMedia('(max-width: 960px)');
+      var FADE = 120;
+      var raf = 0;
+
+      function update() {
+        raf = 0;
+        if (!narrow.matches) {
+          bar.classList.remove('is-stuck');
+          bar.style.opacity = '';
+          bar.style.pointerEvents = '';
+          return;
+        }
+        var b = bar.getBoundingClientRect();
+        var l = list.getBoundingClientRect();
+        // Measured from the bottom of the visible cards (or table), not the wrapper, so
+        // the bar is fully gone as the last card's bottom reaches it.
+        var pane = list.querySelector('[data-pane]:not([hidden])');
+        var end = pane && pane.offsetHeight ? pane.getBoundingClientRect().bottom : l.bottom;
+        bar.classList.toggle('is-stuck', b.top <= 0.5 && l.top < 0);
+        // A sticky element keeps its bottom margin inside its container, so it starts
+        // leaving that far above the cards' end: fade to zero by then.
+        var gap = parseFloat(getComputedStyle(bar).marginBottom) || 0;
+        var left = Math.max(0, Math.min(1, (end - b.bottom - gap) / FADE));
+        bar.style.opacity = left < 1 ? left.toFixed(3) : '';
+        bar.style.pointerEvents = left < 0.15 ? 'none' : '';
+      }
+
+      function queue() { if (!raf) raf = requestAnimationFrame(update); }
+      addEventListener('scroll', queue, { passive: true });
+      addEventListener('resize', queue, { passive: true });
+      // Filtering changes the list's height, so recheck after every filter or view change.
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('[data-stack],[data-view],[data-load]')) setTimeout(queue, 260);
+      });
+      update();
+    })();
+  </script>
+</Base>
+
+<style>
+  /* Hero: title left, the activity panel top right, the lede full width under both. */
+  /* Title and lede stack in the left column; the activity panel spans both
+     rows on the right, so the lede sits right under the heading. */
+  /* Time on record: a tighter gap above (the load bar already breathes),
+     room below before the footer, and the rule lights as it arrives. */
+  .record {
+    margin-top: var(--ds-space-section-sm);
+    padding-bottom: var(--ds-space-section-sm);
+  }
+  /* Phones: main's own bottom space is enough before the footer. */
+  @media screen and (max-width: 640px) {
+    .record {
+      padding-bottom: 0;
+    }
+  }
+  .record :global(.rule-head.is-lit::before) {
+    animation-delay: 0.35s;
+  }
+
+  .workhero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(350px, 700px);
+    grid-template-rows: auto 1fr;
+    gap: 24px 56px;
+    align-items: start;
+    margin-bottom: 40px;
+  }
+
+  .workhero__title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  :global(.workhero__activity) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+
+  .workhero__lede {
+    grid-column: 1;
+    grid-row: 2;
+    max-width: none;
+    margin: 0;
+  }
+
+  /* Stacks below ~1514px: narrower, the 350–700px activity column squeezes the title. */
+  @media (max-width: 1514px) {
+    /* minmax(0, 1fr), not 1fr: the heatmap's fixed-width grid must not widen the
+       column past the page gutter; it scrolls inside its own box instead. */
+    .workhero {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: none;
+    }
+
+    .workhero__title,
+    .workhero__lede,
+    :global(.workhero__activity) {
+      grid-column: 1;
+      grid-row: auto;
+      min-width: 0;
+    }
+
+    /* Title, then its line, then the panel, kept at its desktop width, left-aligned. */
+    .workhero__lede {
+      order: 1;
+    }
+
+    :global(.workhero__activity) {
+      order: 2;
+      justify-self: start;
+      width: 100%;
+      max-width: 700px;
+    }
+  }
+
+  /* ---------- Platform filter: chips on desktop, a Filter button and sheet on narrow screens ---------- */
+
+  .wfilter,
+  .psheet {
+    display: none;
+  }
+
+  @media (max-width: 960px) {
+    .workbar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .workbar .filters {
+      display: none;
+    }
+
+    /* Pinned while the list scrolls: a frosted strip, full-bleed to the screen
+       edges (data-bleed, shell.css breakout layout) with its own gutters.
+       Once stuck it clears the round menu button on the right. */
+    .workbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-sizing: border-box;
+      min-height: var(--fixedbar-h, 56px);
+      padding: 10px var(--gutter);
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      -webkit-backdrop-filter: blur(12px) saturate(1.2);
+      backdrop-filter: blur(12px) saturate(1.2);
+      transition: padding 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+    }
+
+    .workbar.is-stuck {
+      padding-right: var(--fixedbar-clear, 80px);
+      box-shadow: 0 1px 0 var(--line);
+    }
+
+    .wfilter {
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .wfilter__open {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      height: 36px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .wfilter__open svg {
+      flex: none;
+      width: 15px;
+      height: 15px;
+    }
+
+    .wfilter__key {
+      color: var(--muted);
+    }
+
+    .wfilter__open strong {
+      min-width: 3ch;
+      overflow: hidden;
+      font-weight: 500;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .wfilter__open em {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-style: normal;
+      color: var(--faint);
+    }
+
+    .wfilter__open:hover {
+      border-color: var(--text);
+    }
+
+    /* A filter is set: the button reads as the applied chip, with its own clear. */
+    .wfilter__open.is-set {
+      border-color: var(--text);
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .wfilter__open.is-set .wfilter__key,
+    .wfilter__open.is-set em {
+      color: color-mix(in srgb, var(--bg) 65%, transparent);
+    }
+
+    .wfilter__clear {
+      display: inline-grid;
+      place-items: center;
+      /* Joins the filter button: no left border of its own (the button's
+         right border is the seam), so it is 1px narrower to keep its icon box. */
+      width: 35px;
+      height: 36px;
+      border: 1px solid var(--text);
+      border-left-width: 0;
+      border-radius: 0 999px 999px 0;
+      background: var(--text);
+      color: var(--bg);
+      cursor: pointer;
+      box-shadow: inset 1px 0 0 color-mix(in srgb, var(--bg) 25%, transparent);
+    }
+
+    .wfilter__clear[hidden] {
+      display: none;
+    }
+
+    .wfilter__clear svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* The sheet: a centred panel on tablets, a bottom sheet on phones (below). */
+    .psheet {
+      display: block;
+      width: min(520px, calc(100% - 40px));
+      max-width: none;
+      max-height: min(640px, 82dvh);
+      margin: auto;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .psheet:not([open]) {
+      display: none;
+    }
+
+    .psheet::backdrop {
+      background: color-mix(in srgb, #000 45%, transparent);
+      backdrop-filter: blur(2px);
+    }
+
+    .psheet[open] {
+      animation: psheet-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .psheet[open]::backdrop {
+      animation: psheet-fade 0.28s ease;
+    }
+
+    .psheet__inner {
+      display: flex;
+      flex-direction: column;
+      max-height: inherit;
+    }
+
+    .psheet__grip {
+      display: none;
+    }
+
+    .psheet__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* 12px on the right: the round close button's icon then lines up with
+         the list's 20px edge without the button reaching past the padding. */
+      padding: 18px 12px 12px 20px;
+    }
+
+    .psheet__head h2 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .psheet__close {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .psheet__close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .psheet__close:hover {
+      background: color-mix(in srgb, var(--text) 6%, transparent);
+      color: var(--text);
+    }
+
+    .psheet__search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 20px 10px;
+      padding: 0 14px;
+      height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: 0;
+      color: var(--faint);
+    }
+
+    .psheet__search:focus-within {
+      border-color: var(--text);
+      color: var(--text);
+    }
+
+    .psheet__search svg {
+      flex: none;
+      width: 15px;
+      height: 15px;
+    }
+
+    .psheet__search input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font: inherit;
+      font-size: 16px; /* 16px keeps iOS from zooming on focus */
+    }
+
+    .psheet__list {
+      flex: 1;
+      margin: 0;
+      padding: 0 0 12px;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      list-style: none;
+      border-top: 1px solid var(--line);
+    }
+
+    .psheet__list li[hidden] {
+      display: none;
+    }
+
+    .psheet__opt {
+      position: relative;
+      display: grid;
+      grid-template-columns: 20px minmax(0, 1fr) 56px 28px;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 20px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 14.5px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .psheet__opt :global(svg),
+    .psheet__all svg {
+      display: block;
+      width: 18px;
+      height: 18px;
+    }
+
+    .psheet__all {
+      color: var(--faint);
+    }
+
+    .psheet__name {
+      overflow: hidden;
+      color: var(--text);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    /* Share of all projects that use this platform. */
+    .psheet__bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--faint) calc(var(--share) * 100%), color-mix(in srgb, var(--text) 8%, transparent) 0);
+    }
+
+    .psheet__n {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--faint);
+      text-align: right;
+    }
+
+    .psheet__opt:hover {
+      background: color-mix(in srgb, var(--text) 4%, transparent);
+    }
+
+    /* Selected: scanline band and the red tick, like the sidebar. */
+    .psheet__opt.is-on {
+      background:
+        repeating-linear-gradient(to bottom, color-mix(in srgb, var(--text) 6%, transparent) 0 1px, transparent 1px 3px),
+        color-mix(in srgb, var(--text) 4%, transparent);
+    }
+
+    .psheet__opt.is-on::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 2px;
+      height: 18px;
+      background: var(--accent-red);
+      box-shadow: 0 0 10px 1px color-mix(in srgb, var(--accent-red) 55%, transparent);
+      transform: translateY(-50%);
+    }
+
+    .psheet__opt.is-on .psheet__n,
+    .psheet__opt.is-on .psheet__all {
+      color: var(--accent-red);
+    }
+
+    .psheet__opt.is-on .psheet__bar {
+      background: linear-gradient(90deg, var(--accent-red) calc(var(--share) * 100%), color-mix(in srgb, var(--text) 8%, transparent) 0);
+    }
+
+    .psheet__none {
+      margin: 0;
+      padding: 28px 20px 36px;
+      color: var(--faint);
+      text-align: center;
+    }
+
+    :global(html:has(.psheet[open])) {
+      overflow: hidden;
+    }
+  }
+
+  /* Phones: a bottom sheet, full width, with a grip. */
+  @media (max-width: 560px) {
+    /* Tight when pinned beside Grid/Table: the icon says "filter", the value says which. */
+    .wfilter__key {
+      display: none;
+    }
+
+    .psheet {
+      width: 100%;
+      max-height: 85dvh;
+      margin: auto 0 0;
+      border-width: 1px 0 0;
+      border-radius: 0;
+    }
+
+    .psheet[open] {
+      animation-name: psheet-up;
+    }
+
+    /* The grip: a wide, invisible hit area around a small visible bar. */
+    .psheet__grip {
+      position: relative;
+      display: block;
+      height: 20px;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .psheet__grip::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      width: 36px;
+      height: 4px;
+      translate: -50% 0;
+      border-radius: 0;
+      background: var(--line-strong);
+      transition: background-color 0.2s, width 0.2s;
+    }
+
+    .psheet__head {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .psheet.is-dragging,
+    .psheet.is-dragging .psheet__grip,
+    .psheet.is-dragging .psheet__head {
+      cursor: grabbing;
+      user-select: none;
+    }
+
+    .psheet.is-dragging .psheet__grip::before {
+      width: 44px;
+      background: var(--muted);
+    }
+
+    .psheet__head {
+      padding-top: 18px;
+    }
+
+    .psheet__list {
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+  }
+
+  @keyframes psheet-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  }
+
+  @keyframes psheet-up {
+    from { transform: translateY(100%); }
+  }
+
+  @keyframes psheet-fade {
+    from { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .psheet[open],
+    .psheet[open]::backdrop {
+      animation: none;
+    }
+  }
+
+  .loadbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: var(--ds-space-head);
+  }
+
+  .loadbar[hidden] {
+    display: none;
+  }
+
+  .loadbar__btn {
+    padding: 12px 22px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.25s, border-color 0.25s;
+  }
+
+  .loadbar__btn:hover,
+  .loadbar__btn:focus-visible {
+    border-color: color-mix(in srgb, var(--text) 45%, transparent);
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+  }
+
+  .loadbar__left {
+    margin: 0;
+    font-family: var(--ds-font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    color: var(--faint);
+  }
+</style>

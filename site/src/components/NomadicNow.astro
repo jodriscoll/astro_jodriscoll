@@ -1,0 +1,301 @@
+---
+/**
+ * Home "Now": the practice I own and the clients active inside it, drawn as a
+ * ladder of levels (build, solutions, architecture, leadership). Each client's
+ * bar climbs from hands-on build to the level of the role I hold there, so the
+ * spread across levels reads at a glance. Levels come from the recorded role
+ * titles, not typed in; only published roles appear.
+ */
+import type { PublicRole } from '../gateway';
+
+interface Props {
+  practice: PublicRole;
+  clients: PublicRole[];
+}
+
+const { practice, clients } = Astro.props;
+
+const LEVELS = [
+  { id: 'build', label: 'Build', note: 'Hands-on front end and CMS' },
+  { id: 'solutions', label: 'Solutions', note: 'Scoping, integrations, open source' },
+  { id: 'architecture', label: 'Architecture', note: 'Systems, UI architecture, platforms' },
+  { id: 'lead', label: 'Leadership', note: 'Leading the engineering' },
+] as const;
+
+// Display-only overrides, by role id: where the title undersells the level of
+// the work, and which clients lead the list regardless of level.
+const LEVEL_OVERRIDE: Record<string, number> = { taoti: 3 };
+const PINNED = ['taoti'];
+
+function levelOf(title: string): number {
+  const t = title.toLowerCase();
+  if (/\blead\b|director|head of|principal/.test(t)) return 3;
+  if (/architect/.test(t)) return 2;
+  if (/solutions/.test(t)) return 1;
+  return 0;
+}
+
+const rows = clients
+  .map((role) => ({ role, level: LEVEL_OVERRIDE[role.id] ?? levelOf(role.title) }))
+  .sort((a, b) => {
+    const pin = (id: string) => (PINNED.includes(id) ? 0 : 1);
+    return pin(a.role.id) - pin(b.role.id) || b.level - a.level || (a.role.start ?? '').localeCompare(b.role.start ?? '');
+  });
+
+const since = (value: string | null) => {
+  if (!value) return '';
+  const [y, m] = value.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, 1)).toLocaleString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+};
+const covered = new Set(rows.map((row) => row.level));
+---
+
+<div class="now" data-now>
+  <div class="now__practice">
+    <p class="now__open" data-tip="In a Warcraft 2 BNE Peon voice..."><span class="now__dot" aria-hidden="true"></span>Ready to work</p>
+    <h3 class="now__name">{practice.org}</h3>
+    <p class="now__role">{practice.title} · {practice.displayDate}</p>
+    <p class="now__pitch">
+      Web services at every level of a software team: hands-on build, solutions engineering, architecture and
+      engineering leadership. Clients bring me in at the level they need, and I move between levels as the work does.
+    </p>
+    <p class="now__count"><strong>{rows.length}</strong> active clients <span>·</span> <strong>{covered.size}</strong> of {LEVELS.length} levels in use today</p>
+  </div>
+
+  <div class="now__ladder" role="table" aria-label={`Active clients of ${practice.org} by level of work`}>
+    <div class="now__head" role="row">
+      <span role="columnheader">Client</span>
+      <span class="now__levels" role="columnheader">
+        {LEVELS.map((level) => <b title={level.note}>{level.label}</b>)}
+      </span>
+    </div>
+    {
+      rows.map(({ role, level }, i) => (
+        <a class="now__row ds-link-host" href="/resume" role="row" style={`--i: ${i}; --lv: ${level}`}>
+          <span class="now__client" role="cell">
+            <strong>{role.org}</strong>
+            <small>
+              {role.title} · since {since(role.start)}
+            </small>
+          </span>
+          <span class="now__track" role="cell" aria-label={`${LEVELS[level].label} level`}>
+            <i class="now__bar" aria-hidden="true" />
+            <i class="now__node" aria-hidden="true" />
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .now {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+    gap: 56px;
+    align-items: start;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .now__open {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--positive);
+  }
+
+  .now__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .now__name {
+    margin: 0;
+    font-size: clamp(26px, 2.4vw, 34px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .now__role {
+    margin: 6px 0 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  .now__pitch {
+    margin: 0 0 20px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .now__count {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .now__count strong { color: var(--text); font-weight: 500; }
+  .now__count span { color: var(--faint); }
+
+  /* Ladder: client on the left, four level columns on the right. */
+  .now__head,
+  .now__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: 20px;
+    align-items: center;
+  }
+
+  .now__head {
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .now__levels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .now__levels b {
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .now__row {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.25s;
+  }
+
+  .now__row:hover { background: color-mix(in srgb, var(--text) 3%, transparent); }
+
+  .now__client strong {
+    display: block;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .now__client small {
+    display: block;
+    margin-top: 2px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* The track spans the four levels; the bar climbs from Build to the role's level. */
+  .now__track {
+    position: relative;
+    height: 14px;
+    /* rail runs from the Build stop to the Leadership stop, not edge to edge */
+    background: linear-gradient(90deg, var(--line) 0 0) center / 75% 1px no-repeat;
+  }
+
+  .now__track::before {
+    /* faint level stops */
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* One 25% tile per level, starting at the left edge, so each stop lands at
+       the centre of its column (12.5%, 37.5%, 62.5%, 87.5%), right under its
+       label and exactly where the node stops. A percentage position here
+       offsets the tiles by a share of the leftover space and drifts them. */
+    background: radial-gradient(circle, var(--line-strong) 2px, transparent 2.5px) 0 50% / 25% 100% repeat-x;
+  }
+
+  .now__bar {
+    position: absolute;
+    top: calc(50% - 1px);
+    left: 12.5%;
+    height: 2px;
+    width: calc(var(--lv) * 25%);
+    background: var(--text);
+    transform-origin: left;
+  }
+
+  .now__node {
+    position: absolute;
+    top: 50%;
+    left: calc(12.5% + var(--lv) * 25%);
+    width: 10px;
+    height: 10px;
+    /* Centred on its stop with translate, which composes with the pop-in transform. */
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: var(--bg);
+    box-shadow: inset 0 0 0 2px var(--text);
+  }
+
+  .now__row:hover .now__node { background: var(--accent-red, #e5484d); box-shadow: inset 0 0 0 2px var(--accent-red, #e5484d); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .now__dot { animation: now-ping 2.4s ease-out infinite; }
+
+    .now__bar { transform: scaleX(0); }
+    .now__node { opacity: 0; }
+
+    .now.is-in .now__bar {
+      animation: now-climb 0.9s cubic-bezier(0.6, 0, 0.2, 1) calc(0.2s + var(--i) * 0.09s) forwards;
+    }
+
+    .now.is-in .now__node {
+      animation: now-pop 0.35s ease calc(0.2s + var(--i) * 0.09s + var(--lv) * 0.2s) forwards;
+    }
+  }
+
+  @keyframes now-climb { to { transform: none; } }
+  @keyframes now-pop { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+  @keyframes now-ping {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive) 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 7px transparent; }
+  }
+
+  @media (max-width: 900px) {
+    .now { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  /* Phones: one column. The level names stay, as a scale sitting right above
+     the tracks (which run the full width), so the bars still mean something. */
+  @media (max-width: 560px) {
+    .now__head, .now__row { grid-template-columns: 1fr; gap: 8px; }
+    .now__head { gap: 6px; }
+    .now__levels b { font-size: 9.5px; letter-spacing: 0.02em; }
+  }
+
+  /* Phones: the last client needs no closing rule above the next section. */
+  @media screen and (max-width: 640px) {
+    .now__row:last-child { border-bottom: 0; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var el = document.querySelector('[data-now]');
+    if (!el) return;
+    if (!('IntersectionObserver' in window)) return el.classList.add('is-in');
+    var io = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      el.classList.add('is-in');
+      io.disconnect();
+    }, { threshold: 0.15 });
+    io.observe(el);
+  })();
+</script>

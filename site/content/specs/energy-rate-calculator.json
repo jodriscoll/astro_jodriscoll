@@ -1,0 +1,43 @@
+{
+  "slug": "energy-rate-calculator",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A rate calculator built into a utility’s WordPress site: customers enter their home usage and get a rate estimate.",
+  "short": "A rate calculator inside an electric utility's WordPress site: customers enter their home usage and get an estimate, with every rate managed by editors in ACF.",
+  "facts": [
+    {
+      "label": "Platform",
+      "value": "WordPress and ACF"
+    }
+  ],
+  "stack": [
+    {
+      "group": "WordPress",
+      "items": [
+        {
+          "name": "ACF",
+          "note": "rates managed in the admin"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "JavaScript",
+          "version": "ES5"
+        },
+        {
+          "name": "SCSS"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "images": [],
+  "org": "mindgrub"
+}

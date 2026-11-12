@@ -1,0 +1,32 @@
+{
+  "slug": "drive-empower",
+  "org": "nomadic-digital",
+  "kind": "Client",
+  "role": "Consultant, through Nomadic Digital",
+  "dek": "A custom WordPress 5.x theme for Drive Empower, built for the block editor, written and authored by me under Nomadic Digital.",
+  "short": "A custom WordPress theme for Drive Empower, built for the block editor on Bootstrap and Pantheon: designed, written and delivered by me under Nomadic Digital.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Gutenberg"
+        },
+        {
+          "name": "Bootstrap"
+        },
+        {
+          "name": "Pantheon"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

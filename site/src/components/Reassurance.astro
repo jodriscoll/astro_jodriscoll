@@ -1,0 +1,247 @@
+---
+// "Open to Work" stays put. Everything else rides past it.
+// These double as the page's keywords: plain, searchable names for real work.
+const traits = [
+  'Management',
+  'Mentoring',
+  'Tutoring',
+  'AI Agnostic',
+  'Marketing Savvy',
+  'Cost Effective',
+  'No Client Is Too Small',
+  'Cost Analysis',
+  'Estimates and Proposals',
+  'Scoping',
+  'Discovery',
+  'Requirements Gathering',
+  'Stakeholder Communication',
+  'Client Management',
+  'Vendor Coordination',
+  'Technical Summaries',
+  'Technical Documentation',
+  'Runbooks',
+  'Postmortems',
+  'Architecture Decision Records',
+  'Documentation',
+  'Onboarding Guides',
+  'Release Notes',
+  'Changelogs',
+  'Audits and Reports',
+  'Agile',
+  'Scrum',
+  'Kanban',
+  'Waterfall',
+  'Sprint Planning',
+  'Backlog Grooming',
+  'Story Pointing',
+  'Standups',
+  'Retrospectives',
+  'Roadmapping',
+  'Jira',
+  'Linear',
+  'Asana',
+  'Code Review',
+  'Pair Programming',
+  'Team Leadership',
+  'Hiring and Interviews',
+  'PHP Upgrades',
+  'Timber Upgrades',
+  'WordPress Core Upgrades',
+  'Plugin Audits',
+  'Dependency Updates',
+  'Performance Troubleshooting',
+  'Core Web Vitals',
+  'Lighthouse',
+  'Performance Budgets',
+  'Caching',
+  'Redis',
+  'Incident Response',
+  'Security Scanning',
+  'Malware Cleanup',
+  'Two-Factor Authentication',
+  'Backups and Restores',
+  'Domain Management',
+  'DNS',
+  'SSL',
+  'Organizational Email Configurations',
+  'SPF',
+  'DKIM',
+  'DMARC',
+  'Google Search Console',
+  'Google Analytics 4',
+  'Google Tag Manager',
+  'Technical SEO',
+  'Structured Data',
+  'Sitemaps',
+  'Android Play Console',
+  'Apple TestFlight',
+  'App Store Connect',
+  'App Store Releases',
+  'Accessibility First',
+  'WCAG',
+  'Section 508',
+  'WordPress',
+  'Bedrock',
+  'Timber',
+  'Twig',
+  'Advanced Custom Fields',
+  'Gravity Forms',
+  'Gutenberg Blocks',
+  'Multisite',
+  'Craft CMS 5',
+  'Drupal',
+  'Headless CMS',
+  'Content Modeling',
+  'Migrations',
+  'Expo',
+  'React Native',
+  'React',
+  'Vue',
+  'Angular',
+  'Next.js',
+  'Astro',
+  'TypeScript',
+  'JavaScript',
+  'PHP 8.4',
+  'Node.js',
+  'Sass',
+  'Tailwind CSS',
+  'CI Pipelines Built, Not Just Used',
+  'GitHub Actions',
+  'GitLab CI',
+  'Docker',
+  'Lando',
+  'DDEV',
+  'AWS',
+  'Pantheon',
+  'WP Engine',
+  'Craft Cloud',
+  'Kinsta',
+  'Vercel',
+  'Cloudflare',
+  'Supabase',
+  'MySQL',
+  'Visual Regression Testing',
+  'Automated Testing',
+  'Site Migrations',
+  'Hosting Migrations',
+  'Coding Standards',
+  'Design Review',
+  'Remote Across Time Zones',
+  'Writes It Down',
+  'Measures Before Restyling',
+];
+const run = `animation-duration: ${traits.length * 2.2}s`;
+---
+
+<div class="traits" data-bleed="phone">
+  <button type="button" class="traits__open" data-open-contact data-track="contact-open" data-track-label="Open to Work" aria-label="Open to Work: Start a Conversation">
+    <i aria-hidden="true"></i>
+    <span class="traits__open-label">Open to Work</span>
+    <span class="traits__open-go" aria-hidden="true">→</span>
+  </button>
+  <div class="traits__lane">
+    <ul class="traits__track" aria-label="Skills and services" style={run}>
+      {traits.map((trait) => <li>{trait}</li>)}
+    </ul>
+    <ul class="traits__track" aria-hidden="true" style={run}>
+      {traits.map((trait) => <li>{trait}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* "Open to Work" is the one thing in the strip that doesn't move, so it
+     gets a little weight: a tinted cell, a bold label, a radar dot with two
+     rings, and a light that sweeps across now and then. It also opens the
+     contact form, and an arrow slides in on hover to say so. */
+  .traits__open {
+    position: relative;
+    gap: 10px;
+    padding: 0 22px 0 20px;
+    overflow: hidden;
+    border: 0;
+    border-right: 1px solid color-mix(in srgb, var(--positive) 45%, var(--line-strong));
+    background: color-mix(in srgb, var(--positive) 10%, transparent);
+    box-shadow: inset 2px 0 0 var(--positive);
+    color: var(--positive);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: background 0.3s ease, padding 0.4s cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+
+  .traits__open::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--positive) 22%, transparent) 50%, transparent 70%) no-repeat;
+    background-size: 220% 100%;
+    background-position: 160% 0;
+    pointer-events: none;
+  }
+
+  .traits__open i {
+    position: relative;
+    width: 9px;
+    height: 9px;
+  }
+
+  .traits__open i::before,
+  .traits__open i::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--positive);
+    border-radius: 50%;
+    opacity: 0;
+  }
+
+  .traits__open-go {
+    display: inline-block;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: width 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), opacity 0.25s ease, transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1);
+  }
+
+  .traits__open:is(:hover, :focus-visible) {
+    background: color-mix(in srgb, var(--positive) 18%, transparent);
+  }
+
+  .traits__open:is(:hover, :focus-visible) .traits__open-go {
+    width: 1em;
+    opacity: 1;
+    transform: none;
+  }
+
+  .traits__open:focus-visible {
+    outline: 2px solid var(--positive);
+    outline-offset: -2px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .traits__open::after { animation: open-sheen 6s ease-in-out 1.5s infinite; }
+    .traits__open i::before { animation: open-ring 2.4s ease-out infinite; }
+    .traits__open i::after { animation: open-ring 2.4s ease-out 0.8s infinite; }
+    .traits__open:active { scale: 0.97; }
+  }
+
+  @keyframes open-sheen {
+    0%, 70% { background-position: 160% 0; }
+    100% { background-position: -60% 0; }
+  }
+
+  @keyframes open-ring {
+    0% { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0; transform: scale(3.2); }
+  }
+
+  @media print {
+    .traits__open { background: none; box-shadow: none; }
+    .traits__open::after, .traits__open-go { display: none; }
+  }
+</style>

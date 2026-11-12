@@ -1,0 +1,92 @@
+---
+/**
+ * "In my words": the about paragraphs beside the CodeSketch editor drawing.
+ * Stacked (1100px and under), the drawing sits before the last paragraph:
+ * CSS only (display: contents + order), no second copy of the drawing.
+ * Lives on the Work page, above Time on
+ * record, and uses the same head and spacing as that block.
+ */
+import { getProfile } from '../gateway';
+import CodeSketch from './resume/CodeSketch.astro';
+
+const profile = getProfile();
+---
+
+<section class="words" id="about" aria-labelledby="about-title" data-print="hide">
+  <div class="rule-head"><p class="eyebrow">In my words</p></div>
+  <h2 id="about-title" class="h-section">How I think about the work</h2>
+  <div class="words__grid">
+    <div class="words__text">
+      <div class="words__story">
+        {profile.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </div>
+    <div class="words__art">
+      <CodeSketch />
+    </div>
+  </div>
+</section>
+
+<style>
+  .words {
+    margin-top: var(--ds-space-section-sm);
+  }
+
+  .words .rule-head {
+    margin-bottom: var(--ds-space-head, 40px);
+  }
+
+  .words__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 60ch) minmax(360px, 1fr);
+    gap: var(--ds-space-12);
+    align-items: start;
+  }
+
+  .words__story {
+    display: grid;
+    gap: var(--ds-space-4);
+    max-width: var(--ds-measure);
+  }
+
+  .words__story p {
+    margin: 0;
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-lg);
+    line-height: var(--ds-leading-body);
+  }
+
+  .words__art {
+    position: sticky;
+    top: var(--ds-space-16);
+  }
+
+  @media (max-width: 1100px) {
+    /* The paragraphs become direct grid items, so the drawing can be ordered
+       between them; the grid's gap takes over from the story's. */
+    .words__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-4);
+    }
+
+    .words__text,
+    .words__story {
+      display: contents;
+    }
+
+    .words__story p {
+      max-width: var(--ds-measure);
+    }
+
+    .words__art {
+      position: static;
+      order: 1;
+      max-width: 520px;
+      margin-block: var(--ds-space-8);
+    }
+
+    .words__story p:last-child {
+      order: 2;
+    }
+  }
+</style>

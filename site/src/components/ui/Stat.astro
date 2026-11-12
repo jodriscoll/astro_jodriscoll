@@ -1,0 +1,74 @@
+---
+/**
+ * One figure: a value over a label. Lives inside <StatGrid>.
+ * tone="accent" marks the one number a reader should see first.
+ */
+interface Props {
+  value: string | number;
+  label: string;
+  note?: string;
+  tone?: 'default' | 'accent' | 'positive';
+}
+
+const { value, label, note, tone = 'default' } = Astro.props;
+---
+
+<div class:list={['ds-stat', tone !== 'default' && `ds-stat--${tone}`]}>
+  <dt class="ds-stat__label">{label}</dt>
+  <dd class="ds-stat__value">{value}</dd>
+  {note && <dd class="ds-stat__note">{note}</dd>}
+</div>
+
+<style>
+  .ds-stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-space-1);
+    min-width: 0;
+    margin: 0;
+    padding: var(--ds-space-4) var(--ds-space-5) var(--ds-space-4) 0;
+  }
+
+  .ds-stat__value {
+    order: 1;
+    margin: 0;
+    font-size: var(--ds-text-2xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--ds-tracking-tight);
+    font-variant-numeric: tabular-nums;
+    color: var(--ds-fg);
+  }
+
+  .ds-stat__label {
+    order: 2;
+    margin: 0;
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-snug);
+    color: var(--ds-fg-muted);
+  }
+
+  .ds-stat__note {
+    order: 3;
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .ds-stat--accent .ds-stat__value {
+    color: var(--ds-accent);
+  }
+
+  /* Good news: open work, growth, things that are going right. */
+  .ds-stat--positive .ds-stat__value {
+    color: var(--ds-positive);
+  }
+
+  @media print {
+    .ds-stat {
+      padding: var(--ds-space-2) var(--ds-space-3) var(--ds-space-2) 0;
+      break-inside: avoid;
+    }
+  }
+</style>

@@ -1,0 +1,97 @@
+---
+import { build } from '../lib/isometric';
+
+// A device building a generated layout: a browser, or iPhone and Android
+// screens. The large drawing on the home page pairs a browser with a phone and
+// cycles through layouts; post covers cycle too; thumbnails rebuild on hover.
+interface Props {
+  seed: string;
+  label?: string;
+  size?: number;
+  count?: number;
+  tall?: number;
+  class?: string;
+  caption?: string;
+  pair?: boolean;
+  cycle?: boolean;
+}
+
+const { seed, label, size, class: className, caption } = Astro.props;
+const pair = Astro.props.pair ?? (size ?? 0) >= 12;
+const cycle = Astro.props.cycle ?? (pair || String(className ?? '').includes('post__cover'));
+const drawing = build(seed, { pair, variants: pair ? 5 : 4 });
+---
+
+<figure class:list={['iso', 'bld', className]} data-build data-cycle={cycle ? 'true' : undefined}>
+  <svg viewBox={drawing.viewBox} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} preserveAspectRatio="xMidYMid meet">
+    {
+      drawing.devices.map((device) => (
+        <g class:list={['bld__dev', `bld__dev--${device.kind}`]}>
+          {device.chrome
+            .filter((mark) => mark.cls !== 'b-load')
+            .map((mark) => (
+              <path class={mark.cls} d={mark.d} pathLength="1" style={`--d: ${mark.delay}ms`} />
+            ))}
+          {device.layouts.map((layout, i) => (
+            <g class:list={['bld__layout', i === 0 && 'is-on']}>
+              {device.chrome
+                .filter((mark) => mark.cls === 'b-load')
+                .map((mark) => (
+                  <path class="b-load" d={mark.d} pathLength="1" />
+                ))}
+              {layout.map((mark) => (
+                <path class={mark.cls} d={mark.d} pathLength="1" style={`--d: ${mark.delay}ms`} />
+              ))}
+            </g>
+          ))}
+        </g>
+      ))
+    }
+  </svg>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script is:inline>
+  (function () {
+    if (window.__buildsReady) return;
+    window.__buildsReady = true;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function next(fig) {
+      fig.querySelectorAll('.bld__dev').forEach(function (dev) {
+        var layouts = dev.querySelectorAll('.bld__layout');
+        if (layouts.length < 2) return;
+        var at = 0;
+        layouts.forEach(function (l, i) { if (l.classList.contains('is-on')) at = i; });
+        layouts[at].classList.remove('is-on');
+        layouts[(at + 1) % layouts.length].classList.add('is-on');
+      });
+    }
+    function start() {
+      var figs = document.querySelectorAll('[data-build]');
+      if (reduce) { figs.forEach(function (f) { f.classList.add('is-in'); }); return; }
+      var seen = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          entry.target._visible = entry.isIntersecting;
+          if (entry.isIntersecting) entry.target.classList.add('is-in');
+        });
+      }, { threshold: 0.2 });
+      figs.forEach(function (fig) {
+        seen.observe(fig);
+        if (fig.hasAttribute('data-cycle')) {
+          setInterval(function () { if (fig._visible && !document.hidden) next(fig); }, 6500);
+        } else {
+          var host = fig.closest('a') || fig;
+          var last = 0;
+          host.addEventListener('mouseenter', function () {
+            var now = Date.now();
+            if (now - last < 1200) return;
+            last = now;
+            next(fig);
+          });
+        }
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
+</script>

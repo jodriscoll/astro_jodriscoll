@@ -1,0 +1,34 @@
+{
+  "slug": "think-babies",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress theme for the ThinkBabies campaign.",
+  "short": "A custom WordPress theme for ThinkBabies, the national early-childhood campaign, built on Bootstrap 4 and hosted on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": [
+    {
+      "src": "/work/think-babies/home.webp",
+      "alt": "ThinkBabies home page: The future begins with babies"
+    }
+  ]
+}

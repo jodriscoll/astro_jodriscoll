@@ -1,0 +1,219 @@
+/* Tags, Writing index and post rail. Same language as the sidebar:
+   scanline beam, glyph-decode labels, a lit red tick for "current". */
+
+/* ---------- Writing index: the filter bar ---------- */
+
+.tagbar[data-tagbar] {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.tagbar[data-tagbar] a {
+  position: relative;
+  z-index: 1;
+  gap: 5px;
+  margin-right: 0;
+  padding: 13px 16px 15px;
+  transition: color .2s;
+}
+.tagbar[data-tagbar] a:first-of-type { padding-left: 12px; }
+.tagbar[data-tagbar] a:focus-visible { outline: none; color: var(--text); }
+
+.tagbar[data-tagbar] a b { font-weight: inherit; white-space: nowrap; }
+
+.tagbar[data-tagbar] a span {
+  display: inline-block;
+  transition: color .2s, transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+.tagbar[data-tagbar] a:hover span,
+.tagbar[data-tagbar] a:focus-visible span { color: var(--text); transform: rotate(-12deg); }
+
+/* Share meter: each tag carries a hairline as long as its share of posts. */
+.tagbar[data-tagbar] a::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: 6px;
+  width: calc((100% - 32px) * var(--share, 0));
+  min-width: 3px;
+  height: 2px;
+  background: var(--line-strong);
+  transform-origin: left;
+  transition: background .25s, box-shadow .25s;
+}
+.tagbar[data-tagbar] a:first-of-type::after { left: 12px; width: calc((100% - 28px) * var(--share, 0)); }
+.tagbar[data-tagbar].is-ready a::after { animation: meter-in .7s cubic-bezier(.2, .8, .2, 1) both; }
+.tagbar[data-tagbar] a:hover::after,
+.tagbar[data-tagbar] a:focus-visible::after { background: var(--text); }
+
+@keyframes meter-in { from { transform: scaleX(0); } }
+
+/* Current filter: red hash, red count, red meter with a glow. */
+.tagbar[data-tagbar] a[aria-current] { color: var(--text); font-weight: 600; }
+.tagbar[data-tagbar] a[aria-current] span,
+.tagbar[data-tagbar] a[aria-current] em { color: var(--accent-red); }
+.tagbar[data-tagbar] a[aria-current]::after {
+  background: var(--accent-red);
+  box-shadow: 0 0 10px 0 color-mix(in srgb, var(--accent-red) 55%, transparent);
+}
+
+/* Beam: one scanline block that glides to whichever tag is under the pointer. */
+.tagbar__beam {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w, 0px);
+  height: var(--h, 0px);
+  transform: translate(var(--x, 0px), var(--y, 0px));
+  opacity: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--text) 7%, transparent) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(to bottom, color-mix(in srgb, var(--text) 5%, transparent), transparent);
+}
+.tagbar[data-tagbar].is-ready .tagbar__beam {
+  transition:
+    transform .35s cubic-bezier(.2, .8, .2, 1),
+    width .35s cubic-bezier(.2, .8, .2, 1),
+    height .35s cubic-bezier(.2, .8, .2, 1),
+    opacity .25s;
+}
+
+/* Readout under the bar: "SHOWING 02/05 #Testing▌" */
+.tagbar__readout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 40px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.tagbar__readout strong { color: var(--text); font-weight: 500; }
+.tagbar__filter { margin-left: 8px; color: var(--accent-red); text-transform: none; letter-spacing: 0; }
+.tagbar__filter:not(:empty)::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 11px;
+  margin-left: 4px;
+  vertical-align: -1px;
+  background: var(--accent-red);
+  animation: tag-caret 1.1s steps(1) infinite;
+}
+@keyframes tag-caret { 50% { opacity: 0; } }
+
+/* Cards rise in, one after another, when the filter changes. */
+.postgrid > a.is-entering { animation: card-in .5s cubic-bezier(.2, .8, .2, 1) var(--enter-delay, 0ms) both; }
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(14px); clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+
+/* ---------- Post rail: the tag ledger ---------- */
+
+.rail .rail__tags a {
+  position: relative;
+  isolation: isolate;
+  padding: 8px 4px 8px 0;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Scanline band behind the row: drawn 10px wider on the left than the text,
+   as decoration, so the row itself stays on the rail's edge. */
+.rail .rail__tags a::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -10px;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--text) 7%, transparent) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(to right, color-mix(in srgb, var(--text) 6%, transparent), transparent 90%);
+  opacity: 0;
+  transform: scaleX(.6);
+  transform-origin: left;
+  transition: opacity .25s, transform .35s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Red tick on the left edge. */
+.rail .rail__tags a::after {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 2px;
+  height: 0;
+  background: var(--accent-red);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--accent-red) 55%, transparent);
+  transform: translateY(-50%);
+  transition: height .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+.rail .rail__tags a:hover::before,
+.rail .rail__tags a:focus-visible::before { opacity: 1; transform: none; }
+.rail .rail__tags a:hover::after,
+.rail .rail__tags a:focus-visible::after { height: 14px; }
+.rail .rail__tags a:focus-visible { outline: none; }
+
+.rail .rail__tagname { white-space: nowrap; }
+
+.rail .rail__tags a:hover .rail__hash,
+.rail .rail__tags a:focus-visible .rail__hash { color: var(--accent-red); }
+.rail .rail__tags a:hover .rail__ticks i,
+.rail .rail__tags a:focus-visible .rail__ticks i { background: var(--accent-red); height: 12px; }
+.rail .rail__tags a:hover .rail__count,
+.rail .rail__tags a:focus-visible .rail__count { color: var(--text); }
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .tagbar[data-tagbar].is-ready a::after,
+  .postgrid > a.is-entering,
+  .tagbar__filter:not(:empty)::after { animation: none; }
+  .tagbar[data-tagbar].is-ready .tagbar__beam,
+  .rail .rail__tags a::before,
+  .rail .rail__tags a::after { transition: none; }
+}
+
+/* ---------- Cleanup: one quiet row ----------
+   Tags sit on a single line that scrolls sideways, with no dividers. Only the
+   current tag keeps its meter. The readout sits right under it, and the grid
+   below carries no extra rule. */
+.tagbar[data-tagbar] {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  margin-bottom: 10px;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+  mask-image: linear-gradient(90deg, #000 0, #000 92%, transparent);
+}
+.tagbar[data-tagbar]::-webkit-scrollbar { display: none; }
+.tagbar[data-tagbar] a,
+.tagbar[data-tagbar] a:first-of-type {
+  flex: none;
+  border-right: 0;
+  padding: 10px 14px 12px 0;
+  margin-right: 10px;
+  font-size: 13px;
+}
+.tagbar[data-tagbar] a::after,
+.tagbar[data-tagbar] a:first-of-type::after { left: 0; width: calc(100% - 14px); opacity: 0; }
+.tagbar[data-tagbar] a:hover::after { opacity: 0.5; }
+.tagbar[data-tagbar] a[aria-current]::after { opacity: 1; bottom: -1px; }
+.tagbar[data-tagbar] a em { top: -4px; }
+.tagbar__beam { display: none; }
+.tagbar__readout { margin: 0 0 32px; }
+.tagbar__readout + .postgrid { border-top: 0; }
+.tagbar__readout + .postgrid::before { content: none; }

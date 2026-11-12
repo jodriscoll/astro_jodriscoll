@@ -1,0 +1,229 @@
+---
+/**
+ * A stack as platform icons: a hairline strip of brand marks, the same
+ * construction as the Home work cards. Every name is still real text for
+ * parsers (sr-only on screen, a plain line in print). Names with no icon
+ * collapse into a "+N" cell whose tooltip lists them. On phones the strip is
+ * a marquee: every icon rides along (none held back by `max`) and there is
+ * no "+N" cell.
+ */
+import { platformMarks, toolMarkup } from '../../lib/platforms';
+
+interface Props {
+  names: string[];
+  label: string;
+  max?: number;
+  /** How many names the print line keeps (defaults to max). */
+  printMax?: number;
+  size?: 'sm' | 'md';
+}
+
+const { names, label, max = 10, printMax, size = 'md' } = Astro.props;
+// Platform marks first, then tool marks (Storybook, Vitest, Docker…) for names
+// that aren't platforms, so fewer names fall into the "+N" cell.
+const platform = platformMarks(names);
+const taken = new Set(platform.map((mark) => mark.name.toLowerCase()));
+const tools = names
+  .filter((name) => !taken.has(name.toLowerCase()) && ![...taken].some((mark) => name.toLowerCase().includes(mark)))
+  .map((name) => ({ id: name, name, svg: toolMarkup(name) }))
+  .filter((mark) => mark.svg);
+const marks = [...platform, ...tools];
+const shown = marks.slice(0, max);
+const hiddenMarks = marks.slice(max).map((mark) => mark.name);
+const covered = new Set(marks.map((mark) => mark.name.toLowerCase()));
+// Names the icon set doesn't cover, minus ones an icon already stands for.
+const loose = names.filter((name) => {
+  const lower = name.toLowerCase();
+  return ![...covered].some((mark) => lower.includes(mark) || mark.includes(lower));
+});
+const rest = [...hiddenMarks, ...loose];
+---
+
+{
+  names.length > 0 && (
+    <div class:list={['ds-marks', `ds-marks--${size}`]}>
+      <div class="ds-marks__lane" style={`--n: ${shown.length + (rest.length ? 1 : 0)}; --n-all: ${marks.length}`} data-print="hide">
+        {[0, 1].map((copy) => (
+          <ul class:list={['ds-marks__row', copy === 1 && 'ds-marks__dup']} aria-hidden="true">
+            {marks.map((mark, index) => (
+              <li class:list={[index >= shown.length && 'ds-marks__extra']} data-tip={mark.name} set:html={mark.svg} />
+            ))}
+            {rest.length > 0 && (
+              <li class="ds-marks__more" data-tip={rest.join(', ')}>
+                +{rest.length}
+              </li>
+            )}
+          </ul>
+        ))}
+      </div>
+      <p class="sr-only" data-print="hide">
+        {label}: {names.join(', ')}
+      </p>
+      <p class="ds-marks__print" data-print="only">
+        {names.slice(0, printMax ?? max).join(' · ')}
+      </p>
+    </div>
+  )
+}
+
+<script is:inline>
+  // Mark each icon lane that is wider than its box, so only those scroll.
+  (function () {
+    if (window.__dsMarks) return;
+    window.__dsMarks = true;
+    function check(lane) {
+      var row = lane.querySelector('.ds-marks__row');
+      if (row) lane.classList.toggle('is-overflow', row.scrollWidth > lane.clientWidth + 1);
+    }
+    function all() { document.querySelectorAll('.ds-marks__lane').forEach(check); }
+    function start() {
+      if ('ResizeObserver' in window) {
+        var ro = new ResizeObserver(function (entries) { entries.forEach(function (e) { check(e.target); }); });
+        document.querySelectorAll('.ds-marks__lane').forEach(function (lane) { ro.observe(lane); });
+      } else {
+        window.addEventListener('resize', all, { passive: true });
+      }
+      all();
+    }
+    // This script sits beside the first strip; wait until every strip exists.
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
+</script>
+
+<style>
+  .ds-marks {
+    --cell: 52px;
+    min-width: 0;
+  }
+
+  .ds-marks--sm {
+    --cell: 46px;
+  }
+
+  .ds-marks__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: var(--ds-hairline) solid var(--ds-rule);
+    border-left: var(--ds-hairline) solid var(--ds-rule);
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .ds-marks__row li {
+    display: grid;
+    place-items: center;
+    width: var(--cell);
+    height: var(--cell);
+    border-right: var(--ds-hairline) solid var(--ds-rule);
+    border-bottom: var(--ds-hairline) solid var(--ds-rule);
+    transition: background-color var(--ds-dur-fast);
+  }
+
+  .ds-marks__row li:hover {
+    background: var(--ds-ink-5);
+  }
+
+  .ds-marks__row :global(svg) {
+    display: block;
+    width: calc(var(--cell) * 0.6);
+    height: calc(var(--cell) * 0.6);
+  }
+
+  .ds-marks__more {
+    width: auto !important;
+    min-width: var(--cell);
+    padding: 0 var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+    cursor: help;
+  }
+
+  /* Icons past `max` only ride in the phone marquee; elsewhere "+N" stands in. */
+  .ds-marks__row .ds-marks__extra {
+    display: none;
+  }
+
+  /* The second copy only exists for the phone marquee below. */
+  .ds-marks__dup {
+    display: none !important;
+  }
+
+  /* Phones: one line that drifts sideways, like the Home work cards, instead
+     of wrapping into a block of icons. Pauses under a finger. */
+  @media screen and (max-width: 720px) {
+    .ds-marks__lane {
+      display: flex;
+      width: 100%;
+      overflow: hidden;
+      border-top: var(--ds-hairline) solid var(--ds-rule);
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    }
+
+    .ds-marks__lane .ds-marks__row {
+      flex: none;
+      flex-wrap: nowrap;
+      width: max-content;
+      max-width: none;
+      border: 0;
+    }
+
+    .ds-marks__lane .ds-marks__row li {
+      border-bottom: 0;
+      border-left: 0;
+    }
+
+    /* The marquee shows every icon and never a "+N" cell. */
+    .ds-marks__lane .ds-marks__row .ds-marks__extra {
+      display: grid;
+    }
+
+    .ds-marks__lane .ds-marks__row .ds-marks__more {
+      display: none;
+    }
+
+    /* Only a row too long for the card moves; a short one just sits still. */
+    .ds-marks__lane.is-overflow .ds-marks__dup {
+      display: flex !important;
+    }
+
+    .ds-marks__lane:not(.is-overflow) {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .ds-marks__lane.is-overflow .ds-marks__row {
+        animation: ds-marks-run calc(var(--n-all, var(--n, 8)) * 2.4s) linear infinite;
+      }
+
+      .ds-marks__lane:hover .ds-marks__row,
+      .ds-marks__lane:active .ds-marks__row {
+        animation-play-state: paused;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-marks__lane { overflow-x: auto; }
+      .ds-marks__lane.is-overflow .ds-marks__dup { display: none !important; }
+    }
+  }
+
+  @keyframes ds-marks-run {
+    to { transform: translateX(-100%); }
+  }
+
+  @media print {
+    .ds-marks__print {
+      margin: 0;
+      color: var(--ds-fg-muted);
+      font-size: var(--ds-text-xs);
+    }
+  }
+</style>

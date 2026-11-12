@@ -1,0 +1,29 @@
+{
+  "slug": "gilchrist-infoweb",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress intranet for Gilchrist Hospice.",
+  "short": "Infoweb, a custom WordPress intranet for Gilchrist Hospice staff, built on Bootstrap 4 and hosted on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

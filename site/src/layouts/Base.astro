@@ -1,0 +1,402 @@
+---
+import '../styles/global.css';
+import '../design/tokens.css';
+import '../styles/shell.css';
+import ContactDialog from '../components/ContactDialog.astro';
+import Footer from '../components/Footer.astro';
+import Nav from '../components/Nav.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import { absolute, breadcrumbNode, pageNode, serializeGraph, siteGraph } from '../agent';
+import type { JsonLdNode, PageType } from '../agent';
+import { loadBundle } from '../agent/site';
+
+interface Props {
+  title: string;
+  description: string;
+  mode?: 'site' | 'document' | 'piece';
+  /** schema.org type of this page's WebPage node. */
+  pageType?: PageType;
+  /** Extra properties merged into the WebPage node (mainEntity, hasPart, ...). */
+  page?: JsonLdNode;
+  /** Extra JSON-LD nodes for this page (the work, the post, a list). */
+  schema?: JsonLdNode[];
+  /** Breadcrumb trail, home first. */
+  crumbs?: { name: string; path: string }[];
+  /** Share image, site-relative or absolute. Defaults to the portrait. */
+  image?: string;
+  imageAlt?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  published?: Date;
+  modified?: Date;
+  tags?: string[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  mode = 'site',
+  pageType,
+  page,
+  schema = [],
+  crumbs,
+  image,
+  imageAlt,
+  ogType = 'website',
+  published,
+  modified,
+  tags = [],
+  noindex = false,
+} = Astro.props;
+
+// One URL per page: the directory build gives "/resume/", but links and the
+// sitemap use "/resume". Canonicals follow the links.
+const path = Astro.url.pathname.length > 1 ? Astro.url.pathname.replace(/\/+$/, '') : '/';
+const canonical = new URL(path, Astro.site);
+
+const bundle = await loadBundle(Astro.site);
+const { person, site } = bundle;
+const shareImage = absolute(site, image ?? person.image ?? '/favicon.svg');
+const shareAlt = image ? (imageAlt ?? title) : (person.imageAlt ?? person.name);
+const graph = serializeGraph([
+  ...siteGraph(bundle),
+  pageNode(site, {
+    url: canonical.href,
+    type: pageType,
+    name: title,
+    description,
+    image: image ?? person.image,
+    breadcrumb: Boolean(crumbs?.length),
+    extra: page,
+  }),
+  ...(crumbs?.length ? [breadcrumbNode(site, canonical.href, crumbs)] : []),
+  ...schema,
+]);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#050507" />
+    <script is:inline>
+      (function () {
+        var key = 'jodriscoll-theme';
+        var choice = 'system';
+        try {
+          var stored = localStorage.getItem(key);
+          if (stored === 'light' || stored === 'dark' || stored === 'system') choice = stored;
+        } catch (e) {}
+        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var resolved = choice === 'system' ? (dark ? 'dark' : 'light') : choice;
+        var root = document.documentElement;
+        root.dataset.theme = resolved;
+        root.dataset.themeChoice = choice;
+        root.style.colorScheme = resolved;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', resolved === 'dark' ? '#000000' : '#f6f4ef');
+      })();
+    </script>
+    <meta name="description" content={description} />
+    <meta name="author" content={person.name} />
+    <meta
+      name="robots"
+      content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+    <meta name="view-transition" content="same-origin" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.language.replace('-', '_')} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:alt" content={shareAlt} />
+    {ogType === 'article' && published && <meta property="article:published_time" content={published.toISOString()} />}
+    {ogType === 'article' && (modified || published) && <meta property="article:modified_time" content={(modified ?? published)!.toISOString()} />}
+    {ogType === 'article' && <meta property="article:author" content={new URL('/resume', Astro.site)} />}
+    {ogType === 'article' && tags.map((tag) => <meta property="article:tag" content={tag} />)}
+    {ogType === 'profile' && <meta property="profile:username" content={person.handle} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
+    <meta name="twitter:image:alt" content={shareAlt} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" />
+    {person.sameAs.map((href) => <link rel="me" href={href} />)}
+    <link rel="alternate" type="application/rss+xml" title="Joseph O'Driscoll" href="/rss.xml" />
+    <link rel="alternate" type="text/plain" title="Summary for language models" href="/llms.txt" />
+    <link rel="alternate" type="text/plain" title="Full public record for language models" href="/llms-full.txt" />
+    <link rel="alternate" type="application/json" title="Resume (JSON Resume)" href="/resume.json" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <script type="application/ld+json" is:inline set:html={graph}></script>
+    <title>{title}</title>
+  </head>
+  <body class:list={[mode, 'is-shell']}>
+    <a class="skip" href="#content">Skip to content</a>
+    <MobileMenu />
+    <div class="shell">
+      <aside class="side">
+        <div class="side__inner">
+          <Nav />
+        </div>
+      </aside>
+      <div class="shell__main">
+        {
+          Astro.slots.has('bar') && (
+            <div class="crumbbar">
+              <slot name="bar" />
+            </div>
+          )
+        }
+        <main id="content" class={mode === 'piece' ? 'takeover' : undefined}>
+          <slot />
+        </main>
+      </div>
+    </div>
+    <Footer />
+    <ContactDialog />
+    <script is:inline>
+      (function () {
+        if (window.__themeBound) return;
+        window.__themeBound = true;
+        var key = 'jodriscoll-theme';
+        var root = document.documentElement;
+        var media = window.matchMedia('(prefers-color-scheme: dark)');
+        function choice() {
+          return root.dataset.themeChoice || 'system';
+        }
+
+        function resolve(value) {
+          if (value === 'light' || value === 'dark') return value;
+          return media.matches ? 'dark' : 'light';
+        }
+
+        function paint(value, save) {
+          var resolved = resolve(value);
+          root.dataset.theme = resolved;
+          root.dataset.themeChoice = value;
+          root.style.colorScheme = resolved;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', resolved === 'dark' ? '#000000' : '#f6f4ef');
+          document.querySelectorAll('[data-theme-set]').forEach(function (button) {
+            button.setAttribute('aria-pressed', button.getAttribute('data-theme-set') === value ? 'true' : 'false');
+          });
+          if (save) {
+            try { localStorage.setItem(key, value); } catch (e) {}
+          }
+        }
+
+        document.addEventListener('click', function (event) {
+          var button = event.target.closest && event.target.closest('[data-theme-set]');
+          if (!button) return;
+          var value = button.getAttribute('data-theme-set');
+          if (value !== 'system' && value !== 'light' && value !== 'dark') return;
+          paint(value, true);
+        });
+
+        media.addEventListener('change', function () {
+          if (choice() === 'system') paint('system', false);
+        });
+
+        paint(choice(), false);
+      })();
+    </script>
+    <div class="tip" role="tooltip" aria-hidden="true" data-tip-box></div>
+    <script is:inline>
+      (function () {
+        if (window.__tipBound) return;
+        window.__tipBound = true;
+        // Every platform icon gets a tooltip that rides along with the cursor.
+        // .case__marks chips show their names already, so they get no tooltip.
+        var ICONS = '.work__marks li, .ledger__marks i, .specsheet__icon, .foot__platforms i, .filter i, [data-tip]';
+        var box = document.querySelector('[data-tip-box]');
+        var current = null;
+
+        function label(el) {
+          if (el.dataset.tip) return el.dataset.tip;
+          var text = el.getAttribute('data-name') || el.getAttribute('title') || el.getAttribute('aria-label');
+          if (!text) {
+            var sr = el.querySelector('.sr-only');
+            if (sr) text = sr.textContent;
+          }
+          if (!text && el.classList.contains('specsheet__icon')) {
+            var name = el.parentElement && el.parentElement.querySelector('.specsheet__name');
+            if (name) text = name.textContent;
+          }
+          if (!text && el.parentElement) {
+            // The parent's visible words, minus letters drawn inside the SVG marks.
+            var copy = el.parentElement.cloneNode(true);
+            copy.querySelectorAll('svg').forEach(function (svg) { svg.remove(); });
+            text = copy.textContent.replace(/\d+\s*$/, '');
+          }
+          text = (text || '').trim();
+          el.dataset.tip = text;
+          if (el.hasAttribute('title')) el.removeAttribute('title');
+          return text;
+        }
+
+        function place(event) {
+          var pad = 14;
+          var w = box.offsetWidth, h = box.offsetHeight;
+          var x = event.clientX + pad, y = event.clientY + pad;
+          if (x + w > innerWidth - 8) x = event.clientX - w - pad;
+          if (y + h > innerHeight - 8) y = event.clientY - h - pad;
+          box.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+        }
+
+        document.addEventListener('pointerover', function (event) {
+          var el = event.target.closest && event.target.closest(ICONS);
+          if (!el || el === current) return;
+          var text = label(el);
+          if (!text) return;
+          current = el;
+          box.textContent = text;
+          box.classList.add('is-on');
+          place(event);
+        });
+        document.addEventListener('pointermove', function (event) {
+          if (!current) return;
+          if (!current.contains(event.target)) {
+            current = null;
+            box.classList.remove('is-on');
+            return;
+          }
+          place(event);
+        }, { passive: true });
+        document.addEventListener('pointerout', function (event) {
+          if (current && !current.contains(event.relatedTarget)) {
+            current = null;
+            box.classList.remove('is-on');
+          }
+        });
+        addEventListener('scroll', function () {
+          current = null;
+          box.classList.remove('is-on');
+        }, { passive: true });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        if (window.__pulseBound || !('IntersectionObserver' in window)) return;
+        window.__pulseBound = true;
+        // Hairline rules light up once as their section arrives.
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-lit');
+            io.unobserve(entry.target);
+          });
+        }, { threshold: 0.15 });
+        document.querySelectorAll('.rule-head, .case__section, .case__facts, .post__pager, .case__pager, .ledger thead, .traits, .workgrid, .postgrid, .notes-list, .specsheet, .stackindex, .foot, .crumbbar, .tablewrap, .ds-pulse').forEach(function (el, i) {
+          el.style.setProperty('--pulse-delay', (i % 4) * 0.6 + 's');
+          io.observe(el);
+        });
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        // .ds-seg: one thumb on two springs (see design/tokens.css).
+        var picked = '[aria-pressed="true"],[aria-selected="true"],[aria-checked="true"],input:checked + *';
+        var items = '[aria-pressed],[aria-selected],[aria-checked],input + *';
+        var still = matchMedia('(prefers-reduced-motion: reduce)');
+        function bind(root) {
+          if (root.__seg) return;
+          root.__seg = true;
+          var thumb = document.createElement('i');
+          thumb.className = 'ds-seg__thumb';
+          thumb.setAttribute('aria-hidden', 'true');
+          root.insertBefore(thumb, root.firstChild);
+          // Edge positions (px from the pill's inner left) and their velocities.
+          var L = 0, R = 0, vL = 0, vR = 0, tL = 0, tR = 0, frame = 0, last = 0;
+          // Geometry is measured once per change, never inside the animation:
+          // reading layout every frame forces the whole page to reflow and stutters.
+          var spans = [];
+          function measure() {
+            var r = root.getBoundingClientRect();
+            spans = Array.prototype.map.call(root.querySelectorAll(items), function (el) {
+              var e = el.getBoundingClientRect();
+              var a = e.left - r.left - root.clientLeft;
+              return { el: el, a: a, b: a + e.width };
+            });
+          }
+          function aim(el) {
+            if (!el) return false;
+            measure();
+            for (var i = 0; i < spans.length; i++) {
+              if (spans[i].el === el) { tL = spans[i].a; tR = spans[i].b; return true; }
+            }
+            return false;
+          }
+          function paint() {
+            var w = Math.max(0, R - L);
+            // Stretch reads as a drop: a little thinner while it travels fast.
+            var speed = Math.min(1, (Math.abs(vL) + Math.abs(vR)) / 6000);
+            thumb.style.width = w + 'px';
+            thumb.style.transform = 'translate3d(' + L + 'px,0,0) scaleY(' + (1 - speed * 0.14) + ')';
+            for (var i = 0; i < spans.length; i++) {
+              var s = spans[i];
+              var cover = Math.max(0, Math.min(s.b, R) - Math.max(s.a, L)) / ((s.b - s.a) || 1);
+              s.el.style.setProperty('--seg-cover', cover.toFixed(3));
+            }
+          }
+          function step(now) {
+            var dt = Math.min(0.032, (now - (last || now)) / 1000) || 0.016;
+            last = now;
+            var right = tL > L; // moving right: the right edge leads
+            // Lead spring: quick and nearly critically damped. Trail: softer, so it stretches.
+            var kLead = 680, cLead = 2 * Math.sqrt(kLead) * 0.95;
+            var kTrail = 320, cTrail = 2 * Math.sqrt(kTrail) * 1.0;
+            var kL = right ? kTrail : kLead, cL = right ? cTrail : cLead;
+            var kR = right ? kLead : kTrail, cR = right ? cLead : cTrail;
+            for (var i = 0; i < 4; i++) {
+              var h = dt / 4;
+              vL += (kL * (tL - L) - cL * vL) * h; L += vL * h;
+              vR += (kR * (tR - R) - cR * vR) * h; R += vR * h;
+            }
+            paint();
+            var done = Math.abs(tL - L) < 0.3 && Math.abs(tR - R) < 0.3 && Math.abs(vL) < 4 && Math.abs(vR) < 4;
+            if (done) { L = tL; R = tR; vL = vR = 0; paint(); frame = 0; last = 0; return; }
+            frame = requestAnimationFrame(step);
+          }
+          function go(el) {
+            if (!aim(el || root.querySelector(picked))) return;
+            if (still.matches) { L = tL; R = tR; paint(); return; }
+            if (!frame) { last = 0; frame = requestAnimationFrame(step); }
+          }
+          function jump() {
+            if (!aim(root.querySelector(picked))) return;
+            L = tL; R = tR; vL = vR = 0; paint();
+          }
+          jump();
+          root.classList.add('is-liquid');
+          // Start moving on the press itself, before the page does any work for
+          // the new choice, so the pill answers the finger with no delay.
+          root.addEventListener('pointerdown', function (event) {
+            if (event.button !== 0) return;
+            var hit = event.target.closest(items + ',label');
+            if (!hit || !root.contains(hit)) return;
+            if (hit.tagName === 'LABEL') hit = hit.querySelector('input + *') || hit;
+            go(hit);
+          });
+          // Keyboard and script changes still land here; one batched update reads the final state.
+          var queued = false;
+          function soon() {
+            if (queued) return;
+            queued = true;
+            requestAnimationFrame(function () { queued = false; go(); });
+          }
+          root.addEventListener('change', soon);
+          new MutationObserver(soon).observe(root, { subtree: true, attributes: true, attributeFilter: ['aria-pressed', 'aria-selected', 'aria-checked'] });
+          window.addEventListener('resize', jump, { passive: true });
+          if (document.fonts && document.fonts.ready) document.fonts.ready.then(jump);
+        }
+        document.querySelectorAll('.ds-seg').forEach(bind);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,621 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getProject, listProjects, listRoles, neighbors } from '../../gateway';
+import { codeGraphSvg, languageMix } from '../../lib/isometric';
+import { platformMarks, toolMarkup } from '../../lib/platforms';
+import { enrich } from '../../lib/prose';
+import '../../styles/case.css';
+import '../../styles/case-phone.css';
+import { ids, workNode } from '../../agent';
+import { loadBundle } from '../../agent/site';
+import '../../styles/snapshot.css';
+
+export function getStaticPaths() {
+  return listProjects().map((project) => ({ params: { slug: project.slug } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const project = getProject(slug);
+if (!project) throw new Error(`Missing project ${slug}`);
+const { prev, next, index, total } = neighbors(slug);
+const prevHref = prev ? `/things-built/${prev.slug}` : '';
+const nextHref = next ? `/things-built/${next.slug}` : '';
+
+const found = (await getEntry('specs', slug))?.data;
+const spec = found ?? {
+  slug,
+  kind: 'Project',
+  dek: project.summary,
+  facts: [],
+  stack: [{ group: 'Stack', items: project.technologies.map((name) => ({ name })) }],
+  hosting: [],
+  highlights: [],
+  overview: [],
+  images: [],
+};
+
+const roles = listRoles();
+const org = spec.org ? roles.find((role) => role.id === spec.org) : undefined;
+const names = [...project.technologies, ...spec.stack.flatMap((group) => group.items.map((item) => item.name))];
+const marks = platformMarks(names);
+const mix = languageMix({ measured: spec.languages?.items, technologies: names });
+const toolCount = spec.stack.reduce((sum, group) => sum + group.items.length, 0);
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthYear = (value: string) => {
+  const [year, month] = value.split('-').map(Number);
+  return `${MONTHS[month - 1]} ${year}`;
+};
+const period = spec.period ? `${monthYear(spec.period.start)} – ${spec.period.end ? monthYear(spec.period.end) : 'Present'}` : '';
+
+// The overview panel: the spec's own groups, or one built from facts and hosting.
+const overview = spec.overview.length
+  ? spec.overview
+  : [
+      ...(spec.facts.length ? [{ group: 'Facts', rows: spec.facts }] : []),
+      ...(spec.hosting.length ? [{ group: 'Hosting', rows: spec.hosting }] : []),
+    ];
+
+const pct = (share: number) => (share >= 0.1 ? `${Math.round(share * 100)}%` : share >= 0.01 ? `${(share * 100).toFixed(1)}%` : '<1%');
+const pad = (n: number) => String(n).padStart(2, '0');
+
+// A fact reads as a stat when its value leads with a number ("11,676 (48 MB of C)",
+// "About 6,900 lines…", "17", "1.81 s", "35 MB"). Dates and version ranges stay as text; a single
+// version ("8.4") is shown big but doesn't count up.
+const MONTH = /^\s*(January|February|March|April|May|June|July|August|September|October|November|December)\b/;
+function statOf(value: string): { pre: string; num: string; post: string; count: boolean } | null {
+  const match = value.match(/^((?:About|Over|Nearly|Almost|More than)\s)?((?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?(?:[+%]|\s?(?:ms|s|KB|MB|GB)(?![A-Za-z]))?)(.*)$/);
+  if (!match) return null;
+  const [, pre = '', num, rest] = match;
+  if (/^[.\d×x:\/-]/.test(rest) || /^,\s*\d/.test(rest) || MONTH.test(rest)) return null;
+  const post = rest.replace(/^[\s,]+/, '').replace(/^\((.*)\)$/, '$1');
+  return { pre: pre.trim(), num, post, count: !num.includes('.') };
+}
+const factStats = spec.facts.map((fact) => statOf(fact.value));
+// The hero card is the biggest real count on the project.
+let heroFact = -1;
+factStats.forEach((stat, i) => {
+  if (!stat || !stat.count) return;
+  const value = parseFloat(stat.num.replace(/,/g, ''));
+  const best = heroFact < 0 ? -1 : parseFloat(factStats[heroFact]!.num.replace(/,/g, ''));
+  if (value > best) heroFact = i;
+});
+// Dashboard fill: the hero takes a 2×2 block; the last other tile spans whatever
+// its row has left, at 4 columns and at 2, so no row ever ends in a hole.
+const factCells = spec.facts.length + (heroFact >= 0 ? 3 : 0);
+const fillSpan = (cols: number) => (factCells % cols ? cols - (factCells % cols) + 1 : 1);
+const lastFact = spec.facts.reduce((last, _, i) => (i === heroFact ? last : i), -1);
+let section = 0;
+const number = () => pad(++section);
+const host = project.links.demo ? new URL(project.links.demo).hostname.replace(/^www\./, '') : '';
+
+const bundle = await loadBundle(Astro.site);
+const work = bundle.works.find((item) => item.slug === slug);
+if (!work) throw new Error(`Missing agent record for ${slug}`);
+const workGraph = workNode(bundle.site, work);
+---
+
+<Base
+  title={`${project.title} · Work · Joseph O'Driscoll`}
+  description={spec.short ?? spec.dek}
+  pageType="ItemPage"
+  page={{ mainEntity: { '@id': ids.work(work.url) } }}
+  schema={[workGraph]}
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Work', path: '/things-built' },
+    { name: project.title, path: `/things-built/${project.slug}` },
+  ]}
+  image={spec.images[0]?.src}
+  imageAlt={spec.images[0]?.alt}
+>
+  <div slot="bar" class="piece-bar">
+    <a href="/things-built">← Work</a>
+    <p class="count">{index} / {total}</p>
+    <nav aria-label="Pieces">
+      {prev ? <a href={prevHref}>Previous</a> : <span class="is-disabled">Previous</span>}
+      {next ? <a href={nextHref}>Next</a> : <span class="is-disabled">Next</span>}
+    </nav>
+  </div>
+
+  <article class="case">
+    <header class="case__head">
+      <Fragment set:html={codeGraphSvg(slug, mix.items, 60, 'case__graph')} />
+      <p class="case__kicker">
+        <span>Case {pad(index)}</span>
+        <span>{spec.kind}</span>
+        {org && spec.org !== 'nomadic-digital' && !spec.kind.toLowerCase().includes(org.org.toLowerCase().split(' ')[0]) && <span>{org.org}</span>}
+        {period && <span>{period}</span>}
+      </p>
+      <h1 class="case__title" style={`view-transition-name: work-${project.slug}`}>{project.title}</h1>
+      <p class="case__dek" set:html={enrich(spec.dek)} />
+      <ul class="case__marks" aria-label="Built with">
+        {
+          marks.map((mark) => (
+            <li>
+              <span set:html={mark.svg} />
+              {mark.name}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="case__actions">
+        {project.links.demo && <a class="btn" href={project.links.demo} target="_blank" rel="noopener noreferrer">Visit {host} ↗</a>}
+        {project.links.source && <a class="btn btn--ghost" href={project.links.source} target="_blank" rel="noopener noreferrer">Source ↗</a>}
+      </div>
+    </header>
+
+    {
+      spec.images.length > 0 && (
+        <section class="stage" aria-label="Screenshots" data-stage>
+          <div class="shot__chrome" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            {host && <span>{host}</span>}
+            {spec.images.length > 1 && <span class="stage__count" data-stage-count>1 / {spec.images.length}</span>}
+          </div>
+          <div class="stage__frame">
+            {spec.images.map((image, i) => (
+              <figure class:list={['stage__slide', i === 0 && 'is-on', image.tall && 'is-tall']} id={`shot-${i}`} role={spec.images.length > 1 ? 'tabpanel' : undefined}>
+                <img src={image.src} alt={image.alt} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+              </figure>
+            ))}
+          </div>
+          {spec.images.length > 1 && (
+            <div class="stage__thumbs" role="tablist" aria-label="Screenshots">
+              {spec.images.map((image, i) => (
+                <button type="button" class="stage__thumb" role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`shot-${i}`} tabindex={i === 0 ? 0 : -1} data-tip={image.caption ?? image.alt}>
+                  <img src={image.src} alt="" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+      )
+    }
+
+    <div class="case__body">
+      <div class="case__main">
+        {
+          spec.facts.length > 0 && (
+            <div class="facts-wrap">
+              <dl class="case__facts facts">
+                {spec.facts.map((fact, i) => {
+                  const stat = factStats[i];
+                  return (
+                    <div class:list={['facts__card', stat && 'is-stat', i === heroFact && 'is-hero', i === lastFact && 'is-last']} style={i === lastFact ? `--span4: ${fillSpan(4)}; --span2: ${fillSpan(2)}` : undefined}>
+                      <dt>{fact.label}</dt>
+                      <dd>
+                        {stat ? (
+                          <>
+                            {stat.pre && <span class="facts__pre">{stat.pre}</span>}
+                            <span class="facts__num" data-count={stat.count ? '' : undefined}>{stat.num}</span>
+                            {stat.post && <span class="facts__post">{stat.post}</span>}
+                          </>
+                        ) : (
+                          fact.value
+                        )}
+                      </dd>
+                    </div>
+                  );
+                })}
+              </dl>
+            </div>
+          )
+        }
+
+        {
+          spec.highlights.length > 0 && (
+            <section class="case__section" aria-labelledby="notes">
+              <p class="case__num">{number()}</p>
+              <div>
+                <h2 id="notes">Notes from the build</h2>
+                <div class="notes" data-notes>
+                  <div class="notes__body">
+                    <ol class="notes__list" role="tablist" aria-label="Notes from the build" aria-orientation="vertical">
+                      {spec.highlights.map((note, i) => (
+                        <li role="presentation" style={`--o: ${i * 2}`}>
+                          <button type="button" class="notes__tab" role="tab" id={`note-tab-${i}`} aria-controls={`note-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+                            <span>{pad(i + 1)}</span>{note.title}
+                            <i class="notes__bar" aria-hidden="true" />
+                          </button>
+                        </li>
+                      ))}
+                    </ol>
+                    <div class="notes__panels">
+                      {spec.highlights.map((note, i) => (
+                        <div class="notes__panel" role="tabpanel" id={`note-${i}`} aria-labelledby={`note-tab-${i}`} style={`--o: ${i * 2 + 1}`}>
+                          <div class="notes__count">{pad(i + 1)} / {pad(spec.highlights.length)}</div>
+                          <h3>{note.title}</h3>
+                          <p set:html={enrich(note.text)} />
+                        </div>
+                      ))}
+                      <div class="notes__nav">
+                        <button type="button" data-notes-prev aria-label="Previous Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10 3 5 8l5 5" /></svg></button>
+                        <button type="button" data-notes-next aria-label="Next Note"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="m6 3 5 5-5 5" /></svg></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        <section class="case__section" aria-labelledby="languages">
+          <p class="case__num">{number()}</p>
+          <div>
+            <h2 id="languages">What it's written in</h2>
+            <div class="langbar" role="img" aria-label={mix.items.map((l) => `${l.name} ${pct(l.share)}`).join(', ')}>
+              {mix.items.map((item) => <span class="langbar__seg" style={`flex-basis: ${item.share * 100}%; background: ${item.color}`} />)}
+            </div>
+            <ol class="langlist">
+              {
+                mix.items.map((item) => (
+                  <li>
+                    <i style={`background: ${item.color}`} aria-hidden="true" />
+                    <span class="langlist__name">{item.name}</span>
+                    <span class="langlist__pct">{pct(item.share)}</span>
+                  </li>
+                ))
+              }
+            </ol>
+            <p class="case__note">
+              {spec.languages?.note ?? 'Estimated from the stack, not measured from the source. Measured figures replace this once the repository is counted.'}
+            </p>
+          </div>
+        </section>
+
+        {
+          spec.stack.length > 0 && (
+            <section class="case__section" aria-labelledby="stack">
+              <p class="case__num">{number()}</p>
+              <div>
+                <h2 id="stack">
+                  The stack <span class="case__count">{toolCount}</span>
+                </h2>
+                <div class="specsheet">
+                  {spec.stack.map((group) => (
+                    <section class="specsheet__group">
+                      <h3>{group.group}</h3>
+                      <ul>
+                        {group.items.map((item) => {
+                          const icon = toolMarkup(item.name);
+                          return (
+                            <li>
+                              {icon ? <span class="specsheet__icon" set:html={icon} /> : <span class="specsheet__icon specsheet__icon--blank" />}
+                              <span class="specsheet__name">{item.name}</span>
+                              {item.version && <span class="specsheet__ver">{item.version}</span>}
+                              {item.note && <span class="specsheet__note" set:html={enrich(item.note)} />}
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </section>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )
+        }
+
+        {
+          spec.delivery && (
+            <section class="case__section" aria-labelledby="delivery">
+              <p class="case__num">{number()}</p>
+              <div>
+                <h2 id="delivery">
+                  How it ships
+                  <span class:list={['case__flag', !spec.delivery.built && 'is-used']}>
+                    <span class="case__flag-dot" aria-hidden="true" />
+                    {spec.delivery.built ? 'Custom Pipeline Built' : "Client's pipeline"}
+                  </span>
+                </h2>
+                <p class="case__prose" set:html={enrich(spec.delivery.summary)} />
+                <div class="ship" style={`--steps: ${spec.delivery.steps.length}`}>
+                  <div class="ship__bar" aria-hidden="true">
+                    <span class="ship__dots"><i /><i /><i /></span>
+                    <span class="ship__title">{spec.slug} — pipeline</span>
+                    <span>{spec.delivery.steps.length} stages</span>
+                  </div>
+                  <ol class="ship__lines">
+                    {spec.delivery.steps.map((step, i) => (
+                      <li>
+                        <details class="ship__line" style={`--i: ${i}`}>
+                          <summary>
+                            <span class="ship__status"><span class="ship__check"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m3.5 8.5 3 3 6-7" /></svg></span><span class="ship__spin" aria-hidden="true" /></span>
+                            <span class="ship__n">{pad(i + 1)}</span>
+                            <span class="ship__name">{step.name}</span>
+                            <span class="ship__short" aria-hidden="true">{step.detail}</span>
+                            <svg class="ship__chev" viewBox="0 0 16 16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="m6 3 5 5-5 5" /></svg>
+                          </summary>
+                          <p class="ship__detail" set:html={enrich(step.detail)} />
+                        </details>
+                      </li>
+                    ))}
+                  </ol>
+                  <div class="ship__foot">
+                    <span class="ship__count" aria-hidden="true" />
+                    <span class="ship__progress" aria-hidden="true">{spec.delivery.steps.map((_, i) => <i style={`--i: ${i}`} />)}</span>
+                    <span class="ship__done" aria-hidden="true"><svg viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m3.5 8.5 3 3 6-7" /></svg></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        }
+      </div>
+
+      {
+        overview.length > 0 && (
+          <aside class="ov is-snapshot" aria-label="Project Snapshot">
+            <div class="ov__inner">
+              <header class="ov__head">
+                <p class="ov__title">Project Snapshot</p>
+                {spec.role && (
+                  <p class="ov__role">
+                    <span>Role</span>
+                    {spec.role}
+                  </p>
+                )}
+              </header>
+              {overview.map((group) => (
+                <section>
+                  <h2>{group.group}</h2>
+                  <dl>
+                    {group.rows.map((row) => (
+                      <div>
+                        <dt>{row.label}</dt>
+                        <dd class={`is-${'state' in row && row.state ? row.state : 'plain'}`}>{row.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              ))}
+            </div>
+          </aside>
+        )
+      }
+    </div>
+
+    <nav class="case__pager" aria-label="More work">
+      {
+        prev ? (
+          <a href={prevHref}>
+            <span>Previous</span>
+            {prev.title}
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a href={nextHref} class="is-next">
+            <span>Next</span>
+            {next.title}
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>
+
+<script is:inline>
+  (function () {
+    function size() {
+      document.querySelectorAll('.stage__frame').forEach(function (frame) {
+        frame.style.setProperty('--frame-h', frame.offsetHeight + 'px');
+      });
+    }
+    size();
+    addEventListener('resize', size);
+  })();
+</script>
+
+<script is:inline>
+  // Pinned header bar (mobile): fades out over its last 120px before the footer, so it
+  // never sits on top of it. Same behaviour as the Work page's pinned toolbar.
+  (function () {
+    var bar = document.querySelector('.crumbbar');
+    var foot = document.querySelector('[data-footer], .foot');
+    if (!bar || !foot) return;
+    var narrow = matchMedia('(max-width: 960px)');
+    var FADE = 120;
+    var raf = 0;
+    function update() {
+      raf = 0;
+      if (!narrow.matches) { bar.style.opacity = ''; bar.style.pointerEvents = ''; bar.style.visibility = ''; return; }
+      var left = Math.max(0, Math.min(1, (foot.getBoundingClientRect().top - bar.getBoundingClientRect().bottom) / FADE));
+      bar.style.opacity = left < 1 ? left.toFixed(3) : '';
+      bar.style.pointerEvents = left < 0.15 ? 'none' : '';
+      bar.style.visibility = left === 0 ? 'hidden' : '';
+    }
+    function queue() { if (!raf) raf = requestAnimationFrame(update); }
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue, { passive: true });
+    update();
+  })();
+</script>
+
+<script is:inline>
+  // Back to Work, not a fresh Work page: if this case study was opened from
+  // /things-built (directly, or via Previous/Next from one that was), a link to
+  // the Work page goes back through history instead. The browser then plays the
+  // card transition in reverse and restores the scroll position and filters.
+  // Landing here any other way, the link works as a normal link.
+  (function () {
+    var isWork = function (path) { return path === '/things-built' || path === '/things-built/'; };
+    var isCase = function (path) { return path.indexOf('/things-built/') === 0 && !isWork(path); };
+
+    function workEntry() {
+      var nav = window.navigation;
+      if (!nav || !nav.entries || !nav.currentEntry) return null;
+      var list = nav.entries();
+      for (var i = nav.currentEntry.index - 1; i >= 0; i--) {
+        var url;
+        try { url = new URL(list[i].url); } catch (e) { return null; }
+        if (url.origin !== location.origin) return null;
+        if (isWork(url.pathname)) return list[i];
+        if (!isCase(url.pathname)) return null;
+      }
+      return null;
+    }
+
+    function cameFromWork() {
+      if (!document.referrer) return false;
+      try {
+        var ref = new URL(document.referrer);
+        return ref.origin === location.origin && isWork(ref.pathname) && history.length > 1;
+      } catch (e) { return false; }
+    }
+
+    document.addEventListener('click', function (event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var link = event.target.closest && event.target.closest('a[href]');
+      if (!link || link.target === '_blank') return;
+      var url = new URL(link.href, location.href);
+      if (url.origin !== location.origin || !isWork(url.pathname) || url.search || url.hash) return;
+
+      var entry = workEntry();
+      if (entry) {
+        event.preventDefault();
+        window.navigation.traverseTo(entry.key);
+      } else if (!window.navigation && cameFromWork()) {
+        event.preventDefault();
+        history.back();
+      }
+    }, true);
+  })();
+</script>
+
+<script is:inline define:vars={{ prevHref, nextHref }}>
+  addEventListener('keydown', (event) => {
+    if (event.metaKey || event.altKey || event.ctrlKey) return;
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    if (document.activeElement && document.activeElement.closest('[role="tablist"]')) return;
+    if (event.key === 'ArrowLeft' && prevHref) location.href = prevHref;
+    if (event.key === 'ArrowRight' && nextHref) location.href = nextHref;
+  });
+</script>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('[data-notes]').forEach(function (root) {
+      var tabs = [].slice.call(root.querySelectorAll('[role="tab"]'));
+      var panels = [].slice.call(root.querySelectorAll('[role="tabpanel"]'));
+      if (tabs.length < 2) return;
+      var current = 0;
+      function show(i, focus) {
+        current = (i + tabs.length) % tabs.length;
+        tabs.forEach(function (tab, j) {
+          var on = j === current;
+          tab.setAttribute('aria-selected', on ? 'true' : 'false');
+          tab.tabIndex = on ? 0 : -1;
+          // a class, not [hidden]: every note must stay in the layout (just invisible)
+          // so the box is always as tall as the longest one and never changes height
+          panels[j].classList.toggle('is-off', !on);
+          panels[j].setAttribute('aria-hidden', on ? 'false' : 'true');
+          panels[j].inert = !on;
+        });
+        if (focus) tabs[current].focus();
+        // keep the chosen tab in view in the narrow, scrolling strip (never scrolls the page)
+        var list = tabs[current].closest('[role="tablist"]');
+        if (list && list.scrollWidth > list.clientWidth) list.scrollTo({ left: tabs[current].parentElement.offsetLeft - 16, behavior: 'smooth' });
+      }
+      // The loading bar drives auto-advance: when it fills, the next note opens.
+      root.addEventListener('animationend', function (event) {
+        if (event.target.classList && event.target.classList.contains('notes__bar')) show(current + 1);
+      });
+      root.classList.add('is-tabbed');
+      show(0);
+      tabs.forEach(function (tab, i) {
+        tab.addEventListener('click', function () { root.classList.add('is-stopped'); show(i); });
+        tab.addEventListener('keydown', function (event) {
+          var step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[event.key];
+          if (event.key === 'Home') step = -current;
+          if (event.key === 'End') step = tabs.length - 1 - current;
+          if (step === undefined) return;
+          event.preventDefault();
+          event.stopPropagation();
+          root.classList.add('is-stopped');
+          show(current + step, true);
+        });
+      });
+      var prev = root.querySelector('[data-notes-prev]');
+      var next = root.querySelector('[data-notes-next]');
+      if (prev) prev.addEventListener('click', function () { root.classList.add('is-stopped'); show(current - 1); });
+      if (next) next.addEventListener('click', function () { root.classList.add('is-stopped'); show(current + 1); });
+    });
+
+  })();
+</script>
+
+<script is:inline>
+  (function () {
+    // Stat cards count up from zero the first time they scroll in.
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var nums = document.querySelectorAll('.facts__num[data-count]');
+    if (!nums.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        var el = entry.target;
+        var text = el.textContent;
+        var suffix = (text.match(/[^\d.,]*$/) || [''])[0];
+        var target = parseFloat(text.replace(/,/g, ''));
+        var decimals = (text.slice(0, text.length - suffix.length).split('.')[1] || '').length;
+        var commas = text.indexOf(',') > -1;
+        var start = performance.now();
+        var duration = 1100 + Math.min(900, String(Math.round(target)).length * 120);
+        function frame(now) {
+          var t = Math.min(1, (now - start) / duration);
+          var eased = 1 - Math.pow(1 - t, 4);
+          var value = (target * eased).toFixed(decimals);
+          if (commas) value = Number(value).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+          el.textContent = t < 1 ? value + suffix : text;
+          if (t < 1) requestAnimationFrame(frame);
+        }
+        requestAnimationFrame(frame);
+      });
+    }, { threshold: 0.4 });
+    nums.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
+<script is:inline>
+  (function () {
+    // The image stage: thumbnails switch the one visible screenshot.
+    document.querySelectorAll('[data-stage]').forEach(function (stage) {
+      var slides = [].slice.call(stage.querySelectorAll('.stage__slide'));
+      var thumbs = [].slice.call(stage.querySelectorAll('.stage__thumb'));
+      var count = stage.querySelector('[data-stage-count]');
+      if (thumbs.length < 2) return;
+      var current = 0;
+      function show(i, focus) {
+        current = (i + slides.length) % slides.length;
+        slides.forEach(function (slide, j) { slide.classList.toggle('is-on', j === current); });
+        thumbs.forEach(function (thumb, j) {
+          thumb.setAttribute('aria-selected', j === current ? 'true' : 'false');
+          thumb.tabIndex = j === current ? 0 : -1;
+        });
+        if (count) count.textContent = current + 1 + ' / ' + slides.length;
+        if (focus) thumbs[current].focus();
+      }
+      thumbs.forEach(function (thumb, i) {
+        thumb.addEventListener('click', function () { show(i); });
+        thumb.addEventListener('keydown', function (event) {
+          var step = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[event.key];
+          if (step === undefined) return;
+          event.preventDefault();
+          event.stopPropagation();
+          show(current + step, true);
+        });
+      });
+    });
+  })();
+</script>

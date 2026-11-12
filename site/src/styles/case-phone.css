@@ -1,0 +1,25 @@
+/* Project pages on phones. Loaded after case.css, so these win at equal
+   specificity. Kept in their own file: phone-only refinements Joey asked for
+   on Nov 12, separate from case.css's base layout. */
+
+@media screen and (max-width: 640px) {
+  /* The heading's chip ("Custom Pipeline Built") drops to its own line. */
+  .case__section h2:has(.case__flag) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* A stack item's note starts on a new line, under the item's name
+     (column 2, after the icon), so "3D extrusion…" lines up with "Three.js". */
+  .specsheet__note {
+    grid-column: 2 / -1;
+  }
+}
+
+/* "How it ships" in a narrow card: the last stage has nothing below it to
+   connect to, so its detail has no line (the text indent stays the same). */
+@container ship (max-width: 560px) {
+  .ship__lines > li:last-child .ship__detail {
+    border-left-color: transparent;
+  }
+}

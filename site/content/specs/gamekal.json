@@ -1,0 +1,440 @@
+{
+  "slug": "gamekal",
+  "kind": "Creator",
+  "role": "Founder, Designer and Solutions Architect",
+  "period": {
+    "start": "2026-09",
+    "end": null
+  },
+  "dek": "A calendar for the games you mean to play: one Expo codebase serving web, iPhone, iPad and Android, fed by a release catalog drawn from nine storefronts.",
+  "facts": [
+    {
+      "label": "Games in the catalog",
+      "value": "About 147,000, scraped from nine storefronts"
+    },
+    {
+      "label": "Home page load",
+      "value": "1.81 s, down from about 20 s"
+    },
+    {
+      "label": "Warm title search",
+      "value": "1.1 ms median, down from 19.6 ms"
+    },
+    {
+      "label": "First search on a cold instance",
+      "value": "183 ms, down from 572 ms"
+    },
+    {
+      "label": "Search response",
+      "value": "1.8 KB, down from 42 KB"
+    },
+    {
+      "label": "Icon font",
+      "value": "8 KB, down from 573 KB"
+    },
+    {
+      "label": "Catalog function",
+      "value": "35 MB, down from 640 MB"
+    },
+    {
+      "label": "Automated tests",
+      "value": "538"
+    },
+    {
+      "label": "Commits",
+      "value": "130"
+    },
+    {
+      "label": "Current release",
+      "value": "0.1.25, November 10, 2026"
+    },
+    {
+      "label": "First commit",
+      "value": "September 24, 2026"
+    },
+    {
+      "label": "Platforms",
+      "value": "Web, iOS, Android"
+    },
+    {
+      "label": "Release line",
+      "value": "0.1.0 to 0.1.25"
+    }
+  ],
+  "languages": {
+    "note": "Bytes of source in src, web, scripts, server, api, supabase and modules, measured November 10, 2026. Excludes dependencies, build output and the JSON release catalog (about 840 MB of data).",
+    "items": [
+      {
+        "name": "TypeScript",
+        "bytes": 2403079
+      },
+      {
+        "name": "JavaScript",
+        "bytes": 1202399
+      },
+      {
+        "name": "CSS",
+        "bytes": 52039
+      },
+      {
+        "name": "Python",
+        "bytes": 7640
+      },
+      {
+        "name": "Shell",
+        "bytes": 6847
+      },
+      {
+        "name": "SQL",
+        "bytes": 6567
+      },
+      {
+        "name": "Swift",
+        "bytes": 2493
+      }
+    ]
+  },
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Expo SDK",
+          "version": "57"
+        },
+        {
+          "name": "React Native",
+          "version": "0.86.3"
+        },
+        {
+          "name": "React",
+          "version": "19.2.3"
+        },
+        {
+          "name": "TypeScript",
+          "version": "6.0"
+        },
+        {
+          "name": "react-native-web",
+          "version": "0.21"
+        },
+        {
+          "name": "Reanimated",
+          "version": "4.5",
+          "note": "UI-thread animations"
+        },
+        {
+          "name": "Gesture Handler",
+          "version": "2.32"
+        },
+        {
+          "name": "react-native-svg",
+          "version": "15.15"
+        }
+      ]
+    },
+    {
+      "group": "Native",
+      "items": [
+        {
+          "name": "Custom Expo module",
+          "note": "notch-side, written in Swift"
+        },
+        {
+          "name": "expo-notifications",
+          "note": "10 a.m. release reminders"
+        },
+        {
+          "name": "expo-image-picker",
+          "note": "custom case art for added games"
+        }
+      ]
+    },
+    {
+      "group": "Backend",
+      "items": [
+        {
+          "name": "Vercel Functions",
+          "note": "/api/releases, /api/compute, /api/report, /api/wishlist"
+        },
+        {
+          "name": "Static catalog on the Vercel CDN"
+        },
+        {
+          "name": "Supabase",
+          "note": "Postgres, Google and Discord sign-in, storage"
+        },
+        {
+          "name": "Vercel BotID and Firewall",
+          "note": "API protection"
+        }
+      ]
+    },
+    {
+      "group": "Catalog pipeline",
+      "items": [
+        {
+          "name": "Store scrapers",
+          "note": "Steam, Epic, Battle.net, Ubisoft, GOG, Nintendo US and EU, PlayStation, Xbox"
+        },
+        {
+          "name": "Wikipedia and history backfills",
+          "note": "Nintendo, PlayStation and Xbox release history"
+        },
+        {
+          "name": "Built search and picks indexes"
+        }
+      ]
+    },
+    {
+      "group": "Internal tools",
+      "items": [
+        {
+          "name": "Storybook",
+          "version": "10.6",
+          "note": "with the accessibility addon"
+        },
+        {
+          "name": "VitePress",
+          "version": "1.6",
+          "note": "project docs and blog"
+        },
+        {
+          "name": "Mermaid",
+          "version": "12",
+          "note": "live ecosystem map"
+        },
+        {
+          "name": "Three.js",
+          "version": "0.186",
+          "note": "3D extrusion of the ecosystem map"
+        },
+        {
+          "name": "CodeMirror 6 and TanStack Table",
+          "note": "the catalog content editor"
+        },
+        {
+          "name": "Vite",
+          "version": "8"
+        }
+      ]
+    }
+  ],
+  "delivery": {
+    "built": true,
+    "summary": "The pipeline is mine end to end. Vercel's Git integration is disconnected on purpose, so a push never deploys: the website ships from a machine that holds the catalog, and the phone builds go through EAS.",
+    "steps": [
+      {
+        "name": "Checks",
+        "detail": "node --test, tsc for the app, the CMS and the ecosystem map, and boundary checks that keep web-only code out of the phone apps"
+      },
+      {
+        "name": "Release prep",
+        "detail": "/prepare-release bumps the version, updates the changelog and every doc that cites it, and verifies the search index, regions and native project sync"
+      },
+      {
+        "name": "Web",
+        "detail": "expo export, a static 404 page and a static catalog build, published to Vercel"
+      },
+      {
+        "name": "iOS and Android",
+        "detail": "EAS production builds, shipped to TestFlight and the Play Console"
+      }
+    ]
+  },
+  "showcase": {
+    "steps": [
+      {
+        "name": "Scrape",
+        "figure": "147,000",
+        "detail": "Store scrapers for Steam, Epic, Battle.net, Ubisoft, GOG, Nintendo US and EU, PlayStation and Xbox feed one release catalog."
+      },
+      {
+        "name": "Split",
+        "figure": "78 MB",
+        "detail": "The live release file is 78 MB, so lookups read small per-year files and built indexes, and tests record every file a lookup opens."
+      },
+      {
+        "name": "Search",
+        "figure": "1.1 ms",
+        "detail": "Median warm title search, down from 19.6 ms. A cold instance answers its first search in 183 ms, down from 572 ms."
+      },
+      {
+        "name": "Trim",
+        "figure": "1.8 KB",
+        "detail": "Search responses, down from 42 KB. The icon font ships 8 KB, down from 573 KB, and the catalog function 35 MB, down from 640 MB."
+      },
+      {
+        "name": "Load",
+        "figure": "1.81 s",
+        "detail": "Home page load, down from about 20 s. The production site scores 100 for accessibility and SEO in Lighthouse."
+      },
+      {
+        "name": "Ship",
+        "figure": "3 platforms",
+        "detail": "One Expo codebase ships web, iOS and Android: 538 automated tests, then Vercel for the site and EAS for TestFlight and the Play Console."
+      }
+    ],
+    "facts": [
+      "Commits",
+      "Current release",
+      "First commit"
+    ]
+  },
+  "hosting": [
+    {
+      "label": "Website and API",
+      "value": "Vercel Pro"
+    },
+    {
+      "label": "Accounts and sync",
+      "value": "Supabase Pro"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Fonts cut to what's drawn",
+      "text": "Fonts are self-hosted woff2 subsets. The icon font ships 8 KB of the glyphs the app uses, down from 573 KB."
+    },
+    {
+      "title": "Lighthouse",
+      "text": "The production site scores 100 for accessibility and SEO. Performance started at about 84 on a wide window and about 61 on a phone."
+    },
+    {
+      "title": "A 78 MB catalog, opened in pieces",
+      "text": "The live release file is 78 MB, so requests are answered from small per-year files and built indexes, and tests record every file a lookup opens."
+    },
+    {
+      "title": "Public data as files, not a function",
+      "text": "Every catalog read used to run a bot-checked serverless function marked private, no-store. Days, counts and games are now static files on Vercel's CDN, built at deploy under a content stamp so everything beneath it caches forever and only current.json is ever rechecked. Home went from about 20 s to 1.81 s."
+    },
+    {
+      "title": "147,000 games in 8,192 buckets",
+      "text": "A file per game was too many, so every game id hashes with FNV-1a into one of 8,192 bucket files of about 10 KB. The server and the browser share the same gameBucket function, and a test compares every game's file against the API's answer."
+    },
+    {
+      "title": "59 bytes that staled every index",
+      "text": "Two small data fixes grew the live file by 59 bytes. Every index is stamped from file sizes, so all of them read as stale and the API fell back to parsing all 78 MB per request, 5 to 8 s each, while picks returned 503. Deploys now refuse to ship a stale index, checked before and after the catalog syncs."
+    },
+    {
+      "title": "640 MB down to a 35 MB function",
+      "text": "Picks, Similar Games and title search depend on the person or the query, so they moved to a small compute function that carries only the three indexes it reads. Its answers are cached at the CDN for a day, and Similar Games came back in 50 ms."
+    },
+    {
+      "title": "Retries that buried a cold instance",
+      "text": "The client resent any request after 8 s while the first kept running. With Fluid compute sharing one Node instance, each resend queued behind JSON parsing until the instance was buried for about 50 s. Requests now wait 45 s for the catalog and 30 s for search, share one request per URL, and honor Retry-After on a 429."
+    },
+    {
+      "title": "Profiled on the phone, not the desktop",
+      "text": "A 41-second Hermes CPU profile found 8.3 of 26 busy seconds in wishlist matching, which built two URL objects per comparison, and on the phone URL is a slow JavaScript polyfill. A one-regex link reader, animations moved to the UI thread with Reanimated, and a removed swipe gesture took the post-load freeze from 5.8 s to about 0.9 s and tab switches to 36 to 75 ms."
+    },
+    {
+      "title": "One temp folder, two names",
+      "text": "The suite passed 538 of 538 in Linux and 537 on a Mac. On macOS the temp folder lives under /var, a link to /private/var, so a test that records every file a lookup opens saw the right file under the wrong name. Resolving the real path fixed it, and four negative checks that could never fail on a Mac can fail again."
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/gamekal/home.webp",
+      "alt": "GameKal game page for The Legend of Zelda: Ocarina of Time: tracking controls, a screenshot gallery, release dates and similar games"
+    }
+  ],
+  "org": "nomadic-digital",
+  "short": "A release calendar for PC, PlayStation, Xbox and Switch games. One Expo and React Native codebase ships the web app, iOS and Android, fed by a catalog scraped from nine storefronts, with 538 automated tests.",
+  "overview": [
+    {
+      "group": "Runtime",
+      "rows": [
+        {
+          "label": "Expo SDK",
+          "value": "57",
+          "state": "ok"
+        },
+        {
+          "label": "React Native",
+          "value": "0.86.3",
+          "state": "ok"
+        },
+        {
+          "label": "React",
+          "value": "19.2.3",
+          "state": "ok"
+        },
+        {
+          "label": "TypeScript",
+          "value": "6.0",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Platforms",
+      "rows": [
+        {
+          "label": "Web",
+          "value": "gamekal.com",
+          "state": "ok"
+        },
+        {
+          "label": "iOS",
+          "value": "TestFlight",
+          "state": "ok"
+        },
+        {
+          "label": "Android",
+          "value": "Play Console",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Backend",
+      "rows": [
+        {
+          "label": "API",
+          "value": "Vercel Functions",
+          "state": "ok"
+        },
+        {
+          "label": "Catalog",
+          "value": "Static CDN files",
+          "state": "ok"
+        },
+        {
+          "label": "Accounts",
+          "value": "Supabase",
+          "state": "ok"
+        },
+        {
+          "label": "Bot check",
+          "value": "Vercel BotID",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Repo & Build",
+      "rows": [
+        {
+          "label": "Commits",
+          "value": "130"
+        },
+        {
+          "label": "Tests",
+          "value": "538 passing",
+          "state": "ok"
+        },
+        {
+          "label": "Release",
+          "value": "0.1.25",
+          "state": "ok"
+        },
+        {
+          "label": "Git deploys",
+          "value": "Off by design",
+          "state": "off"
+        }
+      ]
+    }
+  ]
+}

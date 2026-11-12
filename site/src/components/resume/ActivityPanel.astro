@@ -1,0 +1,99 @@
+---
+/**
+ * Commit activity for the last twelve months: three totals over the compact
+ * heatmap. Used in the /resume masthead and the /things-built hero.
+ * Screen only.
+ */
+import Stat from '../ui/Stat.astro';
+import StatGrid from '../ui/StatGrid.astro';
+import Heatmap from './Heatmap.astro';
+
+interface Props {
+  contributions: { public: number; private: number; repositories: number };
+  /** Unique per page: the heatmap uses it for its mode switch. */
+  id: string;
+  class?: string;
+}
+
+const { contributions, id, class: className } = Astro.props;
+---
+
+<aside class:list={['act', className]} data-print="hide" aria-label="Commit activity, last twelve months">
+  <p class="act__head">
+    <span>Activity · last 12 months</span>
+    <span class="act__live"><i aria-hidden="true"></i>Shipping</span>
+  </p>
+  <StatGrid size="sm" min="90px" label="Contribution totals">
+    <Stat value={contributions.private.toLocaleString('en-US')} label="Contributions" tone="positive" />
+    <Stat value={contributions.public.toLocaleString('en-US')} label="In public repos" />
+    <Stat value={contributions.repositories} label="Public repos" />
+  </StatGrid>
+  <Heatmap variant="compact" id={id} />
+  <p class="act__note">A pattern shaped to the yearly totals, not a log of which day each commit landed.</p>
+</aside>
+
+<style>
+  .act {
+    display: grid;
+    /* minmax(0, 1fr): the heatmap's fixed-width grid scrolls in its own box
+       instead of pushing the panel's content past its padding. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--ds-space-4);
+    padding: var(--ds-space-5);
+    border: var(--ds-hairline) solid var(--ds-rule);
+    background:
+      repeating-linear-gradient(to bottom, var(--ds-ink-5) 0 1px, transparent 1px 3px),
+      var(--ds-bg);
+    background-size: 100% 3px, auto;
+  }
+
+  .act__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .act__live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ds-positive);
+  }
+
+  .act__live i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .act__live i {
+      animation: act-ping 2.4s ease-out infinite;
+    }
+  }
+
+  @keyframes act-ping {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--ds-positive) 60%, transparent);
+    }
+
+    70%,
+    100% {
+      box-shadow: 0 0 0 7px transparent;
+    }
+  }
+
+  .act__note {
+    margin: 0;
+    color: var(--ds-fg-faint);
+    font-size: var(--ds-text-2xs);
+    line-height: var(--ds-leading-snug);
+  }
+</style>

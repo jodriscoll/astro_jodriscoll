@@ -1,0 +1,382 @@
+{
+  "_about": "Editorial layer for /resume. experience.json stays the record (every original bullet is kept and still rendered under 'Full record'); this file adds one paragraph and the figures per role. Every figure here must come from a source you can point to. Leave metrics empty rather than estimate: an empty list renders nothing.",
+  "positioning": "Front-end and CMS engineering lead for agencies and product teams: WordPress, Drupal and Craft underneath, modern JavaScript above, delivered through an independent practice.",
+  "title": "Software Engineering Consultant",
+  "titles": [
+    "Web Application Consultant",
+    "Web Solutions Architect",
+    "Web Vibe Coder",
+    "Web Prompt Engineer",
+    "Web UX Engineer",
+    "Web Conversion Specialist",
+    "Web Analytics Engineer",
+    "Web Team Lead, WordPress",
+    "Web Senior Developer, Drupal",
+    "Web MEAN Stack Engineer",
+    "Web Diagnostic Engineer",
+    "Web Solutions Consultant",
+    "Web QA Engineer",
+    "Web Test Automation Engineer",
+    "Web Release Engineer"
+  ],
+  "recentSince": "2022-10",
+  "highlightWork": [
+    "under-armour",
+    "trinity-cyber",
+    "rofo-rewards",
+    "umbc-miechv",
+    "cvs-silverscript",
+    "childrens-inn-nih",
+    "comed-powering-lives",
+    "file-and-serve-xpress",
+    "unisys",
+    "samsung-display-pid",
+    "ptc-bio",
+    "black-and-decker-nostos",
+    "dragos",
+    "aarp-pharmacy",
+    "bge",
+    "tak-gov"
+  ],
+  "groups": {
+    "nomadic-digital": {
+      "summary": "Independent consulting practice running agency and product contracts in parallel, with proprietary products alongside. Since 2023: WordPress, Drupal, Craft and Webflow for agencies, a Next.js build for a space-technology company, and GameKal, a release calendar shipped to web, iOS and Android from one Expo codebase. Between contracts, self-directed builds range from a PlayStation game rebuilt in TypeScript from its decompiled code to PawDings, a startup app. Independent work under the practice dates to 2010.",
+      "metrics": [
+        {
+          "value": "232",
+          "label": "Commits since Nov 2025",
+          "source": "specs: gamekal 130, combioh 50, cascade-space 36, echoes-of-history 16 (all Nomadic Digital work, listed or not)"
+        },
+        {
+          "value": "538",
+          "label": "Automated tests on GameKal",
+          "source": "specs/gamekal.json"
+        },
+        {
+          "value": "26",
+          "label": "GameKal releases in seven weeks",
+          "source": "specs/gamekal.json: 0.1.0 to 0.1.25, Sep 24 to Nov 10 2026"
+        }
+      ],
+      "stack": [
+        "Expo",
+        "React Native",
+        "Next.js",
+        "TanStack Start",
+        "TypeScript",
+        "Supabase",
+        "Vercel",
+        "Tailwind CSS",
+        "Storybook",
+        "Vitest"
+      ],
+      "work": [
+        "gamekal",
+        "fisher-of-fire",
+        "cascade-space",
+        "drive-empower",
+        "jason-perry",
+        "lighting-and-supplies"
+      ],
+      "between": [
+        "combioh",
+        "nioh-3-tracker",
+        "pawdings"
+      ],
+      "feature": "gamekal",
+      "sideSince": "2016-01",
+      "sideNote": "Since January 2016: on the side while full time at Jellyfish and Mindgrub, then full time after Rehab LLC sold in 2023.",
+      "childLayout": "cards"
+    },
+    "rehab-llc": {
+      "summary": "Director of web operations for the company behind Rehab.com, MentalHealth.com and Cicada Capital, through the sale of the LLC. Cut a dated Symfony codebase by more than 60%, moved deploys to GitHub Actions and Cloudflare Pages, more than halved monthly AWS spend, eliminated a security single point of failure across the apps, ran the Vue admin platform on Amplify, Lambda, Cognito and GraphQL, and replaced a legacy dashboard with a modern automation and management system. For the sale, consolidated company, domain and asset data in Python and handed the applications to the new owners.",
+      "metrics": [
+        {
+          "value": ">60%",
+          "label": "Codebase removed from the Symfony app",
+          "source": "experience.json rehab-llc",
+          "tone": "accent"
+        },
+        {
+          "value": ">50%",
+          "label": "Monthly AWS hosting cost cut",
+          "source": "experience.json rehab-llc",
+          "tone": "accent"
+        },
+        {
+          "value": "3",
+          "label": "Properties run through the sale",
+          "source": "experience.json: Rehab.com, MentalHealth.com, Cicada Capital"
+        }
+      ],
+      "stack": [
+        "Symfony",
+        "Vue",
+        "Angular",
+        "AWS Amplify",
+        "Lambda",
+        "Cognito",
+        "GraphQL",
+        "GitHub Actions",
+        "Cloudflare Pages",
+        "Python",
+        "MySQL"
+      ],
+      "work": [
+        "rehab-com",
+        "patient-portal"
+      ],
+      "childLayout": "properties"
+    }
+  },
+  "engagements": {
+    "taoti": {
+      "summary": "Solutions engineer across Taoti Creative's WordPress and Drupal client work. Holds the active WordPress portfolio, 21 sites across AWS, WP Engine, Kinsta and Pantheon, to one security and version baseline: 2FA, SSO, application-password removal, the Taoti Security Scanner and synced Composer auth. Hands-on inside the builds as well, from AAMI's BuddyBoss member community to Election Center's Bedrock site under BackstopJS visual regression.",
+      "metrics": [
+        {
+          "value": "30+",
+          "label": "Web apps serviced",
+          "source": "Joey O'Driscoll, stated Nov 11 2026",
+          "tone": "accent"
+        },
+        {
+          "value": "10+",
+          "label": "Web apps helped launch",
+          "source": "Joey O'Driscoll, stated Nov 11 2026"
+        },
+        {
+          "value": "1M+",
+          "label": "Lines of code committed",
+          "source": "Joey O'Driscoll, stated Nov 11 2026"
+        },
+        {
+          "value": "4",
+          "label": "Hosting platforms",
+          "source": "Taoti checklist: 13 / 5 / 1 / 2"
+        }
+      ],
+      "stack": [
+        "WordPress",
+        "Bedrock",
+        "Timber",
+        "BuddyBoss",
+        "ACF Pro",
+        "Drupal",
+        "PHP 8.3",
+        "Redis",
+        "GitHub Actions",
+        "AWS",
+        "BackstopJS",
+        "Lando"
+      ],
+      "work": [
+        "aami",
+        "election-center",
+        "iwf"
+      ]
+    },
+    "millermedia7": {
+      "summary": "Lead of web engineering for millermedia7's client sites. The year's largest effort was ZEFR: its marketing site rebuilt on Craft CMS 5 around a Neo block library editors compose pages from, with SAML single sign-on and SEOmatic, then moved onto Craft Cloud. Also carries TruBridge, a custom Timber theme on WP Engine for a healthcare IT company, its admin pared to what editors actually use.",
+      "metrics": [
+        {
+          "value": "10+",
+          "label": "Projects sold & delivered",
+          "source": "Joey O'Driscoll, stated Nov 10 2026",
+          "tone": "accent"
+        },
+        {
+          "value": "77",
+          "label": "Commits on the ZEFR rebuild",
+          "source": "specs/zefr.json"
+        },
+        {
+          "value": "16 wks",
+          "label": "ZEFR, March 24 to July 17, 2026",
+          "source": "specs/zefr.json"
+        },
+        {
+          "value": "2",
+          "label": "Platforms led",
+          "source": "specs zefr, trubridge"
+        }
+      ],
+      "stack": [
+        "Craft CMS 5",
+        "PHP 8.4",
+        "Neo",
+        "SEOmatic",
+        "SAML SSO",
+        "Craft Cloud",
+        "Vite",
+        "WordPress",
+        "Timber",
+        "WP Engine",
+        "DDEV"
+      ],
+      "work": [
+        "zefr",
+        "trubridge"
+      ]
+    },
+    "sageworx": {
+      "summary": "Solutions architect for Sageworx, remote from New York. Active since August 2023, held under Nomadic Digital alongside the other current clients.",
+      "metrics": [],
+      "stack": [
+        "WordPress"
+      ],
+      "work": [
+        "EverPass.com|https://everpass.com"
+      ]
+    },
+    "pda": {
+      "summary": "Open source solutions engineer for PDA.nyc in Brooklyn since August 2024, with the public site on Webflow. The relationship also brought in ZUGU's release of incaseofdeath.",
+      "metrics": [],
+      "stack": [
+        "Webflow"
+      ],
+      "work": [
+        "ZUGU"
+      ]
+    },
+    "sauce": {
+      "summary": "Open source solutions engineer for SAUCE.nyc in Brooklyn since August 2024, opened alongside PDA.nyc. The public site runs on Webflow.",
+      "metrics": [],
+      "stack": [
+        "Webflow"
+      ],
+      "work": []
+    },
+    "ancient": {
+      "summary": "UI architect lead, through Ancient LLC since July 2026, on PepsiCo's Pepviz: a single-client, two-person collaboration with an international designer, building bespoke marketing landing pages for the brand's messaging and communications.",
+      "metrics": [],
+      "stack": [
+        "Drupal",
+        "HTML",
+        "Sass",
+        "JavaScript",
+        "CodePen"
+      ],
+      "work": [
+        "pepviz"
+      ]
+    },
+    "zugu": {
+      "summary": "Design and implementation for ZUGU's release of incaseofdeath, extending into go-live support and product branding.",
+      "metrics": [],
+      "stack": [
+        "Shopify"
+      ],
+      "work": []
+    },
+    "rehab-com-performance": {
+      "summary": "Core Web Vitals tuning of the Symfony app for organic ranking, Agile adoption across the team, and day-to-day operations across performance, SEO, payments and content. Delivered the Patient Portal, a Vue provider-matching app embedded in Symfony, alongside HubSpot and API integrations, and hardened several smaller Vue apps for security and speed.",
+      "metrics": [],
+      "stack": [],
+      "work": []
+    },
+    "mindgrub-managed-services": {
+      "summary": "A short managed-services contract for Mindgrub Technologies, held under Nomadic Digital and distinct from the earlier full-time role there. From January to June 2022: servicing and maintaining Mindgrub's client web apps during the move from Mindgrub to Rehab.",
+      "metrics": [],
+      "stack": [],
+      "work": []
+    },
+    "mentalhealth": {
+      "summary": "A Rehab LLC property, maintained alongside Rehab.com and carried through the sale.",
+      "metrics": [],
+      "stack": [],
+      "work": []
+    },
+    "cicada-capital": {
+      "summary": "A Rehab LLC property, maintained alongside Rehab.com and carried through the sale.",
+      "metrics": [],
+      "stack": [],
+      "work": []
+    }
+  },
+  "roles": {
+    "mindgrub": "Ground-up interfaces in WordPress, Drupal, React and Angular, on MySQL, MongoDB and AWS with GitLab CI. Owned the UI shell for several Progressive Web Apps (service workers, offline caching, Material Design), led usability and Core Web Vitals audits, held builds to WAI-ARIA, 508 and ADA/AODA, and kept debt down through code review and unit tests.",
+    "jellyfish": "Front end on an Agile team: Angular, WordPress and Drupal builds, DoubleClick interactive ads, and the team's shift to Flexbox and ES5. Daily partnership with design and UX, API testing in Postman and Swagger, and code review and releases on GitHub and GitLab.",
+    "kor-group": "Lead front-end developer alongside the design team: workflows, personas and content structure, responsive builds hand-coded from design comps, and user research and testing folded back into the sites, across several deadline-driven projects at once.",
+    "cogolabs": "Built and launched web startups with a cross-functional team: responsive, A/B-tested email verified in Litmus, front ends in HTML, SASS and JavaScript over Python, Ruby and PHP, and Python automation for internal email distribution.",
+    "shawmut-construction": "Daily web and email production: CMS updates, A/B-tested campaigns, QA, mockups and design revisions, and fixes alongside outside developers and the IS&T team.",
+    "mass-general-hospital": "Web production across the hospital's sites: XHTML/CSS templates for its CMSs, email templates, multimedia and art direction, AWS hosting with the director, and support for the Blackbaud NetCommunity e-philanthropy platform.",
+    "aptima": "Recruited from ITT's multimedia program. Multimedia training for the Army and Air Force, including 40 hours of Interactive Multimedia Instruction for CASCOM, and the move of CD-based training to the web.",
+    "healthcaresource": "Internship during my multimedia studies at ITT: web apps in ColdFusion, PHP and JavaScript, layouts from high-fidelity comps, and dynamic JavaScript PDF forms inside proprietary apps.",
+    "earthbound-media-group": "Front end on an award-winning interactive team: CD-ROMs, Flash, sites, branding and email for higher-education clients, and an early move to CSS2 and JavaScript.",
+    "mentalhealth": "",
+    "cicada-capital": ""
+  },
+  "skillGroups": [
+    {
+      "label": "Front end",
+      "items": [
+        "JavaScript (ES5+)",
+        "TypeScript",
+        "Angular, React, Vue",
+        "HTML5, SASS",
+        "Bootstrap, Material UI, TailwindCSS"
+      ]
+    },
+    {
+      "label": "Platforms",
+      "items": [
+        "WordPress Development",
+        "Drupal",
+        "Craft CMS",
+        "Webflow",
+        "Symfony"
+      ]
+    },
+    {
+      "label": "Server, delivery",
+      "items": [
+        "Node.JS",
+        "ExpressJS, NestJS",
+        "PHP",
+        "Python",
+        "AWS",
+        "Continuous Integration & Continuous Deployment (CI/CD)"
+      ]
+    },
+    {
+      "label": "Quality",
+      "items": [
+        "Web Performance",
+        "Search Engine Optimization (SEO)",
+        "ADA, 508, and WAI-ARIA Compliance",
+        "End-to-End Testing (E2E)",
+        "Test Driven Development (TDD)"
+      ]
+    },
+    {
+      "label": "People",
+      "items": [
+        "Management",
+        "Mentoring",
+        "Tutoring"
+      ]
+    },
+    {
+      "label": "AI tooling",
+      "items": [
+        "OpenAI",
+        "Anthropic",
+        "Gemini",
+        "GitHub Copilot"
+      ]
+    }
+  ],
+  "aiTools": [
+    "OpenAI",
+    "Anthropic",
+    "Gemini",
+    "GitHub Copilot",
+    "Cursor",
+    "T3 Code",
+    "Lovable",
+    "v0",
+    "Windsurf",
+    "Perplexity",
+    "Vercel AI Gateway"
+  ]
+}

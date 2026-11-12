@@ -1,0 +1,92 @@
+{
+  "slug": "tak-gov",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "TAK.gov serves the Team Awareness Kit community. The front end was Bootstrap 5, ES6 and SCSS, templated in a small standalone Express app and then imported into the Ruby application.",
+  "short": "TAK.gov, home of the Team Awareness Kit community: a Ruby application whose Bootstrap 5 and ES6 front end was prototyped in a standalone Express app, then imported, on AWS with GitLab.",
+  "facts": [
+    {
+      "label": "Application",
+      "value": "Ruby"
+    },
+    {
+      "label": "Host",
+      "value": "AWS"
+    },
+    {
+      "label": "Source control",
+      "value": "GitLab"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Application",
+      "items": [
+        {
+          "name": "Ruby"
+        },
+        {
+          "name": "Express",
+          "note": "standalone templating environment"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "Bootstrap",
+          "version": "5"
+        },
+        {
+          "name": "JavaScript",
+          "version": "ES6"
+        },
+        {
+          "name": "SCSS"
+        }
+      ]
+    },
+    {
+      "group": "Delivery",
+      "items": [
+        {
+          "name": "GitLab"
+        },
+        {
+          "name": "AWS"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "AWS"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/tak-gov/home.webp",
+      "alt": "TAK.gov homepage",
+      "tall": true
+    },
+    {
+      "src": "/work/tak-gov/products.webp",
+      "alt": "Products index",
+      "tall": true
+    },
+    {
+      "src": "/work/tak-gov/product.webp",
+      "alt": "A product page",
+      "tall": true
+    },
+    {
+      "src": "/work/tak-gov/news.webp",
+      "alt": "News page",
+      "tall": true
+    }
+  ],
+  "org": "mindgrub"
+}

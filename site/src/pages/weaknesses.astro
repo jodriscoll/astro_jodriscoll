@@ -1,0 +1,942 @@
+---
+import Base from '../layouts/Base.astro';
+import { getProfile, getResume, listProjects } from '../gateway';
+import { essayListNode } from '../agent';
+import { loadBundle, weaknesses } from '../agent/site';
+import raw from '../../content/weaknesses.json';
+import { stackIndex } from '../lib/stackindex';
+
+// The words live in content/weaknesses.json, so this page, its JSON-LD and
+// llms-full.txt all read one source. The page dresses each weakness as a
+// "known issue": an ID, tags, a status, a pull quote, the workaround and a
+// small animated drawing. Every number on the page is counted from the
+// site's own records at build time.
+const profile = getProfile();
+const resume = getResume();
+const bundle = await loadBundle(Astro.site);
+const list = essayListNode(bundle.site, weaknesses);
+
+type Issue = {
+  id: string;
+  title: string;
+  paragraphs: string[];
+  tags?: string[];
+  status?: string;
+  pull?: string;
+  workaround?: string;
+  art?: string;
+};
+const issues = (raw.sections as Issue[]).map((issue, i) => ({ ...issue, code: `JO-${String(i + 1).padStart(2, '0')}` }));
+const tagCount = (tag: string) => issues.filter((issue) => issue.tags?.includes(tag)).length;
+
+const [ry, rm] = (raw.lastReviewed ?? '').split('-').map(Number);
+const reviewed = ry ? new Date(Date.UTC(ry, rm - 1, 1)).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }) : '';
+
+// Data for the drawings, all from the site's own records.
+const stacks = stackIndex(listProjects(), 500);
+const conveyor = stacks.slice(0, 18).map((row) => row.name);
+const pick = (name: string) => stacks.find((row) => row.name.toLowerCase() === name.toLowerCase());
+const depth = ['WordPress', 'PHP', 'TypeScript', 'React', 'Python', 'Ruby']
+  .map((name) => pick(name))
+  .filter((row): row is NonNullable<typeof row> => Boolean(row))
+  .sort((a, b) => b.count - a.count);
+const deepest = Math.max(1, ...depth.map((row) => row.count));
+const practice = resume.roles.find((role) => role.end === null && !role.parent);
+const clients = practice ? resume.roles.filter((role) => role.parent === practice.id && role.end === null).map((role) => role.org) : [];
+const starts = resume.roles.map((role) => Number((role.start ?? '').slice(0, 4))).filter((year) => year > 1990);
+const years = starts.length ? new Date().getUTCFullYear() - Math.min(...starts) : 0;
+---
+
+<Base
+  title={`${weaknesses.title} · ${profile.name}`}
+  description={weaknesses.description}
+  page={{ mainEntity: { '@id': list['@id'] } }}
+  schema={[list]}
+  crumbs={[{ name: 'Home', path: '/' }, { name: weaknesses.title, path: weaknesses.path }]}
+>
+  <article class="wrap weak ds-page" aria-labelledby="weaknesses-title">
+    <header class="weak__hero" data-anim>
+      <p class="eyebrow weak__kicker">
+        <span class="weak__blink" aria-hidden="true"></span>{weaknesses.kicker}{reviewed && <span> · last reviewed {reviewed}</span>}
+      </p>
+      <h1 id="weaknesses-title" class="display weak__title">{weaknesses.title}</h1>
+      <div class="weak__intro">
+        {weaknesses.intro.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+
+      <dl class="weak__board" aria-label="Summary">
+        <div><dt>Known issues</dt><dd>{issues.length}</dd></div>
+        <div><dt>Career</dt><dd>{tagCount('Career')}</dd></div>
+        <div><dt>Collaboration</dt><dd>{tagCount('Collaboration')}</dd></div>
+        {years > 0 && <div><dt>Years in the making</dt><dd>{years}</dd></div>}
+        <div><dt>Hidden</dt><dd>0</dd></div>
+      </dl>
+
+      <div class="weak__track" aria-hidden="true">
+        <svg class="weak__bug" viewBox="0 0 28 18" width="28" height="18">
+          <g class="weak__legs">
+            <path d="M8 6 L3 2 M8 9 L2 9 M8 12 L3 16 M20 6 L25 2 M20 9 L26 9 M20 12 L25 16" />
+          </g>
+          <ellipse cx="14" cy="9" rx="7" ry="6" />
+          <path d="M14 3 V15" />
+          <circle cx="11.5" cy="7" r="1" /><circle cx="16.5" cy="11" r="1" />
+        </svg>
+      </div>
+
+      <nav class="weak__toc" aria-label="Issues on this page">
+        {
+          issues.map((issue, i) => (
+            <a href={`#${issue.id}`} style={`--i: ${i}`}>
+              <span>{issue.code}</span>
+              {issue.title}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    {
+      issues.map((issue, i) => (
+        <section class:list={['issue', i % 2 && 'issue--flip']} id={issue.id} data-weakness={issue.id} data-anim style={`--i: ${i}`} aria-labelledby={`${issue.id}-title`}>
+          <div class="issue__text">
+            <p class="issue__meta">
+              <span class="issue__code">{issue.code}</span>
+              {issue.tags?.map((tag) => <span class="issue__tag">{tag}</span>)}
+              {issue.status && (
+                <span class="issue__status">
+                  <i aria-hidden="true" />
+                  {issue.status}
+                </span>
+              )}
+            </p>
+            <h2 id={`${issue.id}-title`} class="issue__title">{issue.title}</h2>
+            {issue.paragraphs.map((paragraph) => <p class="issue__p">{paragraph}</p>)}
+            {issue.workaround && (
+              <p class="issue__fix">
+                <span>Workaround</span>
+                {issue.workaround}
+              </p>
+            )}
+          </div>
+
+          <figure class="issue__art" aria-hidden="true">
+            {issue.pull && (
+              <blockquote class="issue__pull">
+                <span class="issue__mark">“</span>
+                {issue.pull}
+              </blockquote>
+            )}
+
+            {issue.art === 'conveyor' && (
+              <div class="art">
+                <div class="conv">
+                  <div class="conv__belt">
+                    {[...conveyor, ...conveyor].map((name) => <span>{name}</span>)}
+                  </div>
+                </div>
+                <div class="conv__me">
+                  <i />
+                  <span>me, keeping up</span>
+                </div>
+                <figcaption>Platforms from this site's projects, as they pass</figcaption>
+              </div>
+            )}
+
+            {issue.art === 'terminal' && (
+              <div class="art">
+                <div class="term">
+                  <p class="term__bar"><i /><i /><i /><span>~/client-site</span></p>
+                  <p class="term__line" style="--n: 12; --d: 0">$ git status</p>
+                  <p class="term__line term__dim" style="--n: 37; --d: 1">on branch fix/the-thing-that-was-fine</p>
+                  <p class="term__line" style="--n: 14; --d: 2">$ npm run test</p>
+                  <p class="term__line term__bad" style="--n: 20; --d: 3">1 failing · 11:47 pm</p>
+                  <p class="term__line" style="--n: 17; --d: 4">$ # one more pass</p>
+                  <p class="term__caret">$ <b /></p>
+                </div>
+                <figcaption>A dramatization. The hour is not.</figcaption>
+              </div>
+            )}
+
+            {issue.art === 'pipeline' && (
+              <div class="art">
+                <div class="pipe">
+                  <span class="pipe__node">
+                    <b>Model</b>drafts
+                  </span>
+                  <span class="pipe__node pipe__node--gate">
+                    <b>Specialist</b>reviews
+                    <em>✓</em>
+                  </span>
+                  <span class="pipe__node">
+                    <b>People</b>receive
+                  </span>
+                  <i class="pipe__token" />
+                </div>
+                <figcaption>Every draft waits at the middle stop</figcaption>
+              </div>
+            )}
+
+            {issue.art === 'week' && (
+              <div class="art">
+                <p class="week__label">One week, split across the practice</p>
+                <div class="week">
+                  {clients.map((name, c) => (
+                    <span class="week__seg" style={`--c: ${c}`}>
+                      <b>{name}</b>
+                    </span>
+                  ))}
+                  <span class="week__seg week__seg--mentor">
+                    <b>Mentoring</b>
+                  </span>
+                </div>
+                <figcaption>{clients.length} active clients and one sliver left over. An illustration, not a timesheet.</figcaption>
+              </div>
+            )}
+
+            {issue.art === 'depth' && (
+              <div class="art">
+                <ul class="depth">
+                  {depth.map((row, d) => (
+                    <li style={`--w: ${Math.max(2, (row.count / deepest) * 100)}%; --d: ${d}`}>
+                      <span class="depth__name">{row.name}</span>
+                      <span class="depth__bar">
+                        <i />
+                      </span>
+                      <span class="depth__n">{row.count}</span>
+                    </li>
+                  ))}
+                </ul>
+                <figcaption>Projects on this site that use each. Deep in a few places, a toe in others.</figcaption>
+              </div>
+            )}
+          </figure>
+        </section>
+      ))
+    }
+
+    <footer class="weak__close" data-anim>
+      {weaknesses.close.map((paragraph) => <p>{paragraph}</p>)}
+      <div class="weak__cta">
+        <button type="button" class="weak__btn weak__btn--solid" data-open-contact>Start a Conversation</button>
+        <a class="weak__btn" href="/resume">See the Resume</a>
+      </div>
+    </footer>
+  </article>
+</Base>
+
+<script is:inline>
+  (function () {
+    var els = document.querySelectorAll('.weak [data-anim]');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('is-in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.15 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
+<style>
+  .weak {
+    --weak-gap: clamp(72px, 9vw, 128px);
+    padding-bottom: var(--ds-space-section-sm, 80px);
+  }
+
+  /* ---------- Hero ---------- */
+  .weak__kicker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .weak__blink {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-red, #e5484d);
+  }
+
+  .weak__title { margin: 18px 0 24px; }
+
+  .weak__intro {
+    max-width: 58ch;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .weak__intro p { margin: 0 0 10px; }
+  .weak__intro p:last-child { color: var(--text); }
+
+  .weak__board {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    margin: 48px 0 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .weak__board div { padding: 18px 20px 18px 0; }
+
+  .weak__board div + div {
+    padding-left: 20px;
+    border-left: 1px solid var(--line);
+  }
+
+  .weak__board dt {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .weak__board dd {
+    margin: 6px 0 0;
+    font-family: var(--ds-font-display, var(--sans));
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .weak__board div:last-child dd { color: var(--positive, #3fb950); }
+
+  /* A small bug walks the rule under the board, turns around, walks back. */
+  .weak__track {
+    position: relative;
+    /* Takes 11px of space; the bug hangs 11px above it, straddling the rule. */
+    height: 11px;
+    pointer-events: none;
+  }
+
+  .weak__bug {
+    position: absolute;
+    left: 0;
+    top: -9px;
+    color: var(--accent-red, #e5484d);
+    overflow: visible;
+  }
+
+  .weak__bug ellipse { fill: var(--bg); stroke: currentColor; stroke-width: 1.4; }
+  .weak__bug path { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; }
+  .weak__bug circle { fill: currentColor; }
+
+  .weak__toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+  }
+
+  .weak__toc a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 14px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, translate 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), rotate 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+
+  .weak__toc a span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  .weak__toc a:hover {
+    border-color: var(--text);
+    background: color-mix(in srgb, var(--text) 6%, transparent);
+    translate: 0 -2px;
+    rotate: -1deg;
+  }
+
+  /* ---------- Issues ---------- */
+  .issue {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+    padding-top: var(--weak-gap);
+  }
+
+  .issue--flip .issue__text { order: 2; }
+  .issue--flip .issue__art { order: 1; }
+
+  .issue__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .issue__code { color: var(--accent-red, #e5484d); }
+
+  .issue__tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    color: var(--muted);
+    transition: rotate 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), scale 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+
+  .issue__tag:hover { rotate: -4deg; scale: 1.06; }
+
+  .issue__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--faint);
+  }
+
+  .issue__status i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--positive, #3fb950);
+  }
+
+  .issue__title {
+    margin: 0 0 18px;
+    font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .issue__p {
+    margin: 0 0 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .issue__fix {
+    margin: 22px 0 0;
+    padding: 14px 16px;
+    border-left: 2px solid var(--positive, #3fb950);
+    background: color-mix(in srgb, var(--positive, #3fb950) 6%, transparent);
+    color: var(--text);
+    line-height: 1.55;
+    transition: translate 0.3s ease;
+  }
+
+  .issue__fix:hover { translate: 4px 0; }
+
+  .issue__fix span {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--positive, #3fb950);
+  }
+
+  .issue__art {
+    position: sticky;
+    top: 32px;
+    margin: 0;
+  }
+
+  .issue__pull {
+    position: relative;
+    margin: 0 0 24px;
+    padding-left: 38px;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-wrap: balance;
+  }
+
+  .issue__mark {
+    position: absolute;
+    left: 0;
+    top: -0.15em;
+    display: inline-block;
+    font-family: var(--ds-font-display, var(--sans));
+    font-size: 2.4em;
+    line-height: 1;
+    color: var(--accent-red, #e5484d);
+  }
+
+  .art {
+    padding: 22px;
+    border: 1px solid var(--line);
+    background: var(--panel, #0a0a0a);
+    overflow: hidden;
+  }
+
+  .art figcaption {
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+  }
+
+  /* Conveyor: the stack scrolls past; "me" jogs in place. */
+  .conv {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+  }
+
+  .conv__belt {
+    display: flex;
+    gap: 8px;
+    width: max-content;
+  }
+
+  .conv__belt span {
+    padding: 6px 12px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .conv__me {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: 18px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+  }
+
+  .conv__me i {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-red, #e5484d);
+  }
+
+  /* Terminal: lines type in, then the caret waits. */
+  .term {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .term p { margin: 0; }
+
+  .term__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px !important;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 11px;
+  }
+
+  .term__bar i {
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+
+  .term__bar span { margin-left: 8px; }
+
+  .term__line {
+    width: calc(var(--n) * 1ch);
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  .term__dim { color: var(--muted); }
+  .term__bad { color: var(--accent-red, #e5484d); }
+
+  .term__caret b {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.1em;
+    vertical-align: -0.2em;
+    background: var(--text);
+  }
+
+  /* Pipeline: a token stops at review every time. */
+  .pipe {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding-top: 34px;
+  }
+
+  .pipe::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    left: 16%;
+    right: 16%;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .pipe__node {
+    position: relative;
+    padding: 12px;
+    border: 1px solid var(--line-strong);
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .pipe__node b {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .pipe__node--gate { border-color: var(--positive, #3fb950); }
+
+  .pipe__node em {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--positive, #3fb950);
+    color: var(--bg);
+    font-size: 12px;
+    font-style: normal;
+  }
+
+  .pipe__token {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 11px;
+    height: 11px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--text);
+  }
+
+  /* Week: client segments, and a mentoring sliver that keeps getting squeezed. */
+  .week__label {
+    margin: 0 0 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .week {
+    display: flex;
+    gap: 3px;
+    height: 132px;
+  }
+
+  .week__seg {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    background: color-mix(in srgb, var(--text) calc(9% + var(--c, 0) * 2.5%), transparent);
+    transform-origin: bottom;
+  }
+
+  .week__seg b {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    writing-mode: vertical-rl;
+    transform: translateX(-50%) rotate(180deg);
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .week__seg--mentor {
+    flex: 0 0 5%;
+    background: var(--accent-red, #e5484d);
+  }
+
+  .week__seg--mentor b { color: var(--text); }
+
+  /* Depth: deep in a few places, a toe in others. */
+  .depth {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .depth li {
+    display: grid;
+    grid-template-columns: 96px 1fr 32px;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+  }
+
+  .depth__name { color: var(--text); }
+
+  .depth__bar {
+    height: 8px;
+    background: var(--line);
+  }
+
+  .depth__bar i {
+    display: block;
+    width: var(--w);
+    height: 100%;
+    background: var(--text);
+    transform-origin: left;
+  }
+
+  .depth__n {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align: right;
+    color: var(--faint);
+  }
+
+  .depth li:nth-last-child(-n + 2) .depth__bar i { background: var(--accent-red, #e5484d); }
+
+  /* ---------- Close ---------- */
+  .weak__close {
+    max-width: 62ch;
+    margin-top: var(--weak-gap);
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+
+  .weak__close p {
+    margin: 0;
+    font-size: 1.35rem;
+    line-height: 1.45;
+    letter-spacing: -0.015em;
+  }
+
+  .weak__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .weak__btn {
+    display: inline-flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: translate 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), border-color 0.2s;
+  }
+
+  .weak__btn--solid {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  .weak__btn:hover {
+    translate: 0 -2px;
+    border-color: var(--text);
+  }
+
+  /* ---------- Motion (none of it when reduced motion is asked for) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .weak__blink { animation: weak-blink 1.6s steps(2, jump-none) infinite; }
+    .issue__status i { animation: weak-ping 2.4s ease-out infinite; }
+
+    .weak__bug { animation: bug-walk 22s linear infinite; }
+    .weak__legs { transform-origin: 14px 9px; animation: bug-legs 0.28s steps(2, jump-none) infinite; }
+
+    .weak__toc a { opacity: 0; transform: translateY(8px); }
+    .weak__hero.is-in .weak__toc a { animation: weak-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.4s + var(--i) * 70ms) forwards; }
+
+    .weak__board dd { opacity: 0; transform: translateY(10px) scale(0.9); }
+    .weak__hero.is-in .weak__board dd { animation: weak-up 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) forwards; }
+    .weak__hero.is-in .weak__board div:nth-child(2) dd { animation-delay: 0.1s; }
+    .weak__hero.is-in .weak__board div:nth-child(3) dd { animation-delay: 0.2s; }
+    .weak__hero.is-in .weak__board div:nth-child(4) dd { animation-delay: 0.3s; }
+    .weak__hero.is-in .weak__board div:nth-child(5) dd { animation-delay: 0.4s; }
+    .weak__hero.is-in .weak__board div:last-child dd { animation: weak-up 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) 0.45s forwards, weak-wink 3.4s ease-in-out 1.6s infinite; }
+
+    /* Each issue rises in; its quote mark bounces; its drawing starts. */
+    .issue .issue__text,
+    .issue .issue__art {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .issue .issue__art { transition-delay: 0.12s; }
+
+    .issue.is-in .issue__text,
+    .issue.is-in .issue__art { opacity: 1; transform: none; }
+
+    .issue__mark { transform: scale(0) rotate(-20deg); }
+    .issue.is-in .issue__mark { animation: weak-mark 0.6s cubic-bezier(0.3, 1.6, 0.5, 1) 0.5s forwards; }
+
+    .issue.is-in .conv__belt { animation: conv-run 40s linear infinite; }
+    .issue.is-in .conv__me i { animation: me-jog 0.45s ease-in-out infinite alternate; }
+
+    .term__line { width: 0; }
+    .issue.is-in .term__line { animation: term-type calc(var(--n) * 45ms) steps(var(--n), end) calc(0.5s + var(--d) * 0.9s) forwards; }
+    .term__caret { opacity: 0; }
+    .issue.is-in .term__caret { animation: weak-show 0.01s linear 5.2s forwards; }
+    .issue.is-in .term__caret b { animation: weak-blink 1s steps(2, jump-none) 5.2s infinite; }
+
+    .pipe__token { left: 16%; }
+    .pipe__node em { opacity: 0; }
+    .issue.is-in .pipe__token { animation: pipe-move 6s cubic-bezier(0.6, 0, 0.3, 1) 0.6s infinite; }
+    .issue.is-in .pipe__node em { animation: pipe-stamp 6s ease 0.6s infinite; }
+
+    .issue.is-in .week__seg:not(.week__seg--mentor) { animation: week-grow 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--c) * 90ms) both; }
+    .issue.is-in .week__seg--mentor { animation: week-squeeze 5s ease-in-out 1s infinite; }
+
+    .depth__bar i { transform: scaleX(0); }
+    .issue.is-in .depth__bar i { animation: depth-grow 1s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.3s + var(--d) * 0.12s) forwards; }
+    .issue.is-in .depth li:nth-last-child(-n + 2) .depth__bar i {
+      animation:
+        depth-grow 1s cubic-bezier(0.2, 0.8, 0.2, 1) calc(0.3s + var(--d) * 0.12s) forwards,
+        depth-wobble 2.6s ease-in-out 1.8s infinite;
+    }
+
+    .weak__close { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.8s ease; }
+    .weak__close.is-in { opacity: 1; transform: none; }
+  }
+
+  @keyframes weak-blink { 50% { opacity: 0; } }
+  @keyframes weak-show { to { opacity: 1; } }
+  @keyframes weak-up { to { opacity: 1; transform: none; } }
+  @keyframes weak-wink { 0%, 90%, 100% { transform: none; } 94% { transform: scaleY(0.2); } }
+  @keyframes weak-mark { to { transform: none; } }
+  @keyframes weak-ping {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive, #3fb950) 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 6px transparent; }
+  }
+
+  @keyframes bug-walk {
+    0% { left: 0; transform: none; }
+    48% { left: calc(100% - 28px); transform: none; }
+    50% { left: calc(100% - 28px); transform: scaleX(-1); }
+    98% { left: 0; transform: scaleX(-1); }
+    100% { left: 0; transform: none; }
+  }
+
+  @keyframes bug-legs { 50% { transform: scaleY(-1); } }
+  @keyframes conv-run { to { transform: translateX(-50%); } }
+  @keyframes me-jog { to { transform: translateY(-5px); } }
+  @keyframes term-type { to { width: calc(var(--n) * 1ch); } }
+
+  @keyframes pipe-move {
+    0% { left: 16%; }
+    25%, 60% { left: 50%; }
+    85%, 100% { left: 84%; }
+  }
+
+  @keyframes pipe-stamp {
+    0%, 28% { opacity: 0; transform: scale(0.4); }
+    34%, 58% { opacity: 1; transform: none; }
+    66%, 100% { opacity: 0; transform: scale(0.8); }
+  }
+
+  @keyframes week-grow { from { transform: scaleY(0); } }
+  @keyframes week-squeeze {
+    0%, 100% { flex-basis: 5%; }
+    35% { flex-basis: 16%; }
+    55% { flex-basis: 2%; }
+    70% { flex-basis: 6%; }
+  }
+
+  @keyframes depth-grow { to { transform: none; } }
+  @keyframes depth-wobble { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(1.8); } }
+
+  @media (max-width: 900px) {
+    /* Two columns: the right-hand cell of each row carries the divider, and
+       each row after the first gets a rule above it. */
+    .weak__board { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .weak__board > div,
+    .weak__board > div + div { padding: 16px 16px 16px 0; border-left: 0; }
+    .weak__board > div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+    .weak__board > div:nth-child(n + 3) { border-top: 1px solid var(--line); }
+    /* minmax(0, …): the conveyor belt is max-content wide and would otherwise
+       stretch the single column (and the text with it) far off screen. */
+    .issue { grid-template-columns: minmax(0, 1fr); }
+    .issue--flip .issue__text { order: 0; }
+    .issue__art { position: static; }
+  }
+
+  @media (max-width: 900px) {
+    /* An odd last cell (Hidden) takes the whole row instead of half of it. */
+    .weak__board > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  }
+
+  /* Phones: the week lies on its side. Each client is a full-width row with
+     its name read normally, and the mentoring sliver is a thin row that still
+     gets squeezed (the same flex-basis animation, now on the height). */
+  @media screen and (max-width: 640px) {
+    .week {
+      flex-direction: column;
+      height: 248px;
+    }
+
+    .week__seg {
+      transform-origin: left;
+    }
+
+    .week__seg b {
+      left: 10px;
+      bottom: 50%;
+      writing-mode: horizontal-tb;
+      transform: translateY(50%);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .issue.is-in .week__seg:not(.week__seg--mentor) {
+        animation-name: week-grow-x;
+      }
+    }
+  }
+
+  @keyframes week-grow-x { from { transform: scaleX(0); } }
+
+  @media print {
+    .issue__art, .weak__track, .weak__toc, .weak__cta { display: none; }
+    .issue { grid-template-columns: 1fr; padding-top: 18pt; }
+    .issue .issue__text, .weak__close { opacity: 1 !important; transform: none !important; }
+  }
+</style>

@@ -1,0 +1,863 @@
+---
+/**
+ * An employer or practice with the engagements held inside it.
+ * The parent reads as the lead block; children follow as a card grid
+ * (childLayout "cards") or a compact list ("list").
+ */
+import Engagement from './Engagement.astro';
+import { BORN_YEAR, BORN_MONTH, ageAt } from '../../lib/timeline';
+import Showcase from './Showcase.astro';
+import Stat from '../ui/Stat.astro';
+import StatGrid from '../ui/StatGrid.astro';
+import Marks from '../ui/Marks.astro';
+import type { GroupView } from '../../lib/resume';
+
+interface Props {
+  group: GroupView;
+}
+
+const { group } = Astro.props;
+const eyebrow = [group.title, group.kind, group.location].filter(Boolean).join(' · ');
+// Screen timeline: today at the top, newest engagement first, oldest at the
+// bottom, so the age readout on the line counts back as you scroll.
+const timeline = [...group.children].sort((a, b) => (b.start ?? '0000').localeCompare(a.start ?? '0000'));
+// "properties": a company's own sites, not separate clients, each a short block
+// under the summary. The lead (the one with a title of its own) comes first and
+// full width; the smaller ones sit side by side beneath it.
+const isProps = group.childLayout === 'properties';
+const leadProp = isProps ? (group.children.find((child) => child.title) ?? group.children[0]) : undefined;
+const minorProps = isProps ? group.children.filter((child) => child !== leadProp) : [];
+const firstYear = timeline.map((child) => child.start).filter(Boolean).sort()[0]?.slice(0, 4);
+// End of the line: today's month (refreshed in the browser) and age now.
+const today = new Date();
+const todayLabel = today.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const ageNow = ageAt(today);
+---
+
+<div class="grp ds-pulse p-experience h-event" data-track="role" data-track-label={group.org}>
+  <header class="grp__head">
+    <div>
+      <p class="grp__eyebrow">{eyebrow}</p>
+      <h3 class="grp__org p-name">
+        {group.orgName}
+        {group.suffix && <span class="grp__llc">{group.suffix}</span>}
+      </h3>
+    </div>
+    <p class="grp__when">
+      {group.start && <time class="dt-start" datetime={group.start}>{group.when}</time>}
+      {group.duration && <span>{group.duration}</span>}
+    </p>
+  </header>
+
+  <div class="grp__lead">
+    {group.summary && <p class="grp__summary p-summary">{group.summary}</p>}
+    <div class="grp__side">
+      {
+        group.metrics.length > 0 && (
+          <StatGrid size="sm" min="120px" label={`${group.orgName} figures`}>
+            {group.metrics.map((metric) => (
+              <Stat value={metric.value} label={metric.label} tone={metric.tone} />
+            ))}
+          </StatGrid>
+        )
+      }
+      {
+        group.work.length > 0 && (
+          <p class="grp__work">
+            <span class="grp__label">Work</span>
+            {group.work.map((item, index) => (
+              <>
+                {index > 0 && <span aria-hidden="true">, </span>}
+                <a class="ds-link" href={item.href} data-track="project" data-track-label={item.title}>
+                  {item.title}
+                </a>
+              </>
+            ))}
+          </p>
+        )
+      }
+      {
+        group.between.length > 0 && (
+          <p class="grp__work">
+            <span class="grp__label">Between contracts</span>
+            {group.between.map((item, index) => (
+              <>
+                {index > 0 && <span aria-hidden="true">, </span>}
+                <a class="ds-link" href={item.href} data-track="project" data-track-label={item.title}>
+                  {item.title}
+                </a>
+              </>
+            ))}
+          </p>
+        )
+      }
+      {group.stack.length > 0 && <Marks names={group.stack} size="sm" label={`${group.orgName} stack`} max={8} printMax={5} />}
+    </div>
+  </div>
+
+  {
+    isProps && leadProp && (
+      <div class="grp__props">
+        {[leadProp].map((prop) => (
+            <div class="grp__prop p-experience h-event">
+              <p class="grp__prop-head">
+                <span class="p-name">{prop.orgName}</span>
+                {prop.title && <span> · {prop.title}</span>}
+                {prop.start && (
+                  <span>
+                    {' · '}
+                    <time class="dt-start" datetime={prop.start}>{prop.when}</time>
+                  </span>
+                )}
+              </p>
+              {prop.summary && <p class="grp__prop-text p-summary">{prop.summary}</p>}
+            </div>
+          ))}
+        <div class="grp__props-minor">
+          {minorProps.map((prop) => (
+            <div class="grp__prop p-experience h-event">
+              <p class="grp__prop-head">
+                <span class="p-name">{prop.orgName}</span>
+                {prop.title && <span> · {prop.title}</span>}
+                {prop.start && (
+                  <span>
+                    {' · '}
+                    <time class="dt-start" datetime={prop.start}>{prop.when}</time>
+                  </span>
+                )}
+              </p>
+              {prop.summary && <p class="grp__prop-text p-summary">{prop.summary}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {group.feature && <Showcase feature={group.feature} />}
+
+  {
+    group.children.length > 0 && !isProps &&
+      (group.childLayout === 'list' ? (
+        <ul class="grp__list">
+          {group.children.map((child) => (
+            <Engagement role={child} variant="line" />
+          ))}
+        </ul>
+      ) : (
+        <>
+          <div class="grp__cards tl" data-tl data-born={BORN_YEAR ?? undefined} data-born-month={BORN_MONTH}>
+            <div class="tl__foot" aria-hidden="true">
+              <div class="tl__now">
+                <p class="tl__now-title">Today<span class="tl__caret" /></p>
+                <p class="tl__now-meta">
+                  <span data-tl-today>{todayLabel}</span>
+                  {ageNow && <span> · Age {ageNow}</span>}
+                  {firstYear && <span> · {timeline.length} engagements since {firstYear}</span>}
+                </p>
+              </div>
+              <span class="tl__beacon" data-tl-beacon><i /></span>
+            </div>
+            {timeline.map((child, i) => (
+              <div
+                class:list={['grp__cell', 'tl__item', child.current && 'is-open']}
+                data-side={i % 2 ? 'right' : 'left'}
+                style={`--row: ${i + 2}`}
+                data-print={child.metrics.length ? undefined : 'hide'}
+              >
+                <span class="tl__node" aria-hidden="true" />
+                {child.start && (
+                  <span class="tl__stamp" aria-hidden="true" data-tl-start={child.start}>
+                    {child.start.slice(0, 7)}
+                  </span>
+                )}
+                <div class="tl__card">
+                  {child.start && (
+                    <p class="tl__path" aria-hidden="true">
+                      <time class="tl__since" datetime={child.start}>{child.start.slice(0, 7)}</time>
+                    </p>
+                  )}
+                  <Engagement role={child} />
+                </div>
+              </div>
+            ))}
+            <div class="tl__rail" aria-hidden="true">
+              <span class="tl__fill" />
+              <span class="tl__chip" data-tl-chip>
+                <b data-tl-age />
+              </span>
+            </div>
+          </div>
+          {/* In the PDF, engagements without figures print as compact lines. */}
+          {group.children.some((child) => !child.metrics.length) && (
+            <ul class="grp__list" data-print="only">
+              {group.children
+                .filter((child) => !child.metrics.length)
+                .map((child) => (
+                  <Engagement role={child} variant="line" record={false} />
+                ))}
+            </ul>
+          )}
+        </>
+      ))
+  }
+</div>
+
+<style>
+  .grp {
+    display: grid;
+    gap: var(--ds-space-5);
+    padding: var(--ds-space-8) 0 var(--ds-space-10);
+  }
+
+  /* The first block sits under the section rule; only the dividers between blocks pulse. */
+  .grp:first-child::before,
+  :global(.ds-section__head) + .grp::before,
+  :global(.ds-section__title) + .grp::before,
+  :global(.ds-section__lede) + .grp::before {
+    content: none;
+  }
+
+  .grp + :global(.grp) {
+    border-top: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  .grp__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--ds-space-4);
+  }
+
+  .grp__eyebrow {
+    margin: 0 0 var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .grp__org {
+    margin: 0;
+    font-size: var(--ds-text-3xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: var(--ds-leading-tight);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-fg);
+  }
+
+  /* Legal suffix: part of the name, set quieter than it. */
+  .grp__llc {
+    color: var(--ds-fg-faint);
+  }
+
+  .grp__when {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* The years the practice ran beside a full-time job: noticeable, not loud. */
+  .grp__side-since {
+    padding-left: var(--ds-space-4);
+    background: repeating-linear-gradient(90deg, var(--ds-fg-faint) 0 3px, transparent 3px 5px) left center / 12px 2px no-repeat;
+    color: var(--ds-fg-muted);
+  }
+
+  .grp__lead {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--ds-space-10);
+    align-items: start;
+  }
+
+  .grp__summary {
+    margin: 0;
+    font-size: var(--ds-text-lg);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  .grp__side {
+    display: grid;
+    gap: var(--ds-space-4);
+  }
+
+  .grp__label {
+    margin-right: var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .grp__work {
+    margin: 0;
+    font-size: var(--ds-text-sm);
+    color: var(--ds-fg-muted);
+  }
+
+  .grp__work a {
+    color: var(--ds-fg);
+  }
+
+  .grp__bullets {
+    display: grid;
+    gap: var(--ds-space-2);
+    margin: 0;
+    padding-left: var(--ds-space-4);
+    max-width: var(--ds-measure);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-body);
+  }
+
+  /* Cards sit on a hairline grid, the same construction as the Home work grid. */
+  .grp__cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--ds-space-4);
+    margin-top: var(--ds-space-4);
+  }
+
+  .grp__cell {
+    min-width: 0;
+  }
+
+  .grp__cell:nth-child(2n) {
+    padding-left: var(--ds-space-6);
+    border-left: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  /* Properties: one row under the lead, lined up with its two columns. The
+     lead property sits under the summary; the smaller ones share the side
+     column. Narrow screens stack all three, one per row. */
+  .grp__props {
+    margin-top: var(--ds-space-6);
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--ds-space-10);
+    /* stretch, so all three blocks (and their side rules) share one height */
+    align-items: stretch;
+  }
+
+  .grp__props-minor {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ds-space-6);
+  }
+
+  @media (max-width: 960px) {
+    .grp__props,
+    .grp__props-minor {
+      grid-template-columns: 1fr;
+      gap: var(--ds-space-5);
+    }
+  }
+
+  .grp__prop {
+    padding-left: var(--ds-space-4);
+    border-left: var(--ds-hairline) solid var(--ds-accent);
+  }
+
+  .grp__prop p {
+    margin: 0;
+  }
+
+  .grp__prop-head {
+    margin-bottom: var(--ds-space-1);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .grp__prop-head .p-name {
+    color: var(--ds-fg);
+  }
+
+  .grp__prop-text {
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  .grp__props-minor .grp__prop {
+    border-left-color: var(--ds-rule-strong, var(--ds-rule));
+  }
+
+  .grp__list {
+    margin: var(--ds-space-2) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (max-width: 960px) {
+    .grp__lead {
+      grid-template-columns: 1fr;
+      gap: var(--ds-space-6);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .grp__cards {
+      grid-template-columns: 1fr;
+    }
+
+    .grp__cell:nth-child(2n) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .grp__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .grp__when {
+      justify-items: start;
+      text-align: left;
+    }
+  }
+
+  @media print {
+    .grp__side-since {
+      padding-left: 0;
+      background: none;
+    }
+
+    .grp__when {
+      white-space: normal;
+    }
+
+    .grp {
+      gap: var(--ds-space-2);
+      padding: var(--ds-space-2) 0;
+    }
+
+    .grp__head,
+    .grp__lead {
+      break-inside: avoid;
+    }
+
+    .grp__eyebrow {
+      margin: 0;
+    }
+
+    .grp__lead {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: var(--ds-space-6);
+    }
+
+    .grp__summary {
+      font-size: var(--ds-text-sm);
+    }
+
+    .grp__work a {
+      text-decoration: none;
+    }
+
+    /* Printed pages are ~720 CSS px wide, so the mobile rules above also
+       match in print. Restate the desktop layout here. */
+    .grp__head {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+
+    .grp__when {
+      justify-items: end;
+      text-align: right;
+    }
+
+    .grp__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 0;
+    }
+
+    .grp__cell:nth-child(2n) {
+      padding-left: var(--ds-space-4);
+      border-left: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .grp__list {
+      margin-top: 0;
+    }
+  }
+
+  /* ---------- Timeline (screen only; print keeps the two-up grid) ---------- */
+  @media screen {
+    .grp__cards.tl {
+      --tl-gap: 72px;
+      --tl-node: 13px;
+      position: relative;
+      grid-template-columns: minmax(0, 1fr) var(--tl-gap) minmax(0, 1fr);
+      row-gap: 0;
+      margin-top: var(--ds-space-8);
+      padding-bottom: var(--ds-space-4);
+    }
+
+    /* the spine: a dashed line, like git's graph */
+    .grp__cards.tl::before {
+      content: "";
+      position: absolute;
+      top: var(--tl-top, 44px);
+      bottom: var(--tl-bottom, 44px);
+      left: 50%;
+      width: 1px;
+      background: repeating-linear-gradient(to bottom, var(--ds-rule-strong, var(--ds-rule)) 0 6px, transparent 6px 11px);
+    }
+
+    .tl__head,
+    .tl__foot {
+      position: relative;
+      z-index: 1;
+      grid-column: 1 / -1;
+      justify-self: center;
+      margin: 0;
+      padding: 8px 14px;
+      border: var(--ds-hairline) solid var(--ds-rule);
+      background: var(--bg, #050507);
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-2xs, 11px);
+      color: var(--ds-fg-muted);
+      white-space: nowrap;
+    }
+    .tl__head { grid-row: 1; margin-bottom: var(--ds-space-6); }
+    .tl__prompt { color: var(--ds-positive); }
+
+    /* End of the line: a live beacon on the spine, then "Today" with a cursor. */
+    .tl__foot {
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--ds-space-3);
+      margin-bottom: var(--ds-space-6);
+      padding: 0;
+      border: 0;
+      background: none;
+      text-align: center;
+    }
+    .tl__beacon {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--bg, #050507);
+      box-shadow: 0 0 0 4px var(--bg, #050507);
+    }
+    .tl__beacon::before,
+    .tl__beacon::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--ds-positive);
+      border-radius: 50%;
+      opacity: 0;
+    }
+    .tl__beacon i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ds-positive);
+      box-shadow: 0 0 12px color-mix(in srgb, var(--ds-positive) 70%, transparent);
+    }
+    .tl__now { display: grid; gap: 4px; }
+    .tl__now p { margin: 0; }
+    .tl__now-title {
+      font-family: var(--ds-font-sans, inherit);
+      font-size: var(--ds-text-xl, 20px);
+      font-weight: var(--ds-weight-medium, 500);
+      letter-spacing: var(--ds-tracking-tight, 0);
+      color: var(--ds-fg);
+    }
+    .tl__caret {
+      display: inline-block;
+      width: 0.5em;
+      height: 0.9em;
+      margin-left: 4px;
+      vertical-align: -0.08em;
+      background: var(--ds-positive);
+    }
+    .tl__now .tl__now-meta { margin-bottom: 10px; color: var(--ds-fg-faint); text-transform: uppercase; }
+    .tl__now-meta span:first-child { color: var(--ds-positive); }
+    @media (prefers-reduced-motion: no-preference) {
+      .tl__beacon::before { animation: tl-sonar 2.4s ease-out infinite; }
+      .tl__beacon::after { animation: tl-sonar 2.4s ease-out 1.2s infinite; }
+      .tl__caret { animation: tl-caret 1.1s steps(1) infinite; }
+    }
+    @keyframes tl-sonar {
+      0% { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(3.2); opacity: 0; }
+    }
+    @keyframes tl-caret { 50% { opacity: 0; } }
+
+    .grp__cards.tl .tl__item {
+      position: relative;
+      grid-row: var(--row) / span 2;
+      align-self: start;
+      min-width: 0;
+      padding: 0 0 var(--ds-space-8);
+      border-left: 0;
+    }
+    /* The last card spans one row, not two: a second row would sit empty
+       under it and push the next group down. */
+    .grp__cards.tl .tl__item:nth-last-child(1 of .tl__item) { grid-row-end: span 1; }
+    .grp__cards.tl .tl__item[data-side='left'] { grid-column: 1; }
+    .grp__cards.tl .tl__item[data-side='right'] { grid-column: 3; padding-left: 0; }
+
+    .tl__card {
+      position: relative;
+      padding: var(--ds-space-6);
+      border: var(--ds-hairline) solid var(--ds-rule);
+      background: color-mix(in srgb, var(--ds-fg) 2%, transparent);
+      transition: border-color var(--ds-dur-fast), background-color var(--ds-dur-fast);
+    }
+    /* the card's own padding is the edge; drop the engagement's bottom padding so
+       the space under the icons matches the sides */
+    .tl__card :global(.eng) { padding-bottom: 0; }
+    .tl__item:hover .tl__card { border-color: var(--ds-rule-strong, var(--ds-fg-faint)); background: color-mix(in srgb, var(--ds-fg) 3.5%, transparent); }
+
+    /* the branch from card to spine */
+    .tl__card::after {
+      content: "";
+      position: absolute;
+      top: 34px;
+      width: calc(var(--tl-gap) / 2);
+      height: 1px;
+      background: repeating-linear-gradient(to right, var(--ds-rule-strong, var(--ds-rule)) 0 4px, transparent 4px 7px);
+    }
+    .tl__item[data-side='left'] .tl__card::after { left: 100%; }
+    .tl__item[data-side='right'] .tl__card::after { right: 100%; }
+
+    .tl__node {
+      position: absolute;
+      z-index: 2;
+      top: calc(34px - var(--tl-node) / 2);
+      width: var(--tl-node);
+      height: var(--tl-node);
+      border: 2px solid var(--ds-fg-faint);
+      border-radius: 50%;
+      background: var(--bg, #050507);
+    }
+    .tl__item[data-side='left'] .tl__node { right: calc(var(--tl-gap) / -2 - var(--tl-node) / 2); }
+    .tl__item[data-side='right'] .tl__node { left: calc(var(--tl-gap) / -2 - var(--tl-node) / 2); }
+    .tl__item.is-open .tl__node { border-color: var(--ds-positive); background: var(--ds-positive); }
+
+    /* start date: kept for the readout's maths, shown inside the card instead */
+    .tl__stamp { display: none; }
+    .tl__since { float: right; position: relative; top: var(--ds-space-2); color: var(--ds-fg-muted); }
+
+    /* The path holds only the floated start month, so it has no height of its
+       own. The card's top padding is a step shorter when it has one, so the
+       body starts that step higher; the month is set back down by the same
+       step (relative, which moves it without moving the space it takes). */
+    .tl__card:has(> .tl__path) { padding-top: calc(var(--ds-space-6) - var(--ds-space-2)); }
+    .tl__path {
+      margin: 0;
+      text-align: right;
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-2xs, 11px);
+      color: var(--ds-fg-faint);
+    }
+
+    /* progress along the spine, and the chip that reads out where you are */
+    .tl__rail { position: absolute; top: var(--tl-top, 44px); bottom: var(--tl-bottom, 44px); left: 50%; width: 0; pointer-events: none; }
+    .tl__fill {
+      position: absolute;
+      top: 0;
+      left: -1px;
+      width: 3px;
+      height: 100%;
+      transform: scaleY(var(--tl-p, 0));
+      transform-origin: top;
+      will-change: transform;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--ds-accent) 20%, transparent), var(--ds-accent));
+    }
+    /* Sticky, not moved by script: the browser keeps it at mid-screen while the
+       line scrolls past, so it never lags or shakes. */
+    .tl__chip {
+      position: sticky;
+      top: calc(50vh - 14px);
+      left: 0;
+      z-index: 3;
+      display: inline-flex;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      align-items: baseline;
+      gap: 8px;
+      padding: 3px 9px;
+      border: var(--ds-hairline) solid var(--ds-accent);
+      border-radius: 999px;
+      background: var(--bg, #050507);
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-2xs, 11px);
+      color: var(--ds-fg);
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+      transform: translateX(-50%);
+      box-shadow: 0 0 0 4px var(--bg, #050507);
+    }
+    .tl.is-live .tl__chip { opacity: 1; }
+    .tl__chip b { font-weight: 500; color: var(--ds-accent); }
+    .tl__chip b:empty { display: none; }
+
+    /* cards slide in from their side the first time they scroll in */
+    @media (prefers-reduced-motion: no-preference) {
+      .tl.is-anim .tl__item:not(.is-in) .tl__card { opacity: 0; transform: translateX(-24px); }
+      .tl.is-anim .tl__item[data-side='right']:not(.is-in) .tl__card { transform: translateX(24px); }
+      .tl.is-anim .tl__item:not(.is-in) .tl__node { transform: scale(0); }
+      .tl__card { transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-color var(--ds-dur-fast), background-color var(--ds-dur-fast); }
+      .tl__node { transition: transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 1) 0.2s; }
+      .tl__item.is-open .tl__node { animation: tl-open 2.4s ease-out infinite; }
+    }
+    @keyframes tl-open {
+      0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ds-positive) 55%, transparent); }
+      70%, 100% { box-shadow: 0 0 0 9px transparent; }
+    }
+  }
+
+  /* narrow: one column, spine on the left */
+  @media screen and (max-width: 860px) {
+    /* --tl-col: width of the spine column; --tl-x: where the spine runs in it.
+       Nodes and the Today beacon are placed from these, so they sit on the line. */
+    .grp__cards.tl { --tl-col: 40px; --tl-x: 19px; grid-template-columns: var(--tl-col) minmax(0, 1fr); --tl-gap: 28px; }
+    .grp__cards.tl::before, .tl__rail { left: var(--tl-x); }
+    .tl__head, .tl__foot { justify-self: start; grid-column: 1 / -1; }
+    .grp__cards.tl .tl__item,
+    .grp__cards.tl .tl__item[data-side='left'],
+    .grp__cards.tl .tl__item[data-side='right'] { grid-column: 2; grid-row: auto; padding-left: 14px; }
+    .tl__item[data-side] .tl__node { left: calc(var(--tl-x) + 0.5px - var(--tl-col) - var(--tl-node) / 2); right: auto; }
+    .tl__item[data-side] .tl__card::after { display: none; }
+    .tl__chip { left: 0; transform: translateX(-14px); min-width: 0; }
+    .tl__foot { grid-row: auto; flex-direction: row; align-items: center; gap: 22px; text-align: left; margin-left: calc(var(--tl-x) + 0.5px - 9px); }
+    .tl__foot .tl__beacon { order: -1; }
+    .tl__now .tl__now-meta { margin-bottom: 0; }
+    /* The start month floated right, and a float narrows the card body next to
+       it (the body is a flex box, which steps around floats). Pin it to the
+       corner instead so the body uses the card's full width. */
+    .tl__card { position: relative; }
+    .tl__path { position: absolute; top: var(--ds-space-6, 24px); right: var(--ds-space-6, 24px); margin: 0; }
+    .tl__since { float: none; top: 0; }
+    .tl__card:has(> .tl__path) { padding-top: var(--ds-space-6); }
+    .tl__card :global(.eng) { padding-right: 0; }
+    /* Cards rise into place here instead of sliding in from the side: a
+       sideways start pushed them past the screen edge, which widened the page
+       for a moment and made the whole layout shudder on load. */
+    .tl.is-anim .tl__item:not(.is-in) .tl__card,
+    .tl.is-anim .tl__item[data-side='right']:not(.is-in) .tl__card { transform: translateY(16px); }
+    .tl__card { transition-duration: 0.35s, 0.4s, var(--ds-dur-fast), var(--ds-dur-fast); }
+    .tl__node { transition-delay: 0s; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    if (window.__tlBound) return;
+    window.__tlBound = true;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('[data-tl]').forEach(function (tl) {
+      var items = [].slice.call(tl.querySelectorAll('.tl__item'));
+      var chip = tl.querySelector('[data-tl-chip]');
+      var ageEl = tl.querySelector('[data-tl-age]');
+      var rail = tl.querySelector('.tl__rail');
+      var born = parseInt(tl.getAttribute('data-born') || '', 10);
+      var bornMonth = parseInt(tl.getAttribute('data-born-month') || '1', 10);
+      // Age at a timestamp: a year less until the birth month comes round.
+      function ageAt(ms) {
+        var d = new Date(ms);
+        var a = d.getUTCFullYear() - born;
+        return d.getUTCMonth() + 1 < bornMonth ? a - 1 : a;
+      }
+      var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var todayEl = tl.querySelector('[data-tl-today]');
+      if (todayEl) { var now = new Date(); todayEl.textContent = MONTHS[now.getMonth()] + ' ' + now.getFullYear(); }
+      var beacon = tl.querySelector('[data-tl-beacon]');
+      var nodes = items.map(function (item) { return item.querySelector('.tl__node'); }).filter(Boolean);
+      // The spine runs from the Today beacon down to the oldest node, no further.
+      function ends() {
+        var box = tl.getBoundingClientRect();
+        if (beacon) {
+          var b = beacon.getBoundingClientRect();
+          tl.style.setProperty('--tl-top', (b.top + b.height / 2 - box.top) + 'px');
+        }
+        var last = nodes[nodes.length - 1];
+        if (last) {
+          var n = last.getBoundingClientRect();
+          tl.style.setProperty('--tl-bottom', (box.bottom - (n.top + n.height / 2)) + 'px');
+        }
+      }
+      // Today is the top stop; each dated node below it is a (position, date) stop.
+      function stops() {
+        var top = rail.getBoundingClientRect().top + scrollY;
+        var list = [{ y: 0, t: Date.now() }];
+        items.forEach(function (item) {
+          var stamp = item.querySelector('[data-tl-start]');
+          var node = item.querySelector('.tl__node');
+          if (!stamp || !node) return;
+          var r = node.getBoundingClientRect();
+          list.push({ y: r.top + scrollY + r.height / 2 - top, t: new Date(stamp.getAttribute('data-tl-start')).getTime() });
+        });
+        return list;
+      }
+      var cache = null;
+      function update() {
+        var rect = rail.getBoundingClientRect();
+        var mid = innerHeight * 0.5 - rect.top;
+        var p = Math.max(0, Math.min(1, mid / Math.max(1, rect.height)));
+        tl.style.setProperty('--tl-p', p.toFixed(4));
+        var inside = rect.top < innerHeight * 0.5 && rect.bottom > innerHeight * 0.5;
+        var s = cache || (cache = stops());
+        var y = p * rect.height, t = s[0].t;
+        // The age chip waits until the drawn line reaches the first dot below Today.
+        var first = s.length > 1 ? s[1].y : 0;
+        tl.classList.toggle('is-live', inside && y >= first);
+        if (!inside || y < first) return;
+        for (var i = 0; i < s.length - 1; i++) {
+          if (y >= s[i].y) t = s[i].t + (s[i + 1].t - s[i].t) * Math.min(1, (y - s[i].y) / Math.max(1, s[i + 1].y - s[i].y));
+        }
+        // Compact readout: age at this point on the line.
+        ageEl.textContent = born
+          ? 'Age ' + ageAt(t)
+          : 'Year ' + (Math.floor((t - s[s.length - 1].t) / 31557600000) + 1);
+      }
+      var ticking = false;
+      addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () { ticking = false; update(); });
+      }, { passive: true });
+      function relayout() { ends(); cache = null; update(); }
+      addEventListener('resize', relayout);
+      addEventListener('load', relayout);
+      if ('ResizeObserver' in window) new ResizeObserver(relayout).observe(tl);
+      relayout();
+
+      if (reduce || !('IntersectionObserver' in window)) return;
+      tl.classList.add('is-anim');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+          cache = null;
+        });
+      // Reveal as soon as a card's top edge is a little way onto the screen. A
+      // share of the card's height came too late for tall cards on phones.
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+      items.forEach(function (item) { io.observe(item); });
+    });
+  })();
+</script>

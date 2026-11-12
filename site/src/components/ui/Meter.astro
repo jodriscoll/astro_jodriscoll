@@ -1,0 +1,225 @@
+---
+/**
+ * A labelled level: name, a reading on the right, a hairline track, and an
+ * optional one-line note. value is 0–100.
+ *
+ * Built on <details>: on wide screens it stays open and reads as a plain
+ * meter (the summary isn't clickable). On phones the notes start closed, so
+ * the list reads as a short accordion; tap a row to open its note.
+ */
+interface Props {
+  label: string;
+  value: number;
+  reading?: string;
+  note?: string;
+  tone?: 'default' | 'accent' | 'quiet';
+}
+
+const { label, value, reading, note, tone = 'default' } = Astro.props;
+const clamped = Math.max(0, Math.min(100, value));
+---
+
+<details class:list={['ds-meter', `ds-meter--${tone}`, note && 'has-note']} open data-meter>
+  <summary class="ds-meter__sum">
+    <span class="ds-meter__head">
+      <span class="ds-meter__label">{label}</span>
+      {reading && <span class="ds-meter__reading">{reading}</span>}
+      {note && <span class="ds-meter__chev" aria-hidden="true"></span>}
+    </span>
+    <span class="ds-meter__track" role="img" aria-label={`${label}${reading ? `, ${reading}` : ''}`}>
+      <span class="ds-meter__fill" style={`--ds-meter: ${clamped}%`}></span>
+    </span>
+  </summary>
+  {note && <p class="ds-meter__note">{note}</p>}
+</details>
+
+<script is:inline>
+  (function () {
+    if (window.__dsMeter) return;
+    window.__dsMeter = true;
+    var phone = matchMedia('(max-width: 720px)');
+    function sync() {
+      document.querySelectorAll('[data-meter]').forEach(function (el) {
+        var sum = el.querySelector('summary');
+        if (phone.matches) {
+          if (!el.dataset.touched) el.open = false;
+          sum.removeAttribute('tabindex');
+        } else {
+          el.open = true;
+          sum.setAttribute('tabindex', '-1');
+        }
+      });
+    }
+    function start() {
+      sync();
+      document.addEventListener('click', function (event) {
+        var sum = event.target.closest && event.target.closest('[data-meter] > summary');
+        if (!sum) return;
+        if (!phone.matches) { event.preventDefault(); return; }
+        sum.parentElement.dataset.touched = '1';
+      });
+      phone.addEventListener('change', sync);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+    else start();
+  })();
+</script>
+
+<style>
+  .ds-meter {
+    display: grid;
+    gap: var(--ds-space-3);
+    padding: var(--ds-space-4) 0 var(--ds-space-6);
+    interpolate-size: allow-keywords;
+  }
+
+  .ds-meter__sum {
+    display: grid;
+    gap: var(--ds-space-3);
+    list-style: none;
+    cursor: default;
+  }
+
+  .ds-meter__sum::-webkit-details-marker {
+    display: none;
+  }
+
+  .ds-meter__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--ds-space-3);
+    margin: 0;
+  }
+
+  .ds-meter__label {
+    font-size: var(--ds-text-md);
+    color: var(--ds-fg);
+  }
+
+  .ds-meter__reading {
+    margin-left: auto;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .ds-meter__chev {
+    display: none;
+  }
+
+  .ds-meter__track {
+    display: block;
+    height: 2px;
+    background: var(--ds-rule);
+  }
+
+  .ds-meter__fill {
+    display: block;
+    width: var(--ds-meter);
+    height: 100%;
+    background: var(--ds-fg);
+    transform-origin: left;
+  }
+
+  .ds-meter--accent .ds-meter__fill {
+    background: var(--ds-accent);
+  }
+
+  .ds-meter--quiet .ds-meter__fill {
+    background: var(--ds-ink-35);
+  }
+
+  .ds-meter__note {
+    max-width: 44ch;
+    margin: var(--ds-space-1) 0 0;
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-xs);
+    line-height: var(--ds-leading-snug);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ds-meter__fill {
+      animation: ds-meter-in var(--ds-dur-slow) var(--ds-ease-out) both;
+    }
+  }
+
+  @keyframes ds-meter-in {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
+  /* Phones: an accordion. Tighter rows, a plus that turns to a minus, and the
+     note slides open below the track. */
+  @media screen and (max-width: 720px) {
+    .ds-meter {
+      gap: 0;
+      padding: 14px 0;
+    }
+
+    .ds-meter__label {
+      font-size: 15px;
+    }
+
+    .ds-meter.has-note .ds-meter__sum {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ds-meter__chev {
+      position: relative;
+      display: block;
+      flex: none;
+      width: 12px;
+      height: 12px;
+      align-self: center;
+    }
+
+    .ds-meter__chev::before,
+    .ds-meter__chev::after {
+      content: '';
+      position: absolute;
+      top: calc(50% - 0.75px);
+      left: 0;
+      width: 12px;
+      height: 1.5px;
+      background: var(--ds-fg-muted);
+      transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1);
+    }
+
+    .ds-meter__chev::after {
+      transform: rotate(90deg);
+    }
+
+    .ds-meter[open] .ds-meter__chev::after {
+      transform: rotate(0deg);
+    }
+
+    .ds-meter__note {
+      max-width: none;
+      margin: 0;
+      padding-top: var(--ds-space-3);
+    }
+
+    .ds-meter::details-content {
+      block-size: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: block-size 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, content-visibility 0.35s allow-discrete;
+    }
+
+    .ds-meter[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ds-meter::details-content {
+      transition: none;
+    }
+  }
+</style>

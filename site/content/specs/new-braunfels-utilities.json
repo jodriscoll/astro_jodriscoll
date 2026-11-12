@@ -1,0 +1,32 @@
+{
+  "slug": "new-braunfels-utilities",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "The utility’s custom WordPress site, including its rate calculator.",
+  "short": "The Texas utility's custom WordPress site on Bootstrap 4 and Pantheon, including a rate calculator its staff manage through ACF.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "ACF"
+        },
+        {
+          "name": "Bootstrap 4"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,191 @@
+---
+/**
+ * A study period on the career trail: a hollow, dashed node in the same
+ * grid as RoleRow. Screen only; the Education section carries the record
+ * (and the microformat) so parsers count it once.
+ */
+import type { EducationView } from '../../lib/resume';
+
+interface Props {
+  item: EducationView;
+}
+
+const { item } = Astro.props;
+---
+
+<li class="trail-edu" data-print="hide" aria-label={`${item.when}: ${item.credential} ${item.area}, ${item.institution}`}>
+  <div class="trail-edu__when">
+    <span class="trail-edu__year">{item.start}</span>
+    <span class="trail-edu__dates">{item.when}</span>
+    <span class="trail-edu__kind">Studying</span>
+  </div>
+  <span class="trail-edu__spine" aria-hidden="true"></span>
+  <div class="trail-edu__body">
+    <p class="trail-edu__title">
+      {item.credential}, {item.area}
+      <span>{item.institution}</span>
+    </p>
+    <p class="trail-edu__facts">
+      {item.score} GPA · {item.honors}, {item.honorTerms.length} terms · <a class="ds-link" href="#education">Education</a>
+    </p>
+  </div>
+</li>
+
+<style>
+  .trail-edu {
+    display: grid;
+    grid-template-columns: 200px 56px minmax(0, 1fr);
+  }
+
+  .trail-edu__when {
+    display: grid;
+    justify-items: end;
+    gap: 2px;
+    padding: var(--ds-space-5) 0;
+    text-align: right;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .trail-edu__year {
+    margin-bottom: var(--ds-space-1);
+    font-family: var(--ds-font-sans);
+    font-size: var(--ds-text-xl);
+    font-weight: var(--ds-weight-medium);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-fg-faint);
+  }
+
+  .trail-edu__kind {
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+  }
+
+  /* The spine goes dashed through study years. */
+  .trail-edu__spine {
+    position: relative;
+  }
+
+  /* Study years break the trail's rail into dashes: a background-coloured
+     strip covers the rail, and the dashes are drawn on top of it. */
+  .trail-edu__spine::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    bottom: 0;
+    /* covers the rail, then draws 1px dashes on the rail's own pixel column */
+    left: calc(50% - 2px);
+    width: 3px;
+    background:
+      linear-gradient(to bottom, var(--ds-fg-muted) 3px, transparent 3px) center top / 1px 6px repeat-y,
+      var(--ds-bg);
+  }
+
+  .trail-edu__spine::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--ds-space-5) + 8px);
+    left: calc(50% - 6px);
+    width: 9px;
+    height: 9px;
+    border: 1px dashed var(--ds-fg-muted);
+    transform: rotate(45deg);
+    background: var(--ds-bg);
+    z-index: 3;
+  }
+
+  /* Same focus fade as RoleRow: dim toward the viewport edges. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .trail-edu {
+        view-timeline: --edu-row block;
+      }
+
+      .trail-edu__when,
+      .trail-edu__body {
+        animation: edu-focus linear both;
+        animation-timeline: --edu-row;
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+
+  @media print {
+    .trail-edu__when,
+    .trail-edu__body {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
+
+  @keyframes edu-focus {
+    0%,
+    100% {
+      opacity: 0.12;
+    }
+
+    28%,
+    72% {
+      opacity: 1;
+    }
+  }
+
+  .trail-edu__body {
+    padding: var(--ds-space-5) 0 var(--ds-space-10);
+  }
+
+  .trail-edu__title {
+    margin: 0;
+    font-size: var(--ds-text-md);
+    color: var(--ds-fg);
+  }
+
+  .trail-edu__title span {
+    margin-left: var(--ds-space-3);
+    color: var(--ds-fg-muted);
+  }
+
+  .trail-edu__facts {
+    margin: var(--ds-space-1) 0 0;
+    color: var(--ds-fg-faint);
+    font-size: var(--ds-text-sm);
+  }
+
+  .trail-edu__facts a {
+    color: var(--ds-fg-muted);
+  }
+
+  @media (max-width: 720px) {
+    .trail-edu {
+      grid-template-columns: 28px minmax(0, 1fr);
+    }
+
+    .trail-edu__when {
+      grid-column: 2;
+      grid-row: 1;
+      justify-items: start;
+      text-align: left;
+      padding-bottom: 0;
+    }
+
+    .trail-edu__spine {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .trail-edu__body {
+      grid-column: 2;
+    }
+  }
+
+  /* Phones: the school sits on its own line under the credential. */
+  @media screen and (max-width: 720px) {
+    .trail-edu__title span {
+      display: block;
+      margin: var(--ds-space-1) 0 0;
+    }
+  }
+</style>

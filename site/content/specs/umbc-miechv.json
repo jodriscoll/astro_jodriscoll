@@ -1,0 +1,53 @@
+{
+  "slug": "umbc-miechv",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "UMBC’s Maryland MIECHV home-visiting training site runs on Drupal 8 on Pantheon. It exposes content through GraphQL and OpenAPI with OAuth, builds pages from Paragraphs, and is covered by BackstopJS visual regression and Behat.",
+  "short": "UMBC's Maryland MIECHV home-visiting training platform on Drupal 8: content exposed through GraphQL and OpenAPI with OAuth, pages built from Paragraphs, and BackstopJS and Behat tests.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 8"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Lando"
+        },
+        {
+          "name": "GitLab CI"
+        },
+        {
+          "name": "GraphQL"
+        },
+        {
+          "name": "OpenAPI"
+        },
+        {
+          "name": "Simple OAuth"
+        },
+        {
+          "name": "Paragraphs"
+        },
+        {
+          "name": "Search API"
+        },
+        {
+          "name": "BackstopJS"
+        },
+        {
+          "name": "Behat"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

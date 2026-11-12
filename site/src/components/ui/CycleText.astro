@@ -1,0 +1,157 @@
+---
+/**
+ * Text that rotates through a list with the sidebar's glyph decode: each
+ * word resolves left to right out of block characters, then holds.
+ *
+ * Only `text` is real page text (what parsers, screen readers and the PDF
+ * get). The other words ride in a data attribute and are drawn on screen
+ * only. Reduced motion, print, and no-JS all show `text`.
+ */
+interface Props {
+  text: string;
+  words?: string[];
+  /** Milliseconds each word holds before the next decode. */
+  hold?: number;
+  class?: string;
+  /** Microformat or other class for the real text, e.g. "p-job-title". */
+  textClass?: string;
+}
+
+const { text, words = [], hold = 3600, class: className, textClass } = Astro.props;
+const list = [text, ...words.filter((word) => word !== text)];
+---
+
+<span class:list={['ds-cycle', className]} data-cycle={JSON.stringify(list)} data-hold={hold}>
+  <span class:list={['sr-only', textClass]}>{text}</span>
+  <span class="ds-cycle__shown" aria-hidden="true">{text}</span>
+  <span class="ds-cycle__caret" aria-hidden="true"></span>
+</span>
+
+<script is:inline>
+  (function () {
+    var GLYPHS = '▖▘▝▗▚▞░▒/\\_<>';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var printing = false;
+
+    function decode(el, text, span, done) {
+      var start = performance.now();
+      function tick(now) {
+        var t = Math.min(1, (now - start) / span);
+        var settled = Math.floor(t * text.length);
+        var out = text.slice(0, settled);
+        for (var i = settled; i < text.length; i++) {
+          out += text[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+        }
+        el.textContent = out;
+        if (t < 1) requestAnimationFrame(tick);
+        else {
+          el.textContent = text;
+          if (done) done();
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    document.querySelectorAll('[data-cycle]').forEach(function (root) {
+      if (root.getAttribute('data-ready') === 'true') return;
+      root.setAttribute('data-ready', 'true');
+      var shown = root.querySelector('.ds-cycle__shown');
+      var list;
+      try { list = JSON.parse(root.getAttribute('data-cycle') || '[]'); } catch (e) { list = []; }
+      var hold = Number(root.getAttribute('data-hold')) || 3600;
+      if (!shown || list.length < 2) return;
+
+      // Decode the default once on arrival, then rotate.
+      if (!reduce) decode(shown, list[0], 520);
+      if (reduce) return;
+
+      var index = 0;
+      var visible = true;
+      var timer = 0;
+
+      function next() {
+        timer = 0;
+        if (printing || document.hidden || !visible) return schedule();
+        index = (index + 1) % list.length;
+        var word = list[index];
+        root.classList.add('is-decoding');
+        decode(shown, word, Math.max(380, word.length * 28), function () {
+          root.classList.remove('is-decoding');
+          schedule();
+        });
+      }
+
+      function schedule() {
+        if (!timer) timer = window.setTimeout(next, hold);
+      }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          visible = entries[0].isIntersecting;
+        }).observe(root);
+      }
+
+      window.addEventListener('beforeprint', function () {
+        printing = true;
+        shown.textContent = list[0];
+      });
+      window.addEventListener('afterprint', function () {
+        printing = false;
+      });
+
+      schedule();
+    });
+  })();
+</script>
+
+<style>
+  /* min-width: 0 on both, so a long or scrambling word can never push its
+     container (and the page) wider than the screen; it clips instead. */
+  .ds-cycle {
+    display: inline-flex;
+    align-items: baseline;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .ds-cycle__shown {
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  /* The sidebar's caret: a block that blinks, solid while decoding. */
+  .ds-cycle__caret {
+    flex: none;
+    width: 0.32em;
+    height: 0.82em;
+    margin-left: 0.18em;
+    align-self: center;
+    background: var(--ds-accent);
+    opacity: 0.8;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ds-cycle__caret {
+      animation: ds-caret 1.1s steps(1) infinite;
+    }
+
+    .is-decoding .ds-cycle__caret {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  @keyframes ds-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media print {
+    .ds-cycle__caret {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,658 @@
+---
+---
+
+<dialog class="dialog cdlg" id="contact-dialog" aria-labelledby="contact-dialog-title">
+  <form id="contact-form" novalidate>
+    <i class="cdlg__beam" aria-hidden="true"></i>
+    <div class="dialog__head">
+      <p class="cdlg__eyebrow" aria-hidden="true"><span class="cdlg__dot"></span>Contact · replies by email</p>
+      <h2 id="contact-dialog-title">I'm listening if you're talking</h2>
+      <button type="button" class="dialog__close" data-close-contact aria-label="Close">
+        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+          <path d="M4 4.2 11.8 12M11.8 4.2 4 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog__lede">
+      <p class="dialog__pitch">A bug, a new build, a data question, a site that needs to be faster or a full rebuild. Tell me what's going on.</p>
+      <p>Let's see how to <span class="collab">collaborate</span>.</p>
+    </div>
+
+    <div class="field">
+      <label for="contact-name">Full Name</label>
+      <div class="field__control">
+        <span class="field__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <circle cx="12" cy="8" r="3.1" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+            <path d="M5.6 19.2c1.1-2.8 3.2-4.2 6.4-4.2s5.3 1.4 6.4 4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+          </svg>
+        </span>
+        <input id="contact-name" name="name" autocomplete="name" maxlength="80" required />
+      </div>
+      <p class="field__error" data-error="name" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="contact-email">Email</label>
+      <div class="field__control">
+        <span class="field__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <rect x="3.5" y="5.5" width="17" height="13" fill="none" stroke="currentColor" stroke-width="1.6"></rect>
+            <path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <input id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="120" placeholder="a@b.com" required />
+      </div>
+      <p class="field__error" data-error="email" hidden></p>
+    </div>
+
+    <div class="field">
+      <label for="contact-website">Website</label>
+      <div class="field__control">
+        <span class="field__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="16" height="16">
+            <circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+            <path d="M4 12h16M12 4c2.1 2.3 3.2 5 3.2 8s-1.1 5.7-3.2 8c-2.1-2.3-3.2-5-3.2-8s1.1-5.7 3.2-8z" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+          </svg>
+        </span>
+        <input id="contact-website" name="website" type="text" inputmode="url" autocomplete="url" maxlength="200" placeholder="best-link-ever.com" />
+      </div>
+      <p class="field__error" data-error="website" hidden></p>
+    </div>
+
+    <div class="field">
+      <label id="contact-message-label" for="contact-message">Message</label>
+      <div class="composer">
+        <div class="composer__bar" role="toolbar" aria-label="Message formatting">
+          <button type="button" data-cmd="bold" aria-label="Bold"><b>B</b></button>
+          <button type="button" data-cmd="italic" aria-label="Italic"><i>I</i></button>
+          <button type="button" data-cmd="link" aria-label="Link" aria-expanded="false">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+              <path d="M10 13.2a3.6 3.6 0 0 0 5.1.3l2.2-2.2a3.6 3.6 0 0 0-5.1-5.1l-1.2 1.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+              <path d="M14 10.8a3.6 3.6 0 0 0-5.1-.3l-2.2 2.2a3.6 3.6 0 0 0 5.1 5.1l1.2-1.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="composer__link" hidden>
+          <input type="text" data-link-url placeholder="https://" aria-label="Link address" />
+          <button type="button" data-link-apply>Add</button>
+        </div>
+        <div
+          id="contact-message"
+          class="composer__body is-empty"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          aria-labelledby="contact-message-label"
+          data-placeholder="A short note is enough."
+        ></div>
+      </div>
+      <p class="field__error" data-error="message" hidden></p>
+    </div>
+
+    <p class="form-note" role="status" hidden></p>
+    <div class="dialog__actions">
+      <button type="submit" class="button" data-track="contact-submit" data-track-label="Send">Send</button>
+    </div>
+  </form>
+</dialog>
+
+<script is:inline>
+  (function () {
+    const dialog = document.getElementById('contact-dialog');
+    const form = document.getElementById('contact-form');
+    if (!dialog || !form || dialog.dataset.ready === 'true') return;
+    dialog.dataset.ready = 'true';
+
+    const note = form.querySelector('.form-note');
+    const submit = form.querySelector('[type="submit"]');
+    const editor = form.querySelector('.composer__body');
+    const linkRow = form.querySelector('.composer__link');
+    const linkInput = form.querySelector('[data-link-url]');
+    const linkButton = form.querySelector('[data-cmd="link"]');
+    const errors = {
+      name: 'Speaking to nothing might get me institutionalized. Can you revisit?',
+      email: "Going to be hard to respond to a blank recipient. I'll need an email.",
+      website: "That link doesn't look like a site yet.",
+      message: "Hello... anybody there? I'll need something to talk about.",
+    };
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const siteOk = /^(https?:\/\/)?(localhost|([a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,})(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+    let opener = null;
+    let savedRange = null;
+
+    function track(event, label, kind) {
+      if (typeof window.__track === 'function') window.__track(event, label, kind);
+    }
+
+    function showNote(message, ok) {
+      if (!note) return;
+      note.hidden = !message;
+      note.textContent = message || '';
+      if (message) note.dataset.ok = ok ? 'true' : 'false';
+    }
+
+    function fieldNode(name) {
+      return form.querySelector('[data-error="' + name + '"]');
+    }
+
+    function clearErrors() {
+      ['name', 'email', 'website', 'message'].forEach(function (name) {
+        const node = fieldNode(name);
+        if (!node) return;
+        node.hidden = true;
+        node.textContent = '';
+      });
+      form.querySelectorAll('[aria-invalid="true"]').forEach(function (field) {
+        field.removeAttribute('aria-invalid');
+      });
+    }
+
+    function showError(name, message) {
+      const node = fieldNode(name);
+      if (!node) return;
+      node.hidden = false;
+      node.textContent = message;
+      const field = name === 'message' ? editor : form.querySelector('[name="' + name + '"]');
+      if (field) {
+        field.setAttribute('aria-invalid', 'true');
+        field.setAttribute('aria-describedby', node.id || (node.id = 'contact-error-' + name));
+      }
+    }
+
+    function messagePlain() {
+      return (editor ? editor.innerText : '').replace(/\u00a0/g, ' ').trim();
+    }
+
+    function markEmpty() {
+      if (!editor) return;
+      editor.classList.toggle('is-empty', messagePlain() === '');
+    }
+
+    function validate() {
+      clearErrors();
+      const data = new FormData(form);
+      const name = String(data.get('name') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      const website = String(data.get('website') || '').trim();
+      const found = {};
+      if (!name) found.name = errors.name;
+      if (!email || !emailOk.test(email)) found.email = errors.email;
+      if (website && !siteOk.test(website)) found.website = errors.website;
+      if (!messagePlain()) found.message = errors.message;
+      Object.keys(found).forEach(function (key) {
+        showError(key, found[key]);
+      });
+      return found;
+    }
+
+    function focusName() {
+      const field = form.querySelector('#contact-name');
+      if (field && typeof field.focus === 'function') field.focus();
+    }
+
+    // The button grows into the dialog: the panel starts clipped to the
+    // button's own box and shape, opens out to full size, then the form
+    // fields rise in one after another. Closing folds it back into the button.
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    const EASE = 'cubic-bezier(0.7, 0, 0.15, 1)';
+    let running = null;
+
+    // FLIP: the dialog's own box, transformed so it sits exactly on the button.
+    // Contents are hidden during the move, so the scale never shows on text.
+    function shapeOf(source) {
+      if (!source || !source.getBoundingClientRect) return null;
+      const r = source.getBoundingClientRect();
+      if (!r.width || r.bottom < 0 || r.top > innerHeight) return null;
+      const box = dialog.getBoundingClientRect();
+      const sx = r.width / box.width;
+      const sy = r.height / box.height;
+      const radius = Math.min(r.height / 2, parseFloat(getComputedStyle(source).borderTopLeftRadius) || 0);
+      return {
+        transform: 'translate(' + (r.left - box.left) + 'px, ' + (r.top - box.top) + 'px) scale(' + sx + ', ' + sy + ')',
+        borderRadius: radius / sx + 'px / ' + radius / sy + 'px',
+        backgroundColor: getComputedStyle(source).backgroundColor,
+      };
+    }
+
+    const FULL = { transform: 'translate(0px, 0px) scale(1, 1)', borderRadius: '0px / 0px' };
+    const DOT = { transform: 'translate(0px, 12px) scale(0.92, 0.92)', borderRadius: '0px / 0px', opacity: 0 };
+
+    // Phones: a full-screen sheet that slides up (like the Work filter sheet),
+    // and no auto-focus, so the keyboard doesn't jump over the form on open.
+    const phone = matchMedia('(max-width: 720px)');
+    const SHEET_IN = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+
+    function openDialog(source) {
+      opener = source || document.activeElement;
+      if (running) running.cancel();
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+      dialog.classList.remove('is-shut');
+      if (phone.matches) {
+        if (!reduce.matches && dialog.animate) {
+          running = dialog.animate([{ transform: 'translateY(100%)' }, { transform: 'translateY(0)' }], { duration: 340, easing: SHEET_IN });
+          running.onfinish = function () { running = null; };
+        }
+        dialog.classList.add('is-in');
+        const close = dialog.querySelector('.dialog__close');
+        if (close) close.focus({ preventScroll: true });
+        return;
+      }
+      if (!reduce.matches && dialog.animate) {
+        const from = shapeOf(opener);
+        dialog.classList.add('is-morphing');
+        running = dialog.animate([from || DOT, Object.assign({ opacity: 1 }, FULL)], { duration: from ? 340 : 220, easing: EASE });
+        running.onfinish = function () {
+          running = null;
+          dialog.classList.remove('is-morphing');
+        };
+      }
+      dialog.classList.add('is-in');
+      focusName();
+      requestAnimationFrame(focusName);
+    }
+
+    function closeDialog() {
+      if (!dialog.open) return;
+      const finish = function () {
+        dialog.classList.remove('is-in', 'is-morphing');
+        if (typeof dialog.close === 'function') dialog.close();
+        else dialog.removeAttribute('open');
+      };
+      if (reduce.matches || !dialog.animate) return finish();
+      if (running) running.cancel();
+      if (phone.matches) {
+        dialog.classList.remove('is-in');
+        dialog.classList.add('is-shut');
+        running = dialog.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(100%)' }], { duration: 260, easing: 'cubic-bezier(0.4, 0, 1, 1)', fill: 'forwards' });
+        running.onfinish = function () {
+          running = null;
+          finish();
+          dialog.getAnimations().forEach(function (a) { a.cancel(); });
+        };
+        return;
+      }
+      const to = shapeOf(opener);
+      dialog.classList.add('is-morphing');
+      dialog.classList.remove('is-in');
+      dialog.classList.add('is-shut');
+      running = dialog.animate([Object.assign({ opacity: 1 }, FULL), to ? Object.assign({ opacity: 1 }, to) : DOT], {
+        duration: to ? 280 : 200,
+        easing: EASE,
+        delay: 40,
+        fill: 'forwards',
+      });
+      running.onfinish = function () {
+        running = null;
+        finish();
+        dialog.getAnimations().forEach(function (a) { a.cancel(); });
+      };
+    }
+
+    function restoreRange() {
+      editor.focus();
+      if (!savedRange) return;
+      const selection = window.getSelection();
+      if (!selection) return;
+      selection.removeAllRanges();
+      selection.addRange(savedRange);
+    }
+
+    function saveRange() {
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0 || !editor) return;
+      const range = selection.getRangeAt(0);
+      if (!editor.contains(range.commonAncestorContainer)) return;
+      savedRange = range.cloneRange();
+    }
+
+    function linkHref(value) {
+      const raw = value.trim();
+      if (!raw) return '';
+      if (/^mailto:/i.test(raw)) return emailOk.test(raw.slice(7).split('?')[0]) ? raw : '';
+      if (/^https?:\/\//i.test(raw)) {
+        try {
+          const url = new URL(raw);
+          return url.protocol === 'http:' || url.protocol === 'https:' ? url.toString() : '';
+        } catch (error) {
+          return '';
+        }
+      }
+      if (siteOk.test(raw)) return 'https://' + raw;
+      return '';
+    }
+
+    document.addEventListener('click', function (event) {
+      const open = event.target.closest('[data-open-contact]');
+      if (open) {
+        event.preventDefault();
+        openDialog(open);
+        return;
+      }
+      if (event.target.closest('[data-close-contact]')) closeDialog();
+    });
+
+    document.addEventListener(
+      'keydown',
+      function (event) {
+        if (event.key !== 'Escape' || !dialog.open) return;
+        event.preventDefault();
+        event.stopPropagation();
+        closeDialog();
+      },
+      true,
+    );
+
+    dialog.addEventListener('close', function () {
+      track('contact-close', 'Close', 'click');
+      if (linkRow) linkRow.hidden = true;
+      if (linkButton) linkButton.setAttribute('aria-expanded', 'false');
+      if (opener && typeof opener.focus === 'function') opener.focus();
+    });
+
+    dialog.addEventListener('click', function (event) {
+      if (event.target === dialog) closeDialog();
+    });
+
+    form.addEventListener('input', function (event) {
+      const field = event.target.closest('input');
+      if (!field || !field.name) return;
+      const node = fieldNode(field.name);
+      if (node) {
+        node.hidden = true;
+        node.textContent = '';
+      }
+      field.removeAttribute('aria-invalid');
+    });
+
+    if (editor) {
+      editor.addEventListener('input', function () {
+        markEmpty();
+        const node = fieldNode('message');
+        if (node) {
+          node.hidden = true;
+          node.textContent = '';
+        }
+        editor.removeAttribute('aria-invalid');
+      });
+    }
+
+    form.querySelectorAll('[data-cmd]').forEach(function (button) {
+      button.addEventListener('mousedown', function (event) {
+        event.preventDefault();
+        saveRange();
+      });
+      button.addEventListener('click', function () {
+        const cmd = button.getAttribute('data-cmd');
+        if (cmd === 'link') {
+          if (!linkRow) return;
+          const open = linkRow.hidden;
+          linkRow.hidden = !open;
+          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+          if (open && linkInput) linkInput.focus();
+          return;
+        }
+        restoreRange();
+        document.execCommand(cmd, false);
+        markEmpty();
+      });
+    });
+
+    const applyLink = form.querySelector('[data-link-apply]');
+    if (applyLink) {
+      applyLink.addEventListener('mousedown', function (event) {
+        event.preventDefault();
+      });
+      applyLink.addEventListener('click', function () {
+        const href = linkHref(linkInput ? linkInput.value : '');
+        if (!href) return;
+        restoreRange();
+        document.execCommand('createLink', false, href);
+        if (linkInput) linkInput.value = '';
+        if (linkRow) linkRow.hidden = true;
+        if (linkButton) linkButton.setAttribute('aria-expanded', 'false');
+        markEmpty();
+      });
+    }
+
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      showNote('', false);
+      const found = validate();
+      if (Object.keys(found).length) return;
+      const data = new FormData(form);
+      const payload = {
+        name: String(data.get('name') || '').trim(),
+        email: String(data.get('email') || '').trim(),
+        website: String(data.get('website') || '').trim(),
+        message: editor ? editor.innerHTML : '',
+      };
+      if (submit) submit.disabled = true;
+      showNote('Sending…', true);
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const body = await response.json().catch(function () {
+          return {};
+        });
+        if (body.errors) {
+          showNote('', false);
+          Object.keys(body.errors).forEach(function (key) {
+            showError(key, body.errors[key]);
+          });
+          return;
+        }
+        if (!response.ok) {
+          showNote(body.error || 'The message did not send. Try again in a minute, or reach me on LinkedIn.', false);
+          return;
+        }
+        form.reset();
+        if (editor) editor.innerHTML = '';
+        markEmpty();
+        clearErrors();
+        showNote('Sent. I will reply by email.', true);
+      } catch (error) {
+        showNote('The message did not send. Try again in a minute, or reach me on LinkedIn.', false);
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  })();
+</script>
+
+<style is:global>
+  /* Contact dialog, current system: hairline panel, mono eyebrow, one light
+     sweeping the top rule. Overrides the older gradient-frame styles. */
+  #contact-dialog.cdlg {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    border: 1px solid var(--line-strong, rgb(255 255 255 / 0.18));
+    background: var(--bg, #000);
+    padding: 28px;
+    width: min(600px, calc(100% - 32px));
+    overflow-x: hidden;
+    transform-origin: 0 0;
+  }
+
+  /* While the panel travels, hide the scrollbar so it can't stretch with it. */
+  #contact-dialog.cdlg.is-morphing { overflow: hidden; }
+
+  #contact-dialog.cdlg::backdrop {
+    background: var(--scrim);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+  }
+
+  #contact-dialog.cdlg.is-in::backdrop { opacity: 1; }
+  #contact-dialog.cdlg.is-shut::backdrop { opacity: 0; transition-duration: 0.35s; }
+
+  .cdlg .dialog__head { flex-wrap: wrap; row-gap: 6px; }
+  .cdlg .dialog__head h2 { flex: 1 1 auto; }
+
+  .cdlg__eyebrow {
+    flex: 1 0 100%;
+    order: -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .cdlg__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--positive);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive) 60%, transparent);
+  }
+
+  .cdlg__beam {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--text), transparent);
+    background-size: 30% 100%;
+    background-repeat: no-repeat;
+    background-position: -40% 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* While the shape morphs, the contents wait; then each part rises in turn. */
+  @media (prefers-reduced-motion: no-preference) {
+    .cdlg form > :not(.cdlg__beam) {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .cdlg.is-in form > :not(.cdlg__beam) {
+      opacity: 1;
+      transform: none;
+    }
+
+    .cdlg.is-in form > :nth-child(2) { transition-delay: 0.16s; }
+    .cdlg.is-in form > :nth-child(3) { transition-delay: 0.19s; }
+    .cdlg.is-in form > :nth-child(4) { transition-delay: 0.22s; }
+    .cdlg.is-in form > :nth-child(5) { transition-delay: 0.25s; }
+    .cdlg.is-in form > :nth-child(6) { transition-delay: 0.28s; }
+    .cdlg.is-in form > :nth-child(7) { transition-delay: 0.31s; }
+    .cdlg.is-in form > :nth-child(n + 8) { transition-delay: 0.34s; }
+
+    .cdlg.is-shut form > :not(.cdlg__beam) { transition-duration: 0.15s; transition-delay: 0s; }
+
+    .cdlg.is-in .cdlg__beam {
+      animation: cdlg-beam 1.4s cubic-bezier(0.5, 0, 0.2, 1) 0.3s 1;
+    }
+
+    .cdlg.is-in .cdlg__dot {
+      animation: cdlg-ping 2.4s ease-out 0.9s infinite;
+    }
+  }
+
+  /* "collaborate" is plain emphasis now, not the old gradient sweep. */
+  .cdlg .collab {
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: currentColor;
+    color: var(--text);
+    animation: none;
+  }
+
+  @keyframes cdlg-beam {
+    0% { opacity: 0; background-position: -40% 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; background-position: 140% 0; }
+  }
+
+  @keyframes cdlg-ping {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--positive) 60%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 7px transparent; }
+  }
+  /* Phones: a full-screen sheet. The head pins to the top with the close
+     button where the menu button sits (same 56px bar tokens); the fields
+     scroll; Send pins to the bottom as a full-width bar. */
+  @media (max-width: 720px) {
+    #contact-dialog.cdlg {
+      width: 100%;
+      max-width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    #contact-dialog.cdlg form {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    #contact-dialog.cdlg form > :not(.cdlg__beam, .dialog__head, .dialog__actions) { margin-inline: 20px; }
+
+    #contact-dialog.cdlg .dialog__head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      gap: 6px;
+      padding: 16px var(--fixedbar-clear, 64px) 16px 20px;
+      padding-top: max(16px, env(safe-area-inset-top));
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+    }
+
+    #contact-dialog.cdlg .dialog__head h2 { font-size: 1.25rem; line-height: 1.2; }
+
+    #contact-dialog.cdlg .dialog__close {
+      position: absolute;
+      top: max(var(--mnav-top, 6px), env(safe-area-inset-top));
+      right: max(var(--mnav-right, 8px), env(safe-area-inset-right));
+      width: var(--mnav-size, 44px);
+      height: var(--mnav-size, 44px);
+      border-color: var(--line-strong);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    #contact-dialog.cdlg .dialog__lede { margin-top: 2px; }
+    #contact-dialog.cdlg .dialog__pitch { font-size: 15px; }
+
+    #contact-dialog.cdlg .dialog__actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      margin-top: auto;
+      padding: 12px 20px max(12px, env(safe-area-inset-bottom));
+      border-top: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    #contact-dialog.cdlg .dialog__actions .button { width: 100%; justify-content: center; }
+
+    /* the sheet slides in whole; contents don't need the desktop stagger */
+    #contact-dialog.cdlg form > :not(.cdlg__beam) { transition-delay: 0s !important; }
+  }
+</style>
