@@ -1734,6 +1734,9 @@ a { text-decoration: none; }
 /* Work card: a bottom bar, edge to edge, icons left and languages right */
 .work > * { grid-column: content; }
 .work > .work__foot { grid-column: full; grid-row: -2 / -1; }
+/* The backdrop art (screenshot, code graph) is absolutely positioned: with no grid
+   column it sizes against the whole card, so it reaches the card's right edge. */
+.work > .work__shot, .work > .work__graph { grid-column: auto; grid-row: auto; }
 .work__summary { align-self: start; }
 .work__foot {
   align-items: stretch;
