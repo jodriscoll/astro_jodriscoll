@@ -133,7 +133,15 @@ const graph = serializeGraph([
     <meta name="twitter:image:alt" content={shareAlt} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" data-favicon />
+    <script is:inline>
+      // The SVG favicon follows the site's theme (the toggle, not only the OS):
+      // dark ground by default, the cream twin in light mode.
+      (function () {
+        var icon = document.querySelector('link[data-favicon]');
+        if (icon && document.documentElement.dataset.theme === 'light') icon.href = '/favicon-light.svg';
+      })();
+    </script>
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -194,6 +202,9 @@ const graph = serializeGraph([
           root.style.colorScheme = resolved;
           var meta = document.querySelector('meta[name="theme-color"]');
           if (meta) meta.setAttribute('content', resolved === 'dark' ? '#000000' : '#f6f4ef');
+          var icon = document.querySelector('link[data-favicon]');
+          var iconHref = resolved === 'light' ? '/favicon-light.svg' : '/favicon.svg';
+          if (icon && icon.getAttribute('href') !== iconHref) icon.setAttribute('href', iconHref);
           document.querySelectorAll('[data-theme-set]').forEach(function (button) {
             button.setAttribute('aria-pressed', button.getAttribute('data-theme-set') === value ? 'true' : 'false');
           });
