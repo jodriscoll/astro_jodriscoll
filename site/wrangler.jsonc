@@ -4,5 +4,11 @@
   "name": "jodriscoll",
   "compatibility_date": "2026-11-01",
   // node:crypto in the content gateway, and process.env for the contact form keys
-  "compatibility_flags": ["nodejs_compat"]
+  "compatibility_flags": ["nodejs_compat"],
+  // keep the jodriscoll.joey-6a6.workers.dev test link
+  "workers_dev": true,
+  // The live domain. www is left alone (it has its own DNS record).
+  "routes": [
+    { "pattern": "jodriscoll.com", "custom_domain": true }
+  ]
 }
