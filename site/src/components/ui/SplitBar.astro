@@ -1,0 +1,127 @@
+---
+/**
+ * One bar split into shares, with a legend. Monochrome by default: the first
+ * segment is full ink (or accent), later ones step down the ink ramp.
+ *
+ * keyed: each segment and legend item carries data-mix-key={id} and can be
+ * hovered or focused, so a surrounding view can react with :has() (the
+ * resume timeline dims rows that are not of the hovered kind). No script.
+ */
+interface Segment {
+  id: string;
+  label: string;
+  value: number;
+}
+
+interface Props {
+  segments: Segment[];
+  label: string;
+  showPercent?: boolean;
+  accentFirst?: boolean;
+  keyed?: boolean;
+}
+
+const { segments, label, showPercent = true, accentFirst = false, keyed = false } = Astro.props;
+const total = segments.reduce((sum, item) => sum + item.value, 0) || 1;
+const ramp = ['var(--ds-ink-90)', 'var(--ds-ink-70)', 'var(--ds-ink-50)', 'var(--ds-ink-35)', 'var(--ds-ink-20)', 'var(--ds-ink-10)'];
+const rows = segments.map((item, index) => ({
+  ...item,
+  share: Math.round((item.value / total) * 100),
+  ink: index === 0 && accentFirst ? 'var(--ds-accent)' : ramp[Math.min(index, ramp.length - 1)],
+}));
+const summary = rows.map((row) => `${row.label} ${row.share}%`).join(', ');
+---
+
+<figure class:list={['ds-split', keyed && 'ds-split--keyed']}>
+  <div class="ds-split__bar" role="img" aria-label={`${label}: ${summary}`}>
+    {
+      rows.map((row) => (
+        <span style={`flex-grow: ${row.value}; --ink: ${row.ink}`} title={`${row.label} ${row.share}%`} data-mix-key={keyed ? row.id : undefined} />
+      ))
+    }
+  </div>
+  <figcaption>
+    <ul class="ds-split__legend">
+      {
+        rows.map((row) => (
+          <li style={`--ink: ${row.ink}`} data-mix-key={keyed ? row.id : undefined} tabindex={keyed ? 0 : undefined}>
+            <i aria-hidden="true" />
+            {row.label}
+            {showPercent && <span>{row.share}%</span>}
+          </li>
+        ))
+      }
+    </ul>
+  </figcaption>
+</figure>
+
+<style>
+  .ds-split {
+    margin: 0;
+  }
+
+  .ds-split__bar {
+    display: flex;
+    gap: 2px;
+    height: 8px;
+  }
+
+  .ds-split__bar span {
+    min-width: 2px;
+    background: var(--ink);
+  }
+
+  .ds-split__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-2) var(--ds-space-5);
+    margin: var(--ds-space-3) 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-xs);
+  }
+
+  .ds-split__legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-2);
+  }
+
+  .ds-split__legend i {
+    width: 8px;
+    height: 8px;
+    background: var(--ink);
+  }
+
+  .ds-split--keyed .ds-split__bar span,
+  .ds-split--keyed .ds-split__legend li {
+    cursor: default;
+    transition: opacity var(--ds-dur-fast) var(--ds-ease);
+  }
+
+  .ds-split--keyed .ds-split__bar {
+    height: 10px;
+  }
+
+  .ds-split--keyed .ds-split__legend li {
+    padding: 2px 0;
+    outline-offset: 3px;
+  }
+
+  /* The hovered kind stays lit; the rest of the bar and legend step back. */
+  .ds-split--keyed:has([data-mix-key]:is(:hover, :focus-visible)) [data-mix-key] {
+    opacity: 0.35;
+  }
+
+  .ds-split--keyed [data-mix-key]:is(:hover, :focus-visible) {
+    opacity: 1 !important;
+    color: var(--ds-fg);
+  }
+
+  .ds-split__legend span {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+  }
+</style>

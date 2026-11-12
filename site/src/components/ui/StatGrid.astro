@@ -1,0 +1,135 @@
+---
+/**
+ * A row of <Stat> figures separated by hairlines. Wraps on its own.
+ * size="sm" is for figures inside a card; "md" for a page-level strip.
+ */
+interface Props {
+  label?: string;
+  size?: 'sm' | 'md';
+  min?: string;
+}
+
+const { label, size = 'md', min } = Astro.props;
+const style = min ? `--ds-stat-min: ${min}` : undefined;
+---
+
+<dl class:list={['ds-statgrid', `ds-statgrid--${size}`]} aria-label={label} style={style}>
+  <slot />
+</dl>
+
+<style>
+  .ds-statgrid {
+    --ds-stat-min: 150px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(var(--ds-stat-min), 1fr));
+    margin: 0;
+    border-top: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  .ds-statgrid > :global(.ds-stat) {
+    border-bottom: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  .ds-statgrid > :global(.ds-stat + .ds-stat) {
+    padding-left: var(--ds-space-5);
+    border-left: var(--ds-hairline) solid var(--ds-rule);
+  }
+
+  .ds-statgrid--sm {
+    --ds-stat-min: 110px;
+  }
+
+  .ds-statgrid--sm :global(.ds-stat__value) {
+    font-size: var(--ds-text-xl);
+  }
+
+  .ds-statgrid--sm :global(.ds-stat__label) {
+    font-size: var(--ds-text-xs);
+  }
+
+  .ds-statgrid--sm > :global(.ds-stat) {
+    padding-top: var(--ds-space-3);
+    padding-bottom: var(--ds-space-3);
+  }
+
+  /* When a strip wraps, the "+ sibling" rule would draw a left hairline on the
+     first figure of every new row. On narrower screens use fixed columns and
+     draw the left hairline only between figures in the same row. A last
+     figure left alone on its row spans the whole row instead of leaving a gap. */
+  @media screen and (max-width: 1100px) {
+    .ds-statgrid--md {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .ds-statgrid--md > :global(.ds-stat + .ds-stat) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:not(:nth-child(4n + 1))) {
+      padding-left: var(--ds-space-5);
+      border-left: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:last-child:nth-child(4n + 1)) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Small strips inside cards: two per row on phones, hairlines only
+     between neighbours on the same row, so none dangle on the left edge. */
+  @media screen and (max-width: 720px) {
+    .ds-statgrid--sm {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ds-statgrid--sm > :global(.ds-stat + .ds-stat) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .ds-statgrid--sm > :global(.ds-stat:nth-child(even)) {
+      padding-left: var(--ds-space-4);
+      border-left: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .ds-statgrid--sm > :global(.ds-stat:last-child:nth-child(odd)) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 720px) {
+    .ds-statgrid--md {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:not(:nth-child(4n + 1))) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:nth-child(even)) {
+      padding-left: var(--ds-space-5);
+      border-left: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:last-child:nth-child(4n + 1)) {
+      grid-column: auto;
+    }
+
+    .ds-statgrid--md > :global(.ds-stat:last-child:nth-child(odd)) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media print {
+    .ds-statgrid {
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      grid-auto-flow: column;
+    }
+
+    .ds-statgrid > :global(.ds-stat + .ds-stat) {
+      padding-left: var(--ds-space-3);
+    }
+  }
+</style>

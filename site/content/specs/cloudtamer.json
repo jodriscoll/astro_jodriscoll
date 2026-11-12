@@ -1,0 +1,40 @@
+{
+  "slug": "cloudtamer",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "The October 2019 MVP site for the cloud-governance company, with FacetWP search.",
+  "short": "The October 2019 launch site for Cloudtamer.io, the cloud-governance company: a custom WordPress theme with FacetWP-powered search, on Pantheon.",
+  "facts": [
+    {
+      "label": "Year",
+      "value": "2019"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "FacetWP"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "jQuery"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

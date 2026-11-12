@@ -1,0 +1,29 @@
+{
+  "slug": "casepoint",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "Casepoint’s WordPress site, on AWS.",
+  "short": "Casepoint's WordPress site, maintained for the e-discovery company on AWS while at Jellyfish.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "AWS"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

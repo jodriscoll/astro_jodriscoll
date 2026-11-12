@@ -1,0 +1,150 @@
+---
+/**
+ * Projects as a ledger: index, title, how it came in, one line, stack.
+ * Featured rows print; the rest stay on screen.
+ */
+import Tags from '../ui/Tags.astro';
+
+interface Item {
+  slug: string;
+  title: string;
+  href: string;
+  short: string;
+  kind: string;
+  stack: string[];
+  featured: boolean;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<ol class="wl">
+  {
+    items.map((item, index) => (
+      <li class="wl__row" data-print={item.featured ? undefined : 'hide'}>
+        <span class="wl__n" aria-hidden="true">{pad(index + 1)}</span>
+        <div class="wl__main">
+          <a class="wl__title" href={item.href} data-track="project" data-track-label={item.title}>
+            {item.title}
+          </a>
+          {item.kind && <span class="wl__kind">{item.kind}</span>}
+          <p class="wl__short">{item.short}</p>
+        </div>
+        <div class="wl__stack" data-print="hide">
+          <Tags items={item.stack} size="sm" max={4} label={`${item.title} stack`} />
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .wl {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: var(--ds-hairline) solid var(--ds-rule-strong);
+  }
+
+  .wl__row {
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) minmax(0, 0.8fr);
+    gap: var(--ds-space-2) var(--ds-space-6);
+    align-items: start;
+    padding: var(--ds-space-4) 0;
+    border-bottom: var(--ds-hairline) solid var(--ds-rule);
+    transition: background-color var(--ds-dur-fast);
+  }
+
+  .wl__row:hover {
+    background: var(--ds-ink-5);
+  }
+
+  .wl__n {
+    padding-top: 3px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .wl__main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--ds-space-1) var(--ds-space-3);
+    min-width: 0;
+  }
+
+  .wl__title {
+    color: var(--ds-fg);
+    font-size: var(--ds-text-lg);
+    font-weight: var(--ds-weight-medium);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .wl__row:hover .wl__title {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  .wl__kind {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .wl__short {
+    flex-basis: 100%;
+    margin: 0;
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-snug);
+  }
+
+  @media (max-width: 720px) {
+    .wl__row {
+      grid-template-columns: 32px minmax(0, 1fr);
+    }
+
+    .wl__stack {
+      grid-column: 2;
+    }
+  }
+
+  @media print {
+    .wl {
+      columns: 2;
+      column-gap: var(--ds-space-8);
+      border-top: 0;
+    }
+
+    .wl__row {
+      display: block;
+      padding: var(--ds-space-1) 0;
+      border-bottom: 0;
+      break-inside: avoid;
+    }
+
+    .wl__n {
+      display: none;
+    }
+
+    .wl__title {
+      font-size: var(--ds-text-sm);
+      font-weight: var(--ds-weight-bold);
+    }
+
+    .wl__short {
+      font-size: var(--ds-text-xs);
+    }
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+/**
+ * A page section: hairline, numbered eyebrow, optional title and action link.
+ * Matches the Home page rhythm ("01 · Selected work" over a rule).
+ *
+ * <Section index="01" eyebrow="Recent clients" title="Since 2022" action={{ href: '/things-built', label: 'All work' }}>
+ */
+interface Props {
+  eyebrow: string;
+  index?: string;
+  title?: string;
+  lede?: string;
+  action?: { href: string; label: string };
+  id?: string;
+  print?: 'hide' | 'only';
+  class?: string;
+}
+
+const { eyebrow, index, title, lede, action, id, print, class: className } = Astro.props;
+---
+
+<section class:list={['wrap', 'ds-section', className]} id={id} data-print={print}>
+  <header class="ds-section__head rule-head">
+    <p class="ds-section__eyebrow">
+      {index && <span class="ds-section__index">{index} · </span>}
+      {eyebrow}
+    </p>
+    {action && <a class="ds-section__action" href={action.href} data-print="hide">{action.label} →</a>}
+  </header>
+  {title && <h2 class="ds-section__title">{title}</h2>}
+  {lede && <p class="ds-section__lede">{lede}</p>}
+  <slot />
+</section>
+
+<style>
+  /* border-top: 0 cancels global.css "main > section" rule; the head draws the only line. */
+  .ds-section {
+    padding-top: var(--ds-space-section);
+    border-top: 0;
+  }
+
+  /* .rule-head is kept only as the hook Base uses to run the hairline pulse. */
+  .ds-section__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--ds-space-4);
+    margin: 0;
+    padding-top: var(--ds-space-4);
+    border-top: var(--ds-hairline) solid var(--ds-rule-strong);
+  }
+
+  .ds-section__eyebrow {
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .ds-section__action {
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    text-decoration: none;
+  }
+
+  .ds-section__action:hover {
+    color: var(--ds-fg);
+  }
+
+  .ds-section__title {
+    margin: var(--ds-space-3) 0 var(--ds-space-8);
+    font-size: var(--ds-text-3xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: var(--ds-leading-tight);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-fg);
+  }
+
+  /* A lede tucks up under the title: the title gives it half its usual space. */
+  .ds-section__title:has(+ .ds-section__lede) {
+    margin-bottom: calc(var(--ds-space-8) / 2);
+  }
+
+  .ds-section__lede {
+    max-width: var(--ds-measure);
+    margin: 0 0 var(--ds-space-8);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-md);
+    line-height: var(--ds-leading-body);
+  }
+
+  /* Phones: a tighter section rhythm, and the title stays a clear step
+     above the card headings inside it (resume org names). */
+  @media screen and (max-width: 720px) {
+    .ds-section {
+      padding-top: 64px;
+    }
+
+    .ds-section__title {
+      font-size: 30px;
+    }
+  }
+
+  @media print {
+    .ds-section {
+      width: auto;
+      padding-top: var(--ds-space-section);
+    }
+
+    .ds-section__head {
+      padding-top: var(--ds-space-2);
+      break-after: avoid;
+    }
+
+    /* In the PDF the eyebrow is the section header; the display title is screen voice. */
+    .ds-section__title {
+      display: none;
+    }
+
+    .ds-section__head {
+      margin-bottom: var(--ds-space-2);
+    }
+
+    .ds-section__lede {
+      margin: 0 0 var(--ds-space-4);
+    }
+  }
+</style>

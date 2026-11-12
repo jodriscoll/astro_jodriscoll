@@ -1,0 +1,35 @@
+{
+  "slug": "aarp-pharmacy",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress theme for AARP Pharmacy.",
+  "short": "A custom WordPress theme for AARP Pharmacy, built on Bootstrap 4 with a Lando local environment and hosted on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "Lando"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "black-and-decker-nostos",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "Nostos was a React application for Black & Decker, internationalized with react-intl and built on Reactstrap.",
+  "short": "Nostos, a multilingual React application for Black & Decker, internationalized with react-intl and built on Reactstrap and Sass.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "React"
+        },
+        {
+          "name": "react-intl"
+        },
+        {
+          "name": "Reactstrap"
+        },
+        {
+          "name": "Sass"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

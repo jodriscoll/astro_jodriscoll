@@ -1,0 +1,729 @@
+---
+/**
+ * Phone and tablet navigation (≤960px). No header bar: one small round button
+ * floats top right. Tapping it opens a modal <dialog> whose sheet spreads out
+ * from the button like water, and the button's two lines morph into the "jo"
+ * mark with "Close" beside it.
+ *
+ * Accessibility, by construction:
+ * - showModal() makes the page inert: nothing outside can be clicked, tabbed
+ *   to or read by a screen reader while the menu is open.
+ * - Focus moves to Close on open and returns to the menu button on close.
+ * - Escape, Close, a tap outside the sheet, and scrolling the page all close it.
+ *   A tap outside lands on the dialog itself, never on the page beneath.
+ * - The toggle reports aria-expanded / aria-controls; the current page carries
+ *   aria-current="page".
+ * - prefers-reduced-motion: no ripple, no morph travel, a plain fade.
+ */
+import { navLinks, isCurrent } from '../lib/nav';
+
+const path = Astro.url.pathname;
+---
+
+<button
+  type="button"
+  class="mnav-toggle"
+  aria-haspopup="dialog"
+  aria-expanded="false"
+  aria-controls="mnav"
+  data-mnav-open
+  data-print="hide"
+>
+  <span class="mnav-glyph" aria-hidden="true">
+    <i class="mnav-glyph__line"></i>
+    <i class="mnav-glyph__line"></i>
+  </span>
+  <span class="sr-only">Menu</span>
+</button>
+
+<!-- The water filter lives outside the dialog: a filter inside a display:none
+     subtree doesn't resolve in every browser. -->
+<svg class="mnav-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <filter id="mnav-water" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.011 0.028" numOctaves="2" seed="7" result="noise"></feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+  </filter>
+</svg>
+
+<dialog id="mnav" class="mnav" aria-labelledby="mnav-title" data-mnav data-print="hide">
+  <span class="mnav__ripple" aria-hidden="true"></span>
+  <span class="mnav__ripple" aria-hidden="true"></span>
+
+  <div class="mnav__panel" data-mnav-panel>
+    <div class="mnav__sheet" data-mnav-sheet>
+      <h2 class="mnav__title" id="mnav-title">Menu</h2>
+      <nav aria-label="Primary">
+        <ol class="mnav__list">
+          {
+            navLinks.map((link, i) => (
+              <li style={`--i: ${i}`}>
+                <a
+                  href={link.href}
+                  aria-current={isCurrent(path, link.href) ? 'page' : undefined}
+                  data-track="nav"
+                  data-track-label={link.label}
+                >
+                  <span class="mnav__idx" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span class="mnav__label">{link.label}</span>
+                  <svg class="mnav__arrow" viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      <button type="button" class="mnav__cta" style={`--i: ${navLinks.length}`} data-open-contact data-track="nav" data-track-label="Let's Collaborate">
+        <span class="mnav__cta-dot" aria-hidden="true"></span>
+        Let's Collaborate
+      </button>
+    </div>
+  </div>
+
+  <button type="button" class="mnav__close" aria-label="Close menu" data-mnav-close>
+    <span class="mnav__close-label" aria-hidden="true">Close</span>
+    <span class="mnav-glyph" aria-hidden="true">
+      <i class="mnav-glyph__line"></i>
+      <i class="mnav-glyph__line"></i>
+      <svg class="mnav-glyph__ring" viewBox="0 0 30 30">
+        <circle cx="15" cy="15" r="13.5" pathLength="100"></circle>
+      </svg>
+      <span class="mnav-glyph__jo">jo</span>
+    </span>
+  </button>
+</dialog>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-mnav-open]');
+  const dialog = document.querySelector<HTMLDialogElement>('[data-mnav]');
+  const panel = dialog?.querySelector<HTMLElement>('[data-mnav-panel]');
+  const sheet = dialog?.querySelector<HTMLElement>('[data-mnav-sheet]');
+  const closeBtn = dialog?.querySelector<HTMLButtonElement>('[data-mnav-close]');
+  const ripples = dialog ? Array.from(dialog.querySelectorAll<HTMLElement>('.mnav__ripple')) : [];
+  const displace = document.querySelector('#mnav-water feDisplacementMap');
+
+  if (toggle && dialog && panel && sheet && closeBtn && typeof dialog.showModal === 'function') {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+    const wide = matchMedia('(min-width: 961px)');
+    const contact = () => document.querySelector<HTMLDialogElement>('#contact-dialog');
+    type State = 'closed' | 'opening' | 'open' | 'closing';
+    let state: State = 'closed';
+    let reveal: Animation | null = null;
+    let waterFrame = 0;
+    let scrollStart = 0;
+
+    // Where the button sits, in the sheet's own coordinates, and the radius
+    // that covers the sheet's farthest corner from it.
+    const origin = () => {
+      const b = toggle.getBoundingClientRect();
+      const s = sheet.getBoundingClientRect();
+      const x = b.left + b.width / 2 - s.left;
+      const y = b.top + b.height / 2 - s.top;
+      const r = Math.hypot(Math.max(x, s.width - x), Math.max(y, s.height - y)) + 32;
+      return { x, y, r, vx: b.left + b.width / 2, vy: b.top + b.height / 2 };
+    };
+
+    // Wobble the sheet's edge while it travels, then settle to crisp.
+    const water = (from: number, to: number, duration: number, done?: () => void) => {
+      cancelAnimationFrame(waterFrame);
+      if (!displace) return done?.();
+      panel.classList.add('is-water');
+      const start = performance.now();
+      const step = (now: number) => {
+        const k = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - k, 3);
+        displace.setAttribute('scale', (from + (to - from) * eased).toFixed(2));
+        if (k < 1) {
+          waterFrame = requestAnimationFrame(step);
+          return;
+        }
+        if (to === 0) panel.classList.remove('is-water');
+        done?.();
+      };
+      waterFrame = requestAnimationFrame(step);
+    };
+
+    const ripple = (vx: number, vy: number) => {
+      ripples.forEach((ring, n) => {
+        ring.style.left = `${vx}px`;
+        ring.style.top = `${vy}px`;
+        ring.animate(
+          [
+            { transform: 'translate(-50%, -50%) scale(1)', opacity: 0.55 },
+            { transform: 'translate(-50%, -50%) scale(16)', opacity: 0 },
+          ],
+          { duration: 900, delay: n * 140, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'both' },
+        );
+      });
+    };
+
+    const open = () => {
+      if (state === 'open' || state === 'opening') return;
+      reveal?.cancel();
+      state = 'opening';
+      toggle.setAttribute('aria-expanded', 'true');
+      dialog.showModal();
+      closeBtn.focus({ preventScroll: true });
+      scrollStart = scrollY;
+      document.documentElement.classList.add('has-mnav');
+      // Next frame, so the CSS transitions (backdrop, morph, list) run from closed.
+      requestAnimationFrame(() => {
+        if (state === 'opening' || state === 'open') dialog.classList.add('is-open');
+      });
+
+      if (reduce.matches || !sheet.animate) {
+        state = 'open';
+        return;
+      }
+      const { x, y, r, vx, vy } = origin();
+      reveal = sheet.animate(
+        [{ clipPath: `circle(22px at ${x}px ${y}px)` }, { clipPath: `circle(${r}px at ${x}px ${y}px)` }],
+        { duration: 640, easing: 'cubic-bezier(0.65, 0, 0.2, 1)' },
+      );
+      water(46, 0, 820);
+      ripple(vx, vy);
+      reveal.onfinish = () => {
+        reveal = null;
+        if (state === 'opening') state = 'open';
+      };
+    };
+
+    const close = ({ instant = false, refocus = true } = {}) => {
+      if (state === 'closed' || state === 'closing') return;
+      state = 'closing';
+      toggle.setAttribute('aria-expanded', 'false');
+      dialog.classList.remove('is-open');
+
+      const finish = () => {
+        reveal?.cancel();
+        reveal = null;
+        cancelAnimationFrame(waterFrame);
+        displace?.setAttribute('scale', '0');
+        panel.classList.remove('is-water');
+        if (dialog.open) dialog.close();
+        document.documentElement.classList.remove('has-mnav');
+        state = 'closed';
+        if (refocus) toggle.focus({ preventScroll: true });
+      };
+
+      if (instant || reduce.matches || !sheet.animate) {
+        finish();
+        return;
+      }
+      reveal?.cancel();
+      const { x, y, r } = origin();
+      reveal = sheet.animate(
+        [{ clipPath: `circle(${r}px at ${x}px ${y}px)` }, { clipPath: `circle(0px at ${x}px ${y}px)` }],
+        { duration: 440, easing: 'cubic-bezier(0.7, 0, 0.35, 1)', fill: 'forwards' },
+      );
+      water(0, 34, 440);
+      reveal.onfinish = finish;
+    };
+
+    // The contact form can open on top of the menu (from "Let's Collaborate").
+    // While it's up, it owns the screen: the menu doesn't react underneath it.
+    const contactUp = () => Boolean(contact()?.open);
+
+    toggle.addEventListener('click', open);
+    closeBtn.addEventListener('click', () => close());
+
+    // Escape: animate out instead of the dialog's instant close.
+    dialog.addEventListener('cancel', (event) => {
+      event.preventDefault();
+      close();
+    });
+
+    // A tap anywhere outside the sheet hits the dialog, never the page.
+    dialog.addEventListener('click', (event) => {
+      const target = event.target as Node;
+      if (sheet.contains(target) || closeBtn.contains(target)) return;
+      if (!contactUp()) close();
+    });
+
+    // Scrolling closes it. A scroll inside the sheet only counts when the sheet
+    // itself can't scroll (a tall menu on a short landscape phone can).
+    const sheetScrolls = () => sheet.scrollHeight > sheet.clientHeight + 1;
+    const gesture = (event: Event) => {
+      if (state === 'closed' || contactUp()) return;
+      if (sheet.contains(event.target as Node) && sheetScrolls()) return;
+      close({ refocus: false });
+    };
+    dialog.addEventListener('wheel', gesture, { passive: true });
+    dialog.addEventListener('touchmove', gesture, { passive: true });
+    addEventListener(
+      'scroll',
+      () => {
+        if (state === 'closed' || contactUp()) return;
+        if (Math.abs(scrollY - scrollStart) > 8) close({ refocus: false });
+      },
+      { passive: true },
+    );
+
+    // Growing past the breakpoint swaps to the rail: drop the menu at once.
+    wide.addEventListener('change', (event) => {
+      if (event.matches) close({ instant: true, refocus: false });
+    });
+
+    // Coming back with the browser's Back button must never find it open.
+    addEventListener('pageshow', (event) => {
+      if ((event as PageTransitionEvent).persisted) close({ instant: true, refocus: false });
+    });
+  }
+</script>
+
+<style>
+  .mnav-toggle,
+  .mnav-defs {
+    display: none;
+  }
+
+  .mnav-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* ---------- The glyph: two lines that become the "jo" mark ---------- */
+
+  .mnav-glyph {
+    position: relative;
+    display: block;
+    flex: none;
+    width: 30px;
+    height: 30px;
+  }
+
+  .mnav-glyph__line {
+    position: absolute;
+    left: 7px;
+    right: 7px;
+    top: calc(50% - 0.75px);
+    height: 1.5px;
+    border-radius: 1px;
+    background: currentColor;
+    transition:
+      transform 0.42s cubic-bezier(0.65, 0, 0.2, 1),
+      opacity 0.3s ease;
+  }
+
+  .mnav-glyph__line:first-child {
+    transform: translateY(-3.5px);
+  }
+
+  .mnav-glyph__line:nth-child(2) {
+    transform: translateY(3.5px);
+  }
+
+  .mnav-glyph__ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    transform: rotate(-90deg);
+  }
+
+  .mnav-glyph__ring circle {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition:
+      stroke-dashoffset 0.6s cubic-bezier(0.65, 0, 0.2, 1) 0.12s,
+      stroke 0.25s;
+  }
+
+  .mnav-glyph__jo {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+      opacity 0.3s ease 0.22s,
+      transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.22s,
+      color 0.25s;
+  }
+
+  /* Open: the lines fold into the centre, the ring draws, "jo" settles in. */
+  .mnav.is-open .mnav-glyph__line:first-child {
+    transform: translateY(0) rotate(45deg) scaleX(0);
+    opacity: 0;
+  }
+
+  .mnav.is-open .mnav-glyph__line:nth-child(2) {
+    transform: translateY(0) rotate(-45deg) scaleX(0);
+    opacity: 0;
+  }
+
+  .mnav.is-open .mnav-glyph__ring circle {
+    stroke-dashoffset: 0;
+  }
+
+  .mnav.is-open .mnav-glyph__jo {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ---------- Phones and tablets ---------- */
+
+  /* Shared with pinned header bars on mobile (e.g. the Work page toolbar): a bar is
+     --fixedbar-h tall, the round menu button sits centred in it, and the bar keeps
+     --fixedbar-clear free on its right for the button. */
+  :global(:root) {
+    --fixedbar-h: 56px;
+    --mnav-size: 44px;
+    --mnav-top: calc((var(--fixedbar-h) - var(--mnav-size)) / 2);
+    --mnav-right: 8px;
+    --fixedbar-clear: calc(var(--mnav-right) + var(--mnav-size) + 12px);
+  }
+
+  @media screen and (max-width: 960px) {
+    /* One small round button, top right, centred in a pinned bar's height. */
+    .mnav-toggle {
+      position: fixed;
+      z-index: 45;
+      top: max(var(--mnav-top), env(safe-area-inset-top));
+      right: max(var(--mnav-right), env(safe-area-inset-right));
+      display: grid;
+      place-items: center;
+      width: var(--mnav-size);
+      height: var(--mnav-size);
+      padding: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--bg) 82%, transparent);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      /* No opacity transition: the toggle and the dialog's Close are twins in one spot,
+         so the hand-off happens in a single frame. A fade left the spot half-empty for
+         0.2s as the menu finished closing. */
+      transition: border-color 0.2s;
+    }
+
+    /* Only on devices that really hover: a tap leaves :hover stuck on touch screens,
+       which turned the border dark as the menu finished closing. */
+    @media (hover: hover) and (pointer: fine) {
+      .mnav-toggle:hover {
+        border-color: var(--text);
+      }
+    }
+
+    .mnav-toggle:focus-visible,
+    .mnav__close:focus-visible,
+    .mnav__list a:focus-visible,
+    .mnav__cta:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    /* While open, the dialog's own Close sits exactly where the toggle was. */
+    :global(html.has-mnav) .mnav-toggle {
+      opacity: 0;
+    }
+
+    .mnav-defs {
+      display: block;
+    }
+  }
+
+  /* ---------- The dialog ---------- */
+
+  .mnav {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .mnav::backdrop {
+    background: var(--scrim);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .mnav.is-open::backdrop {
+    opacity: 1;
+  }
+
+  .mnav__ripple {
+    position: fixed;
+    z-index: 0;
+    width: 44px;
+    height: 44px;
+    border: 1px solid color-mix(in srgb, var(--text) 40%, transparent);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .mnav__panel {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    max-height: 100%;
+  }
+
+  .mnav__panel.is-water {
+    filter: url('#mnav-water');
+  }
+
+  .mnav__sheet {
+    flex: 1;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: calc(max(12px, env(safe-area-inset-top)) + 64px) max(20px, env(safe-area-inset-right)) 28px max(20px, env(safe-area-inset-left));
+    border-bottom: 1px solid var(--line-strong);
+    background: var(--bg);
+  }
+
+  .mnav__title {
+    margin: 0 0 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .mnav__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .mnav__list a {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 8px;
+    min-height: 60px;
+    padding: 10px 2px;
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-size: clamp(24px, 7vw, 30px);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .mnav__list a:hover,
+  .mnav__list a:active {
+    color: var(--text);
+  }
+
+  .mnav__idx {
+    align-self: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mnav__label {
+    overflow-wrap: anywhere;
+  }
+
+  .mnav__arrow {
+    width: 18px;
+    height: 18px;
+    color: var(--faint);
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+      color 0.2s;
+  }
+
+  .mnav__list a:hover .mnav__arrow {
+    transform: translateX(3px);
+    color: var(--text);
+  }
+
+  .mnav__list a[aria-current='page'] {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .mnav__list a[aria-current='page'] .mnav__idx,
+  .mnav__list a[aria-current='page'] .mnav__arrow {
+    color: var(--accent-red);
+  }
+
+  .mnav__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 56px;
+    margin-top: 24px;
+    padding: 0 20px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text);
+    font: 600 17px/1.15 var(--sans);
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    transition:
+      background-color 0.25s,
+      border-color 0.25s,
+      color 0.25s;
+  }
+
+  .mnav__cta:hover,
+  .mnav__cta:active {
+    border-color: var(--accent-red);
+    background: var(--accent-red);
+    color: var(--on-accent);
+  }
+
+  .mnav__cta-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-red);
+    transition: background-color 0.25s;
+  }
+
+  .mnav__cta:hover .mnav__cta-dot,
+  .mnav__cta:active .mnav__cta-dot {
+    background: var(--on-accent);
+  }
+
+  /* Close: the toggle's twin, in the same spot; "Close" opens out to its left. */
+  .mnav__close {
+    position: fixed;
+    z-index: 2;
+    top: max(var(--mnav-top), env(safe-area-inset-top));
+    right: max(var(--mnav-right), env(safe-area-inset-right));
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 6px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--text);
+    font: 500 14px/1 var(--sans);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.2s;
+  }
+
+  .mnav__close-label {
+    max-width: 0;
+    overflow: hidden;
+    opacity: 0;
+    white-space: nowrap;
+    transition:
+      max-width 0.45s cubic-bezier(0.65, 0, 0.2, 1),
+      opacity 0.3s ease,
+      padding 0.45s cubic-bezier(0.65, 0, 0.2, 1);
+  }
+
+  .mnav.is-open .mnav__close-label {
+    max-width: 5em;
+    padding: 0 10px 0 10px;
+    opacity: 1;
+    transition-delay: 0.1s, 0.2s, 0.1s;
+  }
+
+  /* Hover only where hover is real; on touch screens it sticks after a tap. */
+  @media (hover: hover) and (pointer: fine) {
+    .mnav__close:hover {
+      border-color: var(--text);
+    }
+
+    .mnav__close:hover .mnav-glyph__ring circle {
+      stroke: var(--accent-red);
+    }
+
+    .mnav__close:hover .mnav-glyph__jo {
+      color: var(--accent-red);
+    }
+  }
+
+  /* The list rises in, one row after another, once the water has spread. */
+  .mnav__list li,
+  .mnav__cta {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .mnav.is-open .mnav__list li,
+  .mnav.is-open .mnav__cta {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.16s + var(--i, 0) * 0.045s);
+  }
+
+  /* Short landscape phones: smaller rows so more of the list fits. */
+  @media (max-height: 520px) {
+    .mnav__list a {
+      min-height: 48px;
+      font-size: 22px;
+    }
+
+    .mnav__sheet {
+      padding-top: calc(max(12px, env(safe-area-inset-top)) + 56px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mnav-glyph__line,
+    .mnav-glyph__ring circle,
+    .mnav-glyph__jo,
+    .mnav__close-label,
+    .mnav__list li,
+    .mnav__cta {
+      transition-duration: 0.01s !important;
+      transition-delay: 0s !important;
+    }
+
+    .mnav::backdrop {
+      transition: opacity 0.15s;
+    }
+  }
+
+  @media print {
+    .mnav-toggle,
+    .mnav {
+      display: none !important;
+    }
+  }
+</style>

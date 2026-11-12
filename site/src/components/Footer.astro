@@ -1,0 +1,112 @@
+---
+import { getCollection } from 'astro:content';
+import ThemeDock from './ThemeDock.astro';
+import { formatLongDate, getProfile, listPosts, listProjects } from '../gateway';
+import { platformMarks, platformMarkup } from '../lib/platforms';
+
+const profile = getProfile();
+const year = new Date().getFullYear();
+
+// Work by platform: the most-used platforms across every project.
+const specs = new Map((await getCollection('specs')).map((entry) => [entry.data.slug, entry.data]));
+const tally = new Map<string, { id: string; name: string; svg: string; count: number }>();
+for (const project of listProjects()) {
+  const spec = specs.get(project.slug);
+  const names = [...project.technologies, ...(spec?.stack.flatMap((g) => g.items.map((item) => item.name)) ?? [])];
+  for (const mark of platformMarks(names)) {
+    const hit = tally.get(mark.id) ?? { ...mark, count: 0 };
+    hit.count++;
+    tally.set(mark.id, hit);
+  }
+}
+const SHOW = ['wordpress', 'craft', 'drupal', 'react', 'react-native', 'angular', 'vue', 'next', 'symfony', 'ruby', 'shopify', 'webflow'];
+const platforms = SHOW.map((id) => tally.get(id)).filter((p): p is NonNullable<typeof p> => Boolean(p));
+
+const posts = (await listPosts()).slice(0, 6);
+const short = (date: Date) => date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+
+const elsewhere = [
+  { label: 'GitHub', href: profile.links.github, svg: platformMarkup('social-github') },
+  { label: 'GitLab', href: 'https://gitlab.com/jodriscoll', svg: platformMarkup('gitlab') },
+  { label: 'LinkedIn', href: profile.links.linkedin, svg: platformMarkup('social-linkedin') },
+  { label: 'Stack Overflow', href: 'https://stackoverflow.com/users/1686298/j-odriscoll', svg: platformMarkup('social-stackoverflow') },
+  { label: 'X (Twitter)', href: 'https://x.com/jtodriscoll', svg: platformMarkup('social-x') },
+  { label: 'CodePen', href: 'https://codepen.io/jodriscoll', svg: platformMarkup('social-codepen') },
+];
+---
+
+<footer class="foot" data-footer>
+  <div class="foot__word" aria-hidden="true">
+    <div class="foot__wordtrack">
+      <span>O'DRISCOLL</span><span>O'DRISCOLL</span>
+    </div>
+  </div>
+  <div class="foot__cols">
+    <div class="foot__id">
+      <ThemeDock />
+      <p class="foot__legal">© {year} {profile.name}. All rights reserved.</p>
+    </div>
+    <nav aria-label="Work by platform">
+      <h2>This decade</h2>
+      <ul class="foot__platforms">
+        {
+          platforms.map((p) => (
+            <li>
+              <a href={`/things-built?stack=${p.id}`}>
+                <i set:html={p.svg} />
+                {p.name}
+                <span>{p.count}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="foot__all" href="/things-built">All Work <span aria-hidden="true">→</span></a>
+    </nav>
+    <nav aria-label="Writing" class="foot__writing">
+      <h2>Writing</h2>
+      <ol>
+        {
+          posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>
+                <time datetime={post.data.date.toISOString()} title={formatLongDate(post.data.date)}>{short(post.data.date)}</time>
+                <span>{post.data.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <a class="foot__all" href="/blog">All Writing <span aria-hidden="true">→</span></a>
+    </nav>
+    <nav aria-label="Elsewhere">
+      <h2>Elsewhere</h2>
+      {elsewhere.map((link) =>
+        link.href ? (
+          <a href={link.href} rel="me noopener noreferrer"><i set:html={link.svg} />{link.label}<span aria-hidden="true">↗</span></a>
+        ) : (
+          <span class="foot__pending">{link.label}</span>
+        ),
+      )}
+    </nav>
+  </div>
+</footer>
+
+<script is:inline>
+  (function () {
+    var footer = document.querySelector('[data-footer]');
+    if (!footer || footer.getAttribute('data-ready') === 'true') return;
+    footer.setAttribute('data-ready', 'true');
+    if (!('IntersectionObserver' in window)) {
+      footer.classList.add('is-in');
+      return;
+    }
+    new IntersectionObserver(function (entries, observer) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        footer.classList.add('is-in');
+        observer.disconnect();
+      });
+    }, { threshold: 0.2 }).observe(footer);
+  })();
+</script>

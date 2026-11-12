@@ -1,0 +1,1111 @@
+[
+  {
+    "slug": "gamekal",
+    "title": "GameKal",
+    "summary": "A release calendar for PC, PlayStation, Xbox and Switch games. One Expo and React Native codebase ships the web app, iOS and Android, fed by a catalog scraped from nine storefronts, with 538 automated tests.",
+    "featured": true,
+    "technologies": [
+      "Expo",
+      "React Native",
+      "React",
+      "TypeScript",
+      "Supabase",
+      "Vercel",
+      "Swift"
+    ],
+    "links": {
+      "demo": "https://www.gamekal.com/"
+    }
+  },
+  {
+    "slug": "pepviz",
+    "title": "PepsiCo Pepviz",
+    "summary": "Seven marketing landing pages for PepsiCo's Pepviz, built with one international designer: hand-authored HTML, one SCSS file and a little vanilla JavaScript per page, staged on CodePen so the client can paste them into its own CMS.",
+    "featured": false,
+    "technologies": [
+      "HTML",
+      "Sass",
+      "JavaScript",
+      "CodePen"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "fisher-of-fire",
+    "title": "Fisher of Fire",
+    "summary": "Breath of Fire III's fishing mode, decrypted from a disc I own, decompiled with Ghidra (11,676 functions) and rebuilt in TypeScript and Phaser 4 rather than emulated, then extended with save files, four fishers and a 128-track jukebox.",
+    "featured": false,
+    "technologies": [
+      "TypeScript",
+      "Phaser",
+      "Vite",
+      "Ghidra",
+      "Node.js",
+      "ffmpeg",
+      "Java",
+      "WebGL",
+      "Vercel"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "pawdings",
+    "title": "PawDings",
+    "summary": "An app I created for iOS, Android and the web that keeps dog owners active: one weather- and location-aware idea a day, GPS arrival checks and fully customizable reminders, on Expo with a typed OpenAPI backend.",
+    "featured": false,
+    "technologies": [
+      "Expo",
+      "React Native",
+      "React",
+      "TypeScript"
+    ],
+    "links": {
+      "demo": "https://pawdings.com/"
+    }
+  },
+  {
+    "slug": "nioh-3-tracker",
+    "title": "Nioh 3 Tracker",
+    "summary": "A progress tracker for Nioh 3, built with the game's community where the wikis fell short and printed strategy guides no longer exist.",
+    "featured": false,
+    "technologies": [
+      "Vercel"
+    ],
+    "links": {
+      "demo": "https://nioh3tracker.vercel.app/"
+    }
+  },
+  {
+    "slug": "zefr",
+    "title": "ZEFR",
+    "summary": "Zefr's marketing site rebuilt on Craft CMS 5 and moved onto Craft Cloud, with a Neo block library editors build pages from, SAML single sign-on, SEOmatic and a Vite build.",
+    "featured": true,
+    "technologies": [
+      "Craft CMS",
+      "PHP 8.4",
+      "nginx",
+      "MySQL 8.0",
+      "Craft Cloud",
+      "Vite",
+      "SEOmatic",
+      "Neo",
+      "SAML SSO",
+      "DDEV"
+    ],
+    "links": {
+      "demo": "https://zefr.com/"
+    }
+  },
+  {
+    "slug": "cascade-space",
+    "title": "Cascade Space",
+    "summary": "A Next.js 14 static site for a space-technology company, assembled from a typed block library: every block has a TypeScript interface, a Storybook story and Vitest tests, and every word lives in content files ready for a CMS.",
+    "featured": true,
+    "technologies": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Storybook",
+      "Vitest",
+      "Vercel"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "echoes-of-history",
+    "title": "Echoes of History",
+    "summary": "An educational app for evidence-based historical reasoning, built through tutoring: TanStack Start and React 19, Supabase auth and saved reports, Vercel's AI Gateway and BotID, with answer keys kept on the server.",
+    "featured": true,
+    "technologies": [
+      "TanStack Start",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "Vercel"
+    ],
+    "links": {
+      "demo": "https://echoeshistory.org/"
+    }
+  },
+  {
+    "slug": "trubridge",
+    "title": "TruBridge",
+    "summary": "TruBridge's site, for a healthcare IT company: a custom Timber and Twig WordPress theme on WP Engine, with events, products and resources as their own content types and an admin trimmed to what editors use.",
+    "featured": true,
+    "technologies": [
+      "WordPress",
+      "WP Engine"
+    ],
+    "links": {
+      "demo": "https://trubridge.com/"
+    }
+  },
+  {
+    "slug": "election-center",
+    "title": "Election Center",
+    "summary": "The Election Center trains and certifies election officials. Its site is Bedrock WordPress with a Timber and Twig theme, WP Rocket and Redis for speed, and BackstopJS visual regression tests in CI.",
+    "featured": true,
+    "technologies": [
+      "WordPress"
+    ],
+    "links": {
+      "demo": "https://electioncenter.org/"
+    }
+  },
+  {
+    "slug": "iwf",
+    "title": "International Women's Forum",
+    "summary": "The International Women's Forum's public site: a custom Taoti theme on Composer-managed WordPress with ACF and Gravity Forms, built and deployed to Pantheon by GitHub Actions on every push.",
+    "featured": true,
+    "technologies": [
+      "WordPress",
+      "PHP",
+      "Sass",
+      "Gulp",
+      "webpack",
+      "GitHub Actions",
+      "Pantheon"
+    ],
+    "links": {
+      "demo": "https://iwforum.org/"
+    }
+  },
+  {
+    "slug": "aami",
+    "title": "AAMI",
+    "summary": "AAMI's member community on Bedrock WordPress and BuddyBoss, with a Timber theme and a homepage feed that blends curated stories with the live activity stream, cached in Redis and behind SAML single sign-on.",
+    "featured": true,
+    "technologies": [
+      "WordPress",
+      "Bedrock",
+      "PHP 8.3",
+      "Apache 2.4",
+      "MySQL 8.0",
+      "Redis",
+      "ACF Pro",
+      "BuddyBoss",
+      "WP Rocket",
+      "Yoast SEO",
+      "SAML SSO",
+      "Lando"
+    ],
+    "links": {
+      "demo": "https://aami.org/"
+    }
+  },
+  {
+    "slug": "combioh",
+    "title": "Combioh",
+    "summary": "A Nioh 3 combo trainer: pick a style, weapons and a difficulty, and a custom controller UI shows each combo on your own button layout as timed sequences, in five languages, with every choice shareable from the URL.",
+    "featured": false,
+    "technologies": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Vitest"
+    ],
+    "links": {
+      "demo": "https://www.combioh.com/"
+    }
+  },
+  {
+    "slug": "apta",
+    "title": "APTA",
+    "summary": "The American Physical Therapy Association's site on Bedrock WordPress, with Composer-managed plugins, ACF Pro, Redis object caching and Taoti's security scanner, held to one security and version baseline.",
+    "featured": true,
+    "technologies": [],
+    "links": {
+      "demo": "https://www.apta.org/"
+    }
+  },
+  {
+    "slug": "ocad",
+    "title": "OCAD University",
+    "summary": "Development on the public Drupal site for OCAD University, Canada's largest university of art and design.",
+    "featured": true,
+    "technologies": [
+      "Drupal"
+    ],
+    "links": {
+      "demo": "https://www.ocadu.ca/"
+    }
+  },
+  {
+    "slug": "sequoia-capital",
+    "title": "Sequoia Capital",
+    "summary": "A custom Gutenberg block theme for Sequoia Capital on WordPress VIP, with motion from CSS animation, Animate on Scroll and Lottie.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "AOS + CSS Animations",
+      "Bootstrap 5.x",
+      "PHP + MySQL",
+      "WordPress VIP"
+    ],
+    "links": {
+      "demo": "https://www.sequoiacap.com"
+    },
+    "internal": {
+      "notes": "INTERNAL commercial terms must never leave the gateway."
+    }
+  },
+  {
+    "slug": "sagelife",
+    "title": "SageLife",
+    "summary": "A WordPress multisite on Pantheon for SageLife, the senior-living operator: each community runs on its own domain through AWS name servers, on a Bootstrap and webpack theme with Animate on Scroll.",
+    "featured": false,
+    "technologies": [
+      "WordPress Multisite",
+      "HTML5 + SCSS + Webpack",
+      "AOS + CSS Animations",
+      "Bootstrap 4.x",
+      "PHP + MySQL",
+      "Pantheon + AWS"
+    ],
+    "links": {
+      "demo": "https://www.sagelife.com"
+    }
+  },
+  {
+    "slug": "tak-gov",
+    "title": "TAK.gov",
+    "summary": "TAK.gov, home of the Team Awareness Kit community: a Ruby application whose Bootstrap 5 and ES6 front end was prototyped in a standalone Express app, then imported, on AWS with GitLab.",
+    "featured": false,
+    "technologies": [
+      "Ruby",
+      "AWS",
+      "GitLab",
+      "Bootstrap 5.x",
+      "JavaScript ES6+"
+    ],
+    "links": {
+      "demo": "https://tak.gov"
+    }
+  },
+  {
+    "slug": "i6tix",
+    "title": "i6tix",
+    "summary": "A browser-based poster maker for events: a React 16 and Redux app with a canvas editor, uploads held in LocalStorage between steps, review and checkout, tested with Jest and served from CloudFront.",
+    "featured": false,
+    "technologies": [
+      "React 16 + Redux",
+      "ESLint + Jest",
+      "AWS + CloudFront",
+      "LocalStorage",
+      "SCSS + JavaScript ES6+"
+    ],
+    "links": {
+      "demo": "https://d2ywhp6fltyv6h.cloudfront.net/storefront.html"
+    }
+  },
+  {
+    "slug": "rehab-com",
+    "title": "Rehab.com",
+    "summary": "Rehab.com's treatment directory: a Symfony and MySQL application with HubSpot and API integrations, Vue and Angular sections and a Vue patient portal, cut by more than 60% and moved to GitHub Actions.",
+    "featured": false,
+    "technologies": [
+      "Symphony + MySQL",
+      "VueJS",
+      "HTML5 + SCSS",
+      "AWS",
+      "Python",
+      "GitHub Actions"
+    ],
+    "links": {
+      "demo": "https://www.rehab.com"
+    }
+  },
+  {
+    "slug": "angular-portfolio",
+    "title": "Portfolio ver. 3",
+    "summary": "The third version of my portfolio: jodriscoll.com as an Angular 13 single-page app, with every word of copy in ngx-translate files, a service worker, Animate on Scroll motion and Karma tests, deployed on Cloudflare Pages.",
+    "featured": false,
+    "technologies": [
+      "Angular 13",
+      "TypeScript",
+      "Karma",
+      "SCSS",
+      "JavaScript ES6+",
+      "AOS + CSS Animations",
+      "CloudFlare Pages"
+    ],
+    "links": {
+      "demo": "https://jodriscoll.com/",
+      "source": "https://github.com/jodriscoll/angular_jodriscoll"
+    }
+  },
+  {
+    "slug": "patient-portal",
+    "title": "Patient Portal",
+    "summary": "A Vue application inside Rehab.com's Symfony site that lets patients curate and compare treatment providers, exchanging data with MySQL over a REST API.",
+    "featured": false,
+    "technologies": [
+      "VueJS + Symphony",
+      "HTML5 + SCSS",
+      "MySQL",
+      "AWS",
+      "REST API"
+    ],
+    "links": {
+      "demo": "https://www.rehab.com/login",
+      "source": "https://github.com/jodriscoll/vue_patient_portal"
+    }
+  },
+  {
+    "slug": "energy-rate-calculator",
+    "title": "Energy Rate Calculator",
+    "summary": "A rate calculator inside an electric utility's WordPress site: customers enter their home usage and get an estimate, with every rate managed by editors in ACF.",
+    "featured": false,
+    "technologies": [
+      "PHP + WordPress + ACF",
+      "JavaScript ES5+",
+      "SCSS"
+    ],
+    "links": {
+      "demo": "https://www.nbutexas.com/bill-calculator/",
+      "source": "https://github.com/jodriscoll/wp_nbu_rate_calculator"
+    }
+  },
+  {
+    "slug": "trinity-cyber",
+    "title": "Trinity Cyber",
+    "summary": "The customer dashboard for Trinity Cyber, a cybersecurity startup: React with Redux-Saga and D3 visualizations, shipped in containers against an API documented in API Blueprint. One of my first React applications.",
+    "featured": false,
+    "technologies": [
+      "React",
+      "Redux",
+      "Redux-Saga",
+      "D3",
+      "react-vis",
+      "styled-components"
+    ],
+    "links": {
+      "demo": "https://www.trinitycyber.com/"
+    }
+  },
+  {
+    "slug": "rofo-rewards",
+    "title": "Royal Farms Rewards Portal",
+    "summary": "The ROFO Rewards loyalty program for Royal Farms: web services behind the rewards app and a React and Redux admin portal, Dockerized and tested with Jest and Enzyme. One of my first React applications.",
+    "featured": false,
+    "technologies": [
+      "React",
+      "Redux",
+      "Jest",
+      "Enzyme",
+      "webpack",
+      "Docker"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "black-and-decker-nostos",
+    "title": "Black & Decker · Nostos",
+    "summary": "Nostos, a multilingual React application for Black & Decker, internationalized with react-intl and built on Reactstrap and Sass.",
+    "featured": false,
+    "technologies": [
+      "React",
+      "react-intl",
+      "Reactstrap",
+      "Sass"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "ptc-bio",
+    "title": "PTC Therapeutics",
+    "summary": "Headless WordPress for PTC Therapeutics: content and languages managed in WordPress and served over the REST API to a separate React front end.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "WP REST API",
+      "React",
+      "Lando"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "file-and-serve-xpress",
+    "title": "File & Serve Xpress",
+    "summary": "The Angular front end for File & Serve Xpress, a legal e-filing and service platform: an Nx monorepo on Angular Material and DevExtreme, tested with Jest, documented in Storybook and shipped through Azure Pipelines.",
+    "featured": false,
+    "technologies": [
+      "Angular",
+      "Nx",
+      "Angular Material",
+      "DevExtreme",
+      "RxJS",
+      "TypeScript"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "mindgrub-project-health",
+    "title": "Project Health Dashboard",
+    "summary": "An internal React dashboard that tracked project health across the agency, built on CoreUI and Reactstrap with Chart.js reporting.",
+    "featured": false,
+    "technologies": [
+      "React",
+      "CoreUI",
+      "Reactstrap",
+      "Chart.js",
+      "webpack",
+      "Sass"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "umbc-miechv",
+    "title": "UMBC Home Visiting Training",
+    "summary": "UMBC's Maryland MIECHV home-visiting training platform on Drupal 8: content exposed through GraphQL and OpenAPI with OAuth, pages built from Paragraphs, and BackstopJS and Behat tests.",
+    "featured": false,
+    "technologies": [
+      "Drupal 8",
+      "Pantheon",
+      "Lando",
+      "GitLab CI",
+      "GraphQL",
+      "OpenAPI"
+    ],
+    "links": {
+      "demo": "https://homevisitingtraining.umbc.edu/"
+    }
+  },
+  {
+    "slug": "unisys",
+    "title": "UNISYS",
+    "summary": "UNISYS's move onto Drupal 8 on Pantheon, with content carried across by a scripted Migrate Plus migration from CSV and directory sources, and Paragraphs for layout.",
+    "featured": false,
+    "technologies": [
+      "Drupal 8",
+      "Pantheon",
+      "Docksal",
+      "Migrate Plus",
+      "Migrate Source CSV",
+      "Paragraphs"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "ncit",
+    "title": "NCIT",
+    "summary": "A Composer-managed Drupal 8 site on Pantheon, with Feeds and Feeds Tamper importing content and Pantheon's Solr powering search.",
+    "featured": false,
+    "technologies": [
+      "Drupal 8",
+      "Pantheon",
+      "Docksal",
+      "Feeds",
+      "Search API Pantheon",
+      "Bootstrap"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "namw",
+    "title": "NAMW",
+    "summary": "A Composer-managed Drupal 8 site on Pantheon, with Paragraphs for page building, Config Split per environment, Docksal locally and Behat tests.",
+    "featured": false,
+    "technologies": [
+      "Drupal 8",
+      "Pantheon",
+      "Docksal",
+      "Paragraphs",
+      "Config Split",
+      "Behat"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "relief-wizard",
+    "title": "Relief Wizard",
+    "summary": "A Drupal 8.8 site on Pantheon built around Webform, with Lando locally and a Bootstrap theme.",
+    "featured": false,
+    "technologies": [
+      "Drupal 8",
+      "Pantheon",
+      "Lando",
+      "Webform",
+      "Bootstrap"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "childrens-inn-nih",
+    "title": "The Children’s Inn at NIH",
+    "summary": "Composer-managed WordPress for The Children's Inn at NIH, with FacetWP search, Gravity Forms and WP All Import, tested with Behat and PHPUnit and deployed through Dockerized GitLab CI to Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Composer",
+      "GitLab CI",
+      "Docker",
+      "ACF Pro"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "comed-powering-lives",
+    "title": "ComEd · Powering Lives",
+    "summary": "A WordPress multisite for ComEd's Powering Lives program, with Lando locally and GitLab CI handing builds to Azure DevOps.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "WordPress Multisite",
+      "Lando",
+      "GitLab CI",
+      "Azure DevOps"
+    ],
+    "links": {
+      "demo": "https://poweringlives.comed.com/"
+    }
+  },
+  {
+    "slug": "bge",
+    "title": "Baltimore Gas & Electric (BGE)",
+    "summary": "Baltimore Gas & Electric's custom WordPress theme on Bootstrap 4 and Pantheon, plus part of the interface for BGE's iOS app, written in Swift.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "jQuery",
+      "Lando",
+      "Swift"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "aarp-pharmacy",
+    "title": "AARP Pharmacy",
+    "summary": "A custom WordPress theme for AARP Pharmacy, built on Bootstrap 4 with a Lando local environment and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "PHP",
+      "Lando"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "entergy-shore-power",
+    "title": "Entergy · Shore Power",
+    "summary": "A lead-generation site for Entergy's Shore Power service, a custom WordPress theme on Bootstrap 4 with GitLab CI deploying to Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "Lando",
+      "GitLab CI"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "entergy-tlg",
+    "title": "Entergy · TLG",
+    "summary": "A custom WordPress theme for Entergy's TLG, on Bootstrap 4, with Lando locally and GitLab CI deploying to Pantheon through Terminus.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "Lando",
+      "Terminus",
+      "GitLab CI"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "dragos",
+    "title": "Dragos",
+    "summary": "A redesign for Dragos, the industrial-cybersecurity company: a custom WordPress theme on Bootstrap 4, with Lando locally and GitLab CI deploying to Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "Lando",
+      "GitLab CI"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "volexity",
+    "title": "Volexity",
+    "summary": "A custom WordPress theme for Volexity, the security firm, built with Gulp and jQuery and deployed by GitLab CI to Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Gulp",
+      "jQuery",
+      "GitLab CI"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "cloudtamer",
+    "title": "Cloudtamer.io",
+    "summary": "The October 2019 launch site for Cloudtamer.io, the cloud-governance company: a custom WordPress theme with FacetWP-powered search, on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "FacetWP",
+      "Bootstrap 4",
+      "jQuery"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "check-to-protect",
+    "title": "Check To Protect",
+    "summary": "A 2018 national campaign site urging drivers to look up and fix open vehicle recalls: a custom WordPress theme on Bootstrap 4, hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "communities-in-schools",
+    "title": "Communities In Schools",
+    "summary": "A custom 2018 WordPress theme for Communities In Schools, the national dropout-prevention nonprofit, built on Bootstrap 4 for Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "brown-goldstein-levy",
+    "title": "Brown Goldstein Levy",
+    "summary": "A custom WordPress theme for the Baltimore law firm, on Bootstrap and jQuery, with Lando locally and GitLab CI deploying to Pantheon through Terminus.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap",
+      "jQuery",
+      "Lando",
+      "Terminus"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "eqrx",
+    "title": "EQRx",
+    "summary": "A custom WordPress theme for EQRx, built with IMRE, plus a plugin that syncs open roles from a jobs API every day on WP Cron.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "WP Cron"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "gilchrist-infoweb",
+    "title": "Gilchrist Hospice · Infoweb",
+    "summary": "Infoweb, a custom WordPress intranet for Gilchrist Hospice staff, built on Bootstrap 4 and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "iamcatholic",
+    "title": "Archdiocese of Baltimore · #iamcatholic",
+    "summary": "#iamcatholic, a campaign microsite for the Archdiocese of Baltimore built with Sizeable, on WordPress and Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "insource-solutions",
+    "title": "InSource Solutions",
+    "summary": "A custom WordPress theme for InSource Solutions, built on Bootstrap 4 and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "new-braunfels-utilities",
+    "title": "New Braunfels Utilities",
+    "summary": "The Texas utility's custom WordPress site on Bootstrap 4 and Pantheon, including a rate calculator its staff manage through ACF.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "ACF",
+      "Bootstrap 4"
+    ],
+    "links": {
+      "demo": "https://www.nbutexas.com/"
+    }
+  },
+  {
+    "slug": "ndpi",
+    "title": "NDPI",
+    "summary": "A custom WordPress theme for NDPI, built on Bootstrap 4 and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "think-babies",
+    "title": "ThinkBabies",
+    "summary": "A custom WordPress theme for ThinkBabies, the national early-childhood campaign, built on Bootstrap 4 and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "venture-trailers",
+    "title": "Venture Trailers",
+    "summary": "A custom 2019 WordPress theme for Venture Trailers, the trailer manufacturer, built on Bootstrap 4 for Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "vyleesi",
+    "title": "Vyleesi",
+    "summary": "A custom WordPress theme for the Vyleesi pharmaceutical brand, built on Bootstrap 4 and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Bootstrap 4"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "you-can-washington",
+    "title": "YouCanWA.org",
+    "summary": "YouCanWA.org, a Washington State youth campaign: a WordPress theme on Bootstrap and Pantheon, animated with GSAP and ScrollMagic.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "GSAP",
+      "ScrollMagic",
+      "Bootstrap"
+    ],
+    "links": {
+      "demo": "https://youcanwa.org/"
+    }
+  },
+  {
+    "slug": "focus-on",
+    "title": "Focus On",
+    "summary": "A custom WordPress theme for Focus On, hosted on WP Engine.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "WP Engine"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "alive-and-thrive",
+    "title": "Alive & Thrive",
+    "summary": "Ongoing development and upkeep of the WordPress site for Alive & Thrive, the global maternal and child nutrition initiative, on GMMB's theme and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon"
+    ],
+    "links": {
+      "demo": "https://www.aliveandthrive.org/"
+    }
+  },
+  {
+    "slug": "chemonics",
+    "title": "Chemonics",
+    "summary": "Upkeep and development of the WordPress site for Chemonics, the international-development firm, on WDG's theme and hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "asap",
+    "title": "ASAP",
+    "summary": "A WordPress multisite for ASAP on Social Driver's theme: I maintained and extended the network on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "WordPress Multisite"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "viaplace",
+    "title": "Viaplace",
+    "summary": "Upkeep and development of the Viaplace WordPress site on the Genesis Framework, hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Genesis"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "mindbuzz",
+    "title": "MindBuzz",
+    "summary": "Upkeep and development of the MindBuzz WordPress site on a Themify theme, hosted on Pantheon.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "under-armour",
+    "title": "Under Armour",
+    "summary": "Under Armour's shopping experience, inside a web of Jenkins builds, approvals and per-build test environments from before CI was a common word, plus the NEXT event app in Laravel for the USA and Canada.",
+    "featured": false,
+    "technologies": [
+      "Jenkins",
+      "Laravel",
+      "PHP",
+      "Gulp",
+      "Bower",
+      "PHPUnit"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "cvs-silverscript",
+    "title": "CVS Health · SilverScript Call Center",
+    "summary": "The call-center application for SilverScript, CVS Health's Medicare Part D plan: Laravel and Vue, with CSV import and seeding, PHPUnit tests and AWS CodeDeploy releases.",
+    "featured": false,
+    "technologies": [
+      "Laravel",
+      "Vue",
+      "Bootstrap",
+      "Laravel Mix",
+      "PHPUnit",
+      "AWS CodeDeploy"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "samsung-display-pid",
+    "title": "Samsung Display",
+    "summary": "Samsung Display's product-information site, formerly pid.samsungdisplay.com, on Drupal 7, packaged as RPMs and deployed to AWS with CodeDeploy.",
+    "featured": false,
+    "technologies": [
+      "Drupal 7",
+      "PHP",
+      "AWS CodeDeploy",
+      "RPM"
+    ],
+    "links": {
+      "demo": "https://www.samsungdisplay.com"
+    }
+  },
+  {
+    "slug": "trl",
+    "title": "Transport Research Laboratory",
+    "summary": "The Drupal 7 site for TRL, the UK's Transport Research Laboratory, packaged as RPMs for deployment.",
+    "featured": false,
+    "technologies": [
+      "Drupal 7",
+      "PHP",
+      "RPM"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "jellyfish-uk",
+    "title": "Jellyfish UK",
+    "summary": "Jellyfish's own UK website on Drupal 7, including a patched reCAPTCHA module that every contact form relied on.",
+    "featured": false,
+    "technologies": [
+      "Drupal 7",
+      "PHP",
+      "MySQL"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "channel-5",
+    "title": "Channel 5",
+    "summary": "WordPress for the UK broadcaster Channel 5, maintained from Jellyfish's repository and hosted on AWS.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "AWS",
+      "PHP"
+    ],
+    "links": {
+      "demo": "https://www.channel5.com/"
+    }
+  },
+  {
+    "slug": "kahootz",
+    "title": "Kahootz",
+    "summary": "WordPress for Kahootz, the UK collaboration-software company, hosted on AWS while at Jellyfish.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "AWS",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "avention",
+    "title": "Avention",
+    "summary": "A Jellyfish-built WordPress theme for Avention, the business-data company, hosted on AWS.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "AWS",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "casepoint",
+    "title": "Casepoint",
+    "summary": "Casepoint's WordPress site, maintained for the e-discovery company on AWS while at Jellyfish.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "AWS",
+      "PHP"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "homeprotect",
+    "title": "HomeProtect.co.uk",
+    "summary": "HomeProtect.co.uk, the UK home-insurance site, on Joomla 3.7 with YOOtheme's ZOO product system and a Gulp and Sass theme build.",
+    "featured": false,
+    "technologies": [
+      "Joomla",
+      "YOOtheme ZOO",
+      "Gulp",
+      "Sass",
+      "PHP"
+    ],
+    "links": {
+      "demo": "https://www.homeprotect.co.uk/"
+    }
+  },
+  {
+    "slug": "paul-uk",
+    "title": "PAUL UK",
+    "summary": "PAUL UK's Magento storefront, for the French bakery chain's UK business.",
+    "featured": false,
+    "technologies": [
+      "Magento",
+      "PHP",
+      "MySQL"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "drive-empower",
+    "title": "Drive Empower",
+    "summary": "A custom WordPress theme for Drive Empower, built for the block editor on Bootstrap and Pantheon: designed, written and delivered by me under Nomadic Digital.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Gutenberg",
+      "Bootstrap",
+      "Pantheon"
+    ],
+    "links": {}
+  },
+  {
+    "slug": "jason-perry",
+    "title": "JasonMPerry.com",
+    "summary": "JasonMPerry.com, the 1.0 site Jason Perry used to get his business off the ground: a WordPress build I delivered as a contractor under Nomadic Digital.",
+    "featured": false,
+    "technologies": [
+      "WordPress",
+      "Pantheon",
+      "Block Editor",
+      "@wordpress/scripts",
+      "webpack",
+      "Lando"
+    ],
+    "links": {
+      "demo": "https://jasonmperry.com/"
+    }
+  },
+  {
+    "slug": "lighting-and-supplies",
+    "title": "LightingAndSupplies.com",
+    "summary": "One of Nomadic Digital's first clients, since 2016: troubleshooting the functionality and performance of a lighting and electrical supplier's online catalog and the WordPress applications around it.",
+    "featured": false,
+    "technologies": [
+      "WordPress"
+    ],
+    "links": {
+      "demo": "https://lightingandsupplies.com/"
+    }
+  },
+  {
+    "slug": "northstar",
+    "title": "DRAFT Northstar",
+    "summary": "DRAFT unpublished project. If this sentence is on the public site, the gateway failed.",
+    "featured": false,
+    "visibility": "draft",
+    "technologies": [
+      "Internal"
+    ],
+    "links": {},
+    "internal": {
+      "notes": "INTERNAL draft notes must never leave the gateway."
+    }
+  }
+]

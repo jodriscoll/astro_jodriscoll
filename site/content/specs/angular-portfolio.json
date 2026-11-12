@@ -1,0 +1,66 @@
+{
+  "slug": "angular-portfolio",
+  "org": "nomadic-digital",
+  "kind": "Portfolio",
+  "role": "Design and Engineering",
+  "dek": "The third version of jodriscoll.com: an Angular 13 single-page portfolio with every word of copy in ngx-translate files, an Angular service worker for offline loads, SCSS, Animate on Scroll motion and Karma unit tests, deployed on Cloudflare Pages.",
+  "short": "The third version of my portfolio: jodriscoll.com as an Angular 13 single-page app, with every word of copy in ngx-translate files, a service worker, Animate on Scroll motion and Karma tests, deployed on Cloudflare Pages.",
+  "facts": [
+    {
+      "label": "Framework",
+      "value": "Angular 13"
+    },
+    {
+      "label": "Host",
+      "value": "Cloudflare Pages"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Angular",
+          "version": "13"
+        },
+        {
+          "name": "TypeScript"
+        },
+        {
+          "name": "ngx-translate",
+          "note": "all copy in en.json"
+        },
+        {
+          "name": "Angular service worker"
+        },
+        {
+          "name": "SCSS"
+        },
+        {
+          "name": "Animate on Scroll"
+        }
+      ]
+    },
+    {
+      "group": "Quality",
+      "items": [
+        {
+          "name": "Karma"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Cloudflare Pages"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/angular-portfolio/home.webp",
+      "alt": "jodriscoll.com version 3: the Angular portfolio home page, introducing Joseph O'Driscoll over a soft portrait"
+    }
+  ]
+}

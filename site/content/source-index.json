@@ -1,0 +1,3782 @@
+{
+  "scanned": "2026-10-16",
+  "method": "Project roots walked for manifests and distinctive filenames. Nested node_modules, dist, vendor, plugins, and build output were skipped. Compass config.rb and Capistrano-only Gemfiles were not counted as Ruby products. Python under cdk/ or scripts/ was not counted as a product stack. Archives under Engineering/Clients were listed, not extracted. Other zips inside already indexed trees (uploads, plugin bundles, database dumps) were not treated as separate projects.",
+  "projects": [
+    {
+      "name": "Retro Fisher",
+      "path": "Web/Gaming/Retro Fisher",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "election-line.lndo.site",
+      "path": "Web/Browser Overrides/election-line.lndo.site",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "perrylabs",
+      "path": "Web/JPerry/perrylabs",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "biobuzz",
+      "path": "Web/JPerry/biobuzz",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "shopify-icod",
+      "path": "Web/PDA.nyc/shopify/shopify-icod",
+      "platforms": [
+        "CSS",
+        "Shopify"
+      ],
+      "supports": "zugu",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "shopify"
+      ]
+    },
+    {
+      "name": "html",
+      "path": "Web/PDA.nyc/html",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "pda",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "zugu-icod",
+      "path": "Web/PDA.nyc/zugu-icod",
+      "platforms": [
+        "CSS",
+        "Shopify"
+      ],
+      "supports": "zugu",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "shopify"
+      ]
+    },
+    {
+      "name": "taoti-dev-obsidian",
+      "path": "Web/Taoti/docs/taoti-dev-obsidian",
+      "platforms": [],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "cvpath-wp",
+      "path": "Web/Taoti/wp/cvpath-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "apta-wp",
+      "path": "Web/Taoti/wp/apta-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "phillips-and-cohen-wp",
+      "path": "Web/Taoti/wp/phillips-and-cohen-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "ncoda-wp",
+      "path": "Web/Taoti/wp/ncoda-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rare-wp",
+      "path": "Web/Taoti/wp/rare-wp",
+      "platforms": [],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "rtca-20-wp",
+      "path": "Web/Taoti/wp/rtca-20-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "taoti-creative-wp",
+      "path": "Web/Taoti/wp/taoti-creative-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wordpress-ci-repeat",
+      "path": "Web/Taoti/wp/wordpress-ci-repeat",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "iwf-wp",
+      "path": "Web/Taoti/wp/iwf-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "perkins-eastman-wp",
+      "path": "Web/Taoti/wp/perkins-eastman-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "elder-research-wp",
+      "path": "Web/Taoti/wp/elder-research-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rare-wp-pantheon",
+      "path": "Web/Taoti/wp/rare-wp-pantheon",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "nationals-philanthropies-wp",
+      "path": "Web/Taoti/wp/nationals-philanthropies-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "phrma-wp",
+      "path": "Web/Taoti/wp/phrma-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "mimic-wp",
+      "path": "Web/Taoti/wp/mimic-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "React",
+        "TypeScript",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:react",
+        "dep:typescript",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "electionline-wp",
+      "path": "Web/Taoti/wp/electionline-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "lipa-wp",
+      "path": "Web/Taoti/wp/lipa-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "ssplive",
+      "path": "Web/Taoti/wp/ssplive",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "aaas-doser",
+      "path": "Web/Taoti/wp/aaas-doser",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "nyam-wp",
+      "path": "Web/Taoti/wp/nyam-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "pluribus-wp",
+      "path": "Web/Taoti/wp/pluribus-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "taoti-security-scanner-wp",
+      "path": "Web/Taoti/wp/taoti-security-scanner-wp",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "tests"
+      ]
+    },
+    {
+      "name": "aami-wp",
+      "path": "Web/Taoti/wp/aami-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "jsi-wp",
+      "path": "Web/Taoti/wp/jsi-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "Svelte",
+        "TypeScript",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:svelte",
+        "dep:typescript",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "behavior-rare-org",
+      "path": "Web/Taoti/wp/behavior-rare-org",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "aic-investcouncil-wp",
+      "path": "Web/Taoti/wp/aic-investcouncil-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "election-center-wp",
+      "path": "Web/Taoti/wp/election-center-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "____electionline-wp",
+      "path": "Web/Taoti/wp/____electionline-wp",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "ocad-dpl",
+      "path": "Web/Taoti/dp/ocad-dpl",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal"
+      ]
+    },
+    {
+      "name": "CSIS",
+      "path": "Web/Taoti/email/CSIS",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "taoti",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "thepulsegovcon",
+      "path": "Web/MillerMedia7/thepulsegovcon",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "sundaleapts",
+      "path": "Web/MillerMedia7/sundaleapts",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "trubridge-wpe",
+      "path": "Web/MillerMedia7/trubridge-wpe",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "oakport",
+      "path": "Web/MillerMedia7/oakport",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "zefr",
+      "path": "Web/MillerMedia7/zefr",
+      "platforms": [
+        "CSS",
+        "Craft",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "craft",
+        "dep:craft",
+        "python-scripts-only"
+      ]
+    },
+    {
+      "name": "pulsegovcon",
+      "path": "Web/MillerMedia7/pulsegovcon",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "zefr-ms",
+      "path": "Web/MillerMedia7/zefr-ms",
+      "platforms": [
+        "CSS",
+        "Craft",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "craft",
+        "dep:craft"
+      ]
+    },
+    {
+      "name": "countrybrookcondos",
+      "path": "Web/MillerMedia7/countrybrookcondos",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "zefr-goodwork",
+      "path": "Web/MillerMedia7/zefr-goodwork",
+      "platforms": [
+        "CSS",
+        "Craft",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "craft",
+        "dep:craft",
+        "python-scripts-only"
+      ]
+    },
+    {
+      "name": "ardenwoodforest",
+      "path": "Web/MillerMedia7/ardenwoodforest",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "alz-org",
+      "path": "Web/MillerMedia7/alz-org",
+      "platforms": [],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "trubridge",
+      "path": "Web/MillerMedia7/trubridge",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "markhopkinsapts",
+      "path": "Web/MillerMedia7/markhopkinsapts",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "trubridge-src",
+      "path": "Web/MillerMedia7/trubridge-src",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "ardenbrook",
+      "path": "Web/MillerMedia7/ardenbrook",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "zefr-com",
+      "path": "Web/MillerMedia7/zefr-com",
+      "platforms": [
+        "CSS",
+        "Craft",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "craft",
+        "dep:craft"
+      ]
+    },
+    {
+      "name": "wp_everpass",
+      "path": "Web/Sageworx/wp_everpass",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "sageworx",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp-everpass",
+      "path": "Web/Sageworx/wp-everpass",
+      "platforms": [],
+      "supports": "sageworx",
+      "kind": "client",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "Backups",
+      "path": "Web/Sageworx/Backups",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "sageworx",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "american-investment-council",
+      "path": "Web/LocalWP/american-investment-council",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "Vue",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:vue",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "electionline",
+      "path": "Web/LocalWP/electionline",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "runningoak1",
+      "path": "Web/LocalWP/runningoak1",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "trubridge",
+      "path": "Web/LocalWP/trubridge",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "aic-pension-performance-microsite",
+      "path": "Web/LocalWP/aic-pension-performance-microsite",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "Vue",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:vue",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "PEPVIZ",
+      "path": "Web/Ancient/PEPVIZ",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "ancient",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "cascade-space-client",
+      "path": "Web/Consulting/Archived/cascade-space-client",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Next.js",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:next",
+        "dep:react",
+        "dep:typescript",
+        "next.config.js"
+      ]
+    },
+    {
+      "name": "cascade-space-old",
+      "path": "Web/Consulting/Archived/cascade-space-old",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Next.js",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:next",
+        "dep:react",
+        "dep:typescript",
+        "next.config.mjs"
+      ]
+    },
+    {
+      "name": "cascade-space",
+      "path": "Web/Consulting/cascade-space",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Next.js",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:next",
+        "dep:react",
+        "dep:typescript",
+        "next.config.js"
+      ]
+    },
+    {
+      "name": "echoes-of-history",
+      "path": "Web/Consulting/echoes-of-history",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "deevicee",
+      "path": "Web/Concepts/deevicee",
+      "platforms": [
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "gamekal",
+      "path": "Web/Concepts/gamekal",
+      "platforms": [
+        "HTML",
+        "JavaScript",
+        "React",
+        "TypeScript"
+      ],
+      "supports": "gamekal",
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "pawdings",
+      "path": "Web/Concepts/pawdings",
+      "platforms": [
+        "HTML",
+        "JavaScript",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "combioh",
+      "path": "Web/Concepts/combioh",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Next.js",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:next",
+        "dep:react",
+        "dep:typescript",
+        "next.config.ts",
+        "python-scripts-only"
+      ]
+    },
+    {
+      "name": "apppass-rm-plugin",
+      "path": "Web/Concepts/apppass-rm-plugin",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "smithing-texts",
+      "path": "Web/Concepts/smithing-texts",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "python-scripts-only"
+      ]
+    },
+    {
+      "name": "jodriscoll",
+      "path": "Web/jodriscoll/jodriscoll",
+      "platforms": [],
+      "supports": "nomadic-digital",
+      "kind": "personal",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "theodorable.me",
+      "path": "Engineering/Projects/Personal/theodorable.me",
+      "platforms": [
+        "Angular",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "angular.json",
+        "dep:angular",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "jodriscoll.com",
+      "path": "Engineering/Projects/Personal/jodriscoll.com",
+      "platforms": [
+        "Angular",
+        "Astro",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "supports": "nomadic-digital",
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "angular.json",
+        "astro.config.mjs",
+        "dep:angular",
+        "dep:astro",
+        "dep:typescript",
+        "tests"
+      ]
+    },
+    {
+      "name": "nomadic-digital",
+      "path": "Engineering/Projects/Personal/vue_locomotive/nomadic-digital",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Vue"
+      ],
+      "supports": "nomadic-digital",
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "dep:vue",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "_Misc",
+      "path": "Engineering/Projects/Personal/_Misc",
+      "platforms": [
+        "Angular",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "angular.json",
+        "dep:angular",
+        "dep:typescript",
+        "tests"
+      ]
+    },
+    {
+      "name": "jasonmperry.com",
+      "path": "Engineering/Projects/Personal/jasonmperry.com",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "personal",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "magento_paul",
+      "path": "Engineering/Projects/Magento/magento_paul",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "tests"
+      ]
+    },
+    {
+      "name": "drupal8_namw",
+      "path": "Engineering/Projects/Drupal/drupal8_namw",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal",
+        "drupal-core",
+        "tests"
+      ]
+    },
+    {
+      "name": "drupal7_samsung_pid",
+      "path": "Engineering/Projects/Drupal/drupal7_samsung_pid",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "folder-name"
+      ],
+      "note": "Drupal from the project folder name. Manifest scan did not see a root Drupal package."
+    },
+    {
+      "name": "drupal8_ncit",
+      "path": "Engineering/Projects/Drupal/drupal8_ncit",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal",
+        "drupal-core",
+        "tests"
+      ]
+    },
+    {
+      "name": "drupal7_jellyfish",
+      "path": "Engineering/Projects/Drupal/drupal7_jellyfish",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "jellyfish",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "folder-name"
+      ],
+      "note": "Drupal from the project folder name. Manifest scan did not see a root Drupal package."
+    },
+    {
+      "name": "drupal8_relief_wizard",
+      "path": "Engineering/Projects/Drupal/drupal8_relief_wizard",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal",
+        "drupal-core",
+        "theme-tooling-rb"
+      ]
+    },
+    {
+      "name": "drupal7_trl",
+      "path": "Engineering/Projects/Drupal/drupal7_trl",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "folder-name"
+      ],
+      "note": "Drupal from the project folder name. Manifest scan did not see a root Drupal package."
+    },
+    {
+      "name": "drupal8_unisys",
+      "path": "Engineering/Projects/Drupal/drupal8_unisys",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal",
+        "drupal-core",
+        "tests"
+      ]
+    },
+    {
+      "name": "drupal8_umbc_miechv",
+      "path": "Engineering/Projects/Drupal/drupal8_umbc_miechv",
+      "platforms": [
+        "CSS",
+        "Drupal",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:drupal",
+        "drupal-core",
+        "tests",
+        "python-library-script"
+      ]
+    },
+    {
+      "name": "wp_millermedia7",
+      "path": "Engineering/Projects/WordPress/WPMU/wp_millermedia7",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "millermedia7",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "jobs-sync",
+      "path": "Engineering/Projects/WordPress/Plugins/jobs-sync",
+      "platforms": [
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json"
+      ]
+    },
+    {
+      "name": "wp_aarp_pharmacy",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_aarp_pharmacy",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_gilchrist",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_gilchrist",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_cloudtamer",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_cloudtamer",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "entergy-shore-power",
+      "path": "Engineering/Projects/WordPress/Pantheon/entergy-shore-power",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_childrens_inn",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_childrens_inn",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_viaplace",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_viaplace",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_nbu",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_nbu",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_eqrx",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_eqrx",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wpmulti_sagelife",
+      "path": "Engineering/Projects/WordPress/Pantheon/wpmulti_sagelife",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "sagelife",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_bge_comed",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bge_comed",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_insource_solutions",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_insource_solutions",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_bge_now",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bge_now",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_ndpi",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_ndpi",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_jasonmperry",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_jasonmperry",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wpmulti_asap",
+      "path": "Engineering/Projects/WordPress/Pantheon/wpmulti_asap",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_venture_trailers",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_venture_trailers",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_iamcatholic",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_iamcatholic",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_nbu_rate_calculator",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_nbu_rate_calculator",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "wp_cis",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_cis",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_bgl",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bgl",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_driveempower",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_driveempower",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "entergy-tlg",
+      "path": "Engineering/Projects/WordPress/Pantheon/entergy-tlg",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_vyleesi",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_vyleesi",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_volexity",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_volexity",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_think_babies",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_think_babies",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_youcanwa",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_youcanwa",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_check_to_protect",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_check_to_protect",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_mindbuzz",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_mindbuzz",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_dragos",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_dragos",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_alive_and_thrive",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_alive_and_thrive",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_chemonics",
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_chemonics",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_ptcbio",
+      "path": "Engineering/Projects/WordPress/WP Headless/wp_ptcbio",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wpe_gmmb",
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_gmmb",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wpe_focuson",
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_focuson",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wpe_buildinit",
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_buildinit",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_sequoia-capital",
+      "path": "Engineering/Projects/WordPress/WP VIP/wp_sequoia-capital",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "sequoia-capital",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:wordpress",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_channel5",
+      "path": "Engineering/Projects/WordPress/AWS/wp_channel5",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_avention",
+      "path": "Engineering/Projects/WordPress/AWS/wp_avention",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_kahootz",
+      "path": "Engineering/Projects/WordPress/AWS/wp_kahootz",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-content"
+      ]
+    },
+    {
+      "name": "wp_casepoint",
+      "path": "Engineering/Projects/WordPress/AWS/wp_casepoint",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "py_slack_cleaner",
+      "path": "Engineering/Projects/Python/py_slack_cleaner",
+      "platforms": [
+        "Python"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "python"
+      ],
+      "note": "Utility script. Not a client product."
+    },
+    {
+      "name": "tut_password_validator",
+      "path": "Engineering/Projects/Training/tut_password_validator",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "tut_image_editor",
+      "path": "Engineering/Projects/Training/tut_image_editor",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "fem_angular13_fundamentals",
+      "path": "Engineering/Projects/Training/fem_angular13_fundamentals",
+      "platforms": [
+        "Angular",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": [
+        "angular.json",
+        "dep:angular",
+        "dep:typescript",
+        "tests"
+      ]
+    },
+    {
+      "name": "tut_coming_soon",
+      "path": "Engineering/Projects/Training/tut_coming_soon",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "tut_color_mode_toggler",
+      "path": "Engineering/Projects/Training/tut_color_mode_toggler",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "tut_masonry_image_grid",
+      "path": "Engineering/Projects/Training/tut_masonry_image_grid",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "tut_vanilla_pagination",
+      "path": "Engineering/Projects/Training/tut_vanilla_pagination",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "training",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "vue_patient_portal",
+      "path": "Engineering/Projects/Vue/vue_patient_portal",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "React",
+        "Vue"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:vue",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "angular_fsx",
+      "path": "Engineering/Projects/Angular/angular_fsx",
+      "platforms": [
+        "Angular",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "angular.json",
+        "dep:angular",
+        "dep:typescript",
+        "tests"
+      ]
+    },
+    {
+      "name": "html_avery_point",
+      "path": "Engineering/Projects/HTML/html_avery_point",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "shadow",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "html_mindgov",
+      "path": "Engineering/Projects/HTML/html_mindgov",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "mindgrub",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "html_takgov",
+      "path": "Engineering/Projects/HTML/html_takgov",
+      "platforms": [
+        "AWS",
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "mindgrub",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "aws",
+        "python-scripts-only",
+        "tests"
+      ]
+    },
+    {
+      "name": "html_happy_holidays",
+      "path": "Engineering/Projects/HTML/html_happy_holidays",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": "shadow",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "ptcbio",
+      "path": "Engineering/Projects/React/ptcbio",
+      "platforms": [
+        "AWS",
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "aws",
+        "dep:react",
+        "python-scripts-only"
+      ]
+    },
+    {
+      "name": "tc_api_doc",
+      "path": "Engineering/Projects/React/tc_api_doc",
+      "platforms": [],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [],
+      "note": "stack not detected"
+    },
+    {
+      "name": "rf_rewards_portal",
+      "path": "Engineering/Projects/React/rf_rewards_portal",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "React"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react"
+      ]
+    },
+    {
+      "name": "project-health-dashboard",
+      "path": "Engineering/Projects/React/project-health-dashboard",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react"
+      ]
+    },
+    {
+      "name": "tc_dashboard",
+      "path": "Engineering/Projects/React/tc_dashboard",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react"
+      ]
+    },
+    {
+      "name": "black_and_decker",
+      "path": "Engineering/Projects/React/black_and_decker",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react"
+      ]
+    },
+    {
+      "name": "rf_web_services",
+      "path": "Engineering/Projects/React/rf_web_services",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React",
+        "TypeScript"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react",
+        "dep:typescript"
+      ]
+    },
+    {
+      "name": "tc_apib",
+      "path": "Engineering/Projects/React/tc_apib",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "i6tix",
+      "path": "Engineering/Projects/React/i6tix",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": "i6tix",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:react"
+      ]
+    },
+    {
+      "name": "joomla3.7_homeprotect",
+      "path": "Engineering/Projects/Joomla/joomla3.7_homeprotect",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "resp-600-cais_evite",
+      "path": "Engineering/Projects/Email/resp-600-cais_evite",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "resp-560-degree_hunting",
+      "path": "Engineering/Projects/Email/resp-560-degree_hunting",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-450-squeebles",
+      "path": "Engineering/Projects/Email/stnd-450-squeebles",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-450-joomla_real_estate",
+      "path": "Engineering/Projects/Email/stnd-450-joomla_real_estate",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-450-astro_pulse",
+      "path": "Engineering/Projects/Email/stnd-450-astro_pulse",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-560-the_tizzy",
+      "path": "Engineering/Projects/Email/stnd-560-the_tizzy",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-470-app_orchard",
+      "path": "Engineering/Projects/Email/stnd-470-app_orchard",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "resp-600-retail_newsletter",
+      "path": "Engineering/Projects/Email/resp-600-retail_newsletter",
+      "platforms": [
+        "CSS",
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-600-affordable_auto_plans",
+      "path": "Engineering/Projects/Email/stnd-600-affordable_auto_plans",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-600-gizmoe",
+      "path": "Engineering/Projects/Email/stnd-600-gizmoe",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-620-seat_snap",
+      "path": "Engineering/Projects/Email/stnd-620-seat_snap",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-500-click2call",
+      "path": "Engineering/Projects/Email/stnd-500-click2call",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "stnd-620-purchase_health_plans",
+      "path": "Engineering/Projects/Email/stnd-620-purchase_health_plans",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "resp-600-shore_country_day",
+      "path": "Engineering/Projects/Email/resp-600-shore_country_day",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": "cogolabs",
+      "kind": "client",
+      "via": "tree",
+      "signals": []
+    },
+    {
+      "name": "gateshosting-pvalcomm",
+      "path": "Engineering/Projects/Ruby/gateshosting-pvalcomm",
+      "platforms": [
+        "PHP",
+        "WordPress"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "capistrano",
+        "composer.json",
+        "dep:wordpress",
+        "ruby-deploy-only",
+        "wp-config.php"
+      ]
+    },
+    {
+      "name": "takgov-core",
+      "path": "Engineering/Projects/Ruby/takgov-core",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Rails",
+        "Ruby"
+      ],
+      "supports": "mindgrub",
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "dep:rails"
+      ]
+    },
+    {
+      "name": "laravel_ua-next-usa",
+      "path": "Engineering/Projects/Laravel/laravel_ua-next-usa",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Laravel",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:laravel",
+        "tests"
+      ]
+    },
+    {
+      "name": "laravel_ua-next-canada",
+      "path": "Engineering/Projects/Laravel/laravel_ua-next-canada",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Laravel",
+        "PHP"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:laravel",
+        "tests"
+      ]
+    },
+    {
+      "name": "laravel_cvs_ssiccca",
+      "path": "Engineering/Projects/Laravel/laravel_cvs_ssiccca",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Laravel",
+        "PHP",
+        "Vue"
+      ],
+      "supports": null,
+      "kind": "client",
+      "via": "tree",
+      "signals": [
+        "composer.json",
+        "dep:laravel",
+        "dep:vue",
+        "tests",
+        "vue-file"
+      ]
+    }
+  ],
+  "archives": [
+    {
+      "name": "ContactQualifier.zip",
+      "path": "Engineering/Clients/CicadaCapital/ContactQualifier.zip",
+      "platforms": [
+        "AWS",
+        "Python"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "aws",
+        "python-file",
+        "requirements.txt"
+      ]
+    },
+    {
+      "name": "HubspotServiceLamda.zip",
+      "path": "Engineering/Clients/CicadaCapital/HubspotServiceLamda.zip",
+      "platforms": [
+        "Python"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "python-file",
+        "requirements.txt"
+      ]
+    },
+    {
+      "name": "admin.interventions.com.zip",
+      "path": "Engineering/Clients/CicadaCapital/admin.interventions.com.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "React",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "dep:react",
+        "dep:symfony",
+        "html",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "admin.interventionscom_dbbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/admin.interventionscom_dbbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "admin.interventionscom_kernelbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/admin.interventionscom_kernelbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "admin.rehab.com.zip",
+      "path": "Engineering/Clients/CicadaCapital/admin.rehab.com.zip",
+      "platforms": [
+        "HTML",
+        "JavaScript",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:vue",
+        "html",
+        "package.json",
+        "script",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "connect-data-transfer.zip",
+      "path": "Engineering/Clients/CicadaCapital/connect-data-transfer.zip",
+      "platforms": [
+        "JavaScript"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "package.json",
+        "script"
+      ]
+    },
+    {
+      "name": "connect.rehab.com.zip",
+      "path": "Engineering/Clients/CicadaCapital/connect.rehab.com.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:vue",
+        "html",
+        "package.json",
+        "script",
+        "styles",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "coronavirusco.zip",
+      "path": "Engineering/Clients/CicadaCapital/coronavirusco.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Laravel",
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "artisan",
+        "composer.json",
+        "dep:laravel",
+        "dep:php",
+        "dep:symfony",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "current_production.zip",
+      "path": "Engineering/Clients/CicadaCapital/current_production.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "dep:symfony",
+        "html",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "dbbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/dbbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "interventions.com.zip",
+      "path": "Engineering/Clients/CicadaCapital/interventions.com.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "interventionscom_dbbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/interventionscom_dbbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "interventionscom_kernelbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/interventionscom_kernelbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "kernelbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/kernelbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "linode_rehabcom_app.zip",
+      "path": "Engineering/Clients/CicadaCapital/linode_rehabcom_app.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "React",
+        "Symfony"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "dep:react",
+        "dep:symfony",
+        "html",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "linode_rehabcom_dbbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/linode_rehabcom_dbbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "linode_rehabcom_kernelbundle.zip",
+      "path": "Engineering/Clients/CicadaCapital/linode_rehabcom_kernelbundle.zip",
+      "platforms": [
+        "PHP",
+        "Symfony"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "php-file",
+        "tests"
+      ]
+    },
+    {
+      "name": "ratingsengine.zip",
+      "path": "Engineering/Clients/CicadaCapital/ratingsengine.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "Laravel",
+        "PHP",
+        "Vue"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "artisan",
+        "composer.json",
+        "dep:jquery",
+        "dep:laravel",
+        "dep:php",
+        "dep:vue",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "rehab.ca.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab.ca.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "Symfony"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:symfony",
+        "html",
+        "listing-capped",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "rehab_admin.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_admin.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "React",
+        "Symfony",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:react",
+        "dep:symfony",
+        "dep:vue",
+        "html",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "rehab_api.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_api.zip",
+      "platforms": [
+        "JavaScript"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "package.json",
+        "script"
+      ]
+    },
+    {
+      "name": "rehab_backend.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_backend.zip",
+      "platforms": [
+        "Python"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "pyproject.toml",
+        "python-file"
+      ]
+    },
+    {
+      "name": "rehab_cms.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_cms.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "React"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:react",
+        "package.json",
+        "script",
+        "styles"
+      ]
+    },
+    {
+      "name": "rehab_india.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_india.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "html",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rehab_infrastructure.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_infrastructure.zip",
+      "platforms": [],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "unseen",
+      "signals": [],
+      "note": "stack not evident from filenames or manifests"
+    },
+    {
+      "name": "rehab_js.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_js.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "React",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:react",
+        "package.json",
+        "script",
+        "styles",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "rehab_react.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehab_react.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "React"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:react",
+        "html",
+        "package.json",
+        "script",
+        "styles"
+      ]
+    },
+    {
+      "name": "rehabcom_database.zip",
+      "path": "Engineering/Clients/CicadaCapital/rehabcom_database.zip",
+      "platforms": [
+        "JavaScript"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "package.json",
+        "script"
+      ]
+    },
+    {
+      "name": "sobriety.com.zip",
+      "path": "Engineering/Clients/CicadaCapital/sobriety.com.zip",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "html"
+      ]
+    },
+    {
+      "name": "stigma.org.zip",
+      "path": "Engineering/Clients/CicadaCapital/stigma.org.zip",
+      "platforms": [
+        "HTML"
+      ],
+      "supports": null,
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "html"
+      ]
+    },
+    {
+      "name": "connect-admin-amplify.zip",
+      "path": "Engineering/Clients/Rehab/connect-admin-amplify.zip",
+      "platforms": [
+        "AWS",
+        "HTML",
+        "JavaScript",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "aws",
+        "dep:vue",
+        "html",
+        "package.json",
+        "script",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "pantheon_india.zip",
+      "path": "Engineering/Clients/Rehab/pantheon_india.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "html",
+        "listing-capped",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rehab_admin.zip",
+      "path": "Engineering/Clients/Rehab/rehab_admin.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "React",
+        "Symfony",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:php",
+        "dep:react",
+        "dep:symfony",
+        "dep:vue",
+        "html",
+        "listing-capped",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "tests"
+      ]
+    },
+    {
+      "name": "rehab_api.zip",
+      "path": "Engineering/Clients/Rehab/rehab_api.zip",
+      "platforms": [
+        "JavaScript"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "listing-capped",
+        "package.json",
+        "script"
+      ]
+    },
+    {
+      "name": "rehab_bootstrap.zip",
+      "path": "Engineering/Clients/Rehab/rehab_bootstrap.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "script",
+        "styles"
+      ]
+    },
+    {
+      "name": "rehab_cms.zip",
+      "path": "Engineering/Clients/Rehab/rehab_cms.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "React"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:react",
+        "package.json",
+        "script",
+        "styles"
+      ]
+    },
+    {
+      "name": "rehab_connect_console.zip",
+      "path": "Engineering/Clients/Rehab/rehab_connect_console.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "Vue"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "dep:vue",
+        "html",
+        "listing-capped",
+        "package.json",
+        "script",
+        "styles",
+        "vue-file"
+      ]
+    },
+    {
+      "name": "rehab_india.zip",
+      "path": "Engineering/Clients/Rehab/rehab_india.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "composer.json",
+        "dep:jquery",
+        "dep:php",
+        "html",
+        "listing-capped",
+        "package.json",
+        "php-file",
+        "script",
+        "styles",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rehab_lamda.zip",
+      "path": "Engineering/Clients/Rehab/rehab_lamda.zip",
+      "platforms": [
+        "Python"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "python-file",
+        "requirements.txt"
+      ]
+    },
+    {
+      "name": "rehab_pantheon.zip",
+      "path": "Engineering/Clients/Rehab/rehab_pantheon.zip",
+      "platforms": [
+        "CSS",
+        "HTML",
+        "JavaScript",
+        "PHP",
+        "WordPress"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "html",
+        "php-file",
+        "script",
+        "styles",
+        "wp-config.php",
+        "wp-content"
+      ]
+    },
+    {
+      "name": "rehab_wordpress.zip",
+      "path": "Engineering/Clients/Rehab/rehab_wordpress.zip",
+      "platforms": [
+        "CSS",
+        "JavaScript",
+        "PHP"
+      ],
+      "supports": "rehab",
+      "kind": "archive",
+      "via": "archive-listing",
+      "signals": [
+        "php-file",
+        "script",
+        "styles"
+      ],
+      "note": "Listing showed PHP, CSS, and JavaScript, not wp-content. WordPress is only in the archive name, so it is not counted as WordPress."
+    }
+  ],
+  "unseen": [
+    {
+      "name": "ssplive_39180177_2025-11-03T14-32-31_UTC_files.tar.gz",
+      "path": "Web/Taoti/wp/ssplive/ssplive_39180177_2025-11-03T14-32-31_UTC_files.tar.gz",
+      "via": "unseen",
+      "supports": "taoti",
+      "note": "About 11GB. Filename sample was not completed. The ssplive tree beside it is WordPress."
+    }
+  ]
+}

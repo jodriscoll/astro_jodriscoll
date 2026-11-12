@@ -1,0 +1,30 @@
+---
+import type { Accent } from '../lib/practice';
+
+interface Item {
+  id: string;
+  label: string;
+  accent: Accent;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <div class="facetbar">
+      <ul class="facetbar__track">
+        {items.map((item) => (
+          <li class="facetbar__seg" data-accent={item.accent} tabIndex={0}>
+            <span class="sr-only">{item.label}</span>
+            <span class="facetbar__tip" aria-hidden="true">{item.label}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

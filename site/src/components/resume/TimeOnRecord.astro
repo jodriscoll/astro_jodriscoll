@@ -1,0 +1,45 @@
+---
+/**
+ * Time on record: the kind-of-role split bar over every dated role on one
+ * calendar axis. Hovering or focusing a kind in the bar dims the rows that
+ * are not of that kind (pure CSS, :has()). Used on /resume and /things-built.
+ */
+import SplitBar from '../ui/SplitBar.astro';
+import Timeline from './Timeline.astro';
+import type { TimelineRow } from '../../lib/resume';
+import '../../design/tokens.css';
+
+interface Props {
+  rows: TimelineRow[];
+  start: string;
+  end: string;
+  mix: { id: string; label: string; value: number }[];
+}
+
+const { rows, start, end, mix } = Astro.props;
+---
+
+<div class="mixwrap">
+  <div class="mixwrap__key">
+    <SplitBar segments={mix} label="Months on record by kind of role" keyed />
+  </div>
+  <Timeline rows={rows} start={start} end={end} />
+</div>
+
+<style>
+  .mixwrap__key {
+    max-width: 720px;
+    margin-bottom: var(--ds-space-8);
+  }
+
+  .mixwrap :global(.tl__row) {
+    transition: opacity var(--ds-dur) var(--ds-ease);
+  }
+
+  .mixwrap:has(:global([data-mix-key='Full-Time']:is(:hover, :focus-visible))) :global(.tl__row:not([data-mix~='Full-Time'])),
+  .mixwrap:has(:global([data-mix-key='Contractor']:is(:hover, :focus-visible))) :global(.tl__row:not([data-mix~='Contractor'])),
+  .mixwrap:has(:global([data-mix-key='Internship']:is(:hover, :focus-visible))) :global(.tl__row:not([data-mix~='Internship'])),
+  .mixwrap:has(:global([data-mix-key='Leader']:is(:hover, :focus-visible))) :global(.tl__row:not([data-mix~='Leader'])) {
+    opacity: 0.15;
+  }
+</style>

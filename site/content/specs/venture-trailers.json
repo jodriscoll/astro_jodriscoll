@@ -1,0 +1,37 @@
+{
+  "slug": "venture-trailers",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom 2019 WordPress theme for the trailer manufacturer.",
+  "short": "A custom 2019 WordPress theme for Venture Trailers, the trailer manufacturer, built on Bootstrap 4 for Pantheon.",
+  "facts": [
+    {
+      "label": "Year",
+      "value": "2019"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

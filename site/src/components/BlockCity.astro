@@ -1,0 +1,36 @@
+---
+/**
+ * The isometric block drawing: a lattice floor and towers of different heights,
+ * drawn in line by line, one lit in the accent. Same seed, same drawing.
+ * Uses the original .iso styles in shell.css, so it renders exactly as the
+ * home page drawing used to. Decorative; hidden from assistive tech and print.
+ */
+import { scene } from '../lib/isometric';
+
+interface Props {
+  seed: string;
+  size?: number;
+  count?: number;
+  tall?: number;
+  class?: string;
+}
+
+const { seed, size = 10, count = 8, tall = 6, class: className } = Astro.props;
+const drawing = scene(seed, { size, count, tall });
+---
+
+<figure class:list={['iso', className]} aria-hidden="true" data-print="hide">
+  <svg viewBox={drawing.viewBox} preserveAspectRatio="xMidYMid meet">
+    <g class="iso__grid">
+      {drawing.grid.map((d) => <path d={d} pathLength="1" />)}
+    </g>
+    {
+      drawing.boxes.map((box) => (
+        <g class:list={['iso__box', box.lit && 'is-lit']} style={`--d: ${300 + box.delay}ms`}>
+          {box.faces.map((d) => <path class="iso__face" d={d} pathLength="1" />)}
+          {box.windows.map((d) => <path class="iso__win" d={d} pathLength="1" />)}
+        </g>
+      ))
+    }
+  </svg>
+</figure>

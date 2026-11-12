@@ -1,0 +1,233 @@
+/* Blog post on phones and tablets (≤1080px).
+   The article comes first. The "In this post" contents become a pinned bar
+   (it uses the same 56px fixed-bar tokens as the other header bars, and
+   leaves room on the right for the menu button). The bar shows the section
+   being read, its count, and reading progress, and it opens into the full
+   list. Author, date and tags follow the article as an "about this post"
+   block. */
+
+.toc__bar,
+.toc-scrim { display: none; }
+
+/* The pager sits outside the article (so on phones the about block can come
+   between them); on desktop it stays in the article column under the post. */
+.post { row-gap: 0; }
+.post > .rail { grid-column: 2; grid-row: 1 / span 2; }
+.post > .post__pager { grid-column: 1; grid-row: 2; }
+
+@media (max-width: 1080px) {
+  .post > .rail,
+  .post > .post__pager { grid-column: 1; grid-row: auto; }
+
+  .post > .rail {
+    order: 1;
+    margin-top: 32px;
+  }
+
+  .post > .post__pager { order: 2; margin-top: 32px; }
+
+  /* "About this post": one sharp panel. The date, then the tags. */
+  .post > .rail .rail__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+  }
+
+  .post > .rail .rail__inner > div { padding: 18px 20px; }
+
+  .post > .rail .rail__inner > div:has(.rail__tags) {
+    grid-column: 1 / -1;
+    padding-bottom: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  .post > .rail .rail__label {
+    margin-bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .post > .rail .rail__inner time { font-size: 14px; line-height: 1.4; }
+  .post > .rail .rail__reading { margin-top: 6px; }
+
+  /* tag rows run flush inside the panel */
+  .post > .rail .rail__tags { border-top: 0; }
+  .post > .rail .rail__tags li:last-child { border-bottom: 0; }
+
+  /* headings land below the pinned bar, not under it */
+  .post__body :is(h2, h3, h4)[id] { scroll-margin-top: calc(var(--fixedbar-h, 56px) + 20px); }
+
+  .post .toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    flex-basis: auto;
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0s linear 0.25s;
+  }
+
+  .post .toc.is-pinned {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  /* reading progress along the bar's bottom edge */
+  .post .toc::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: var(--accent-red, #e5484d);
+    transform: scaleX(var(--read, 0));
+    transform-origin: left;
+  }
+
+  /* open: the page behind dims and blurs, the same scrim as the Work filter
+     sheet (its element is added by the page script, outside the bar, because
+     the bar's backdrop-filter would trap a fixed child) */
+  .toc-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 19;
+    background: color-mix(in srgb, #000 45%, transparent);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+  }
+
+  .toc-scrim.is-on {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.28s ease;
+  }
+
+  .post .toc .toc__label { display: none; }
+
+  .toc__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) 12px;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: var(--fixedbar-h, 56px);
+    margin: 0;
+    padding: 0 var(--fixedbar-clear, 64px) 0 20px;
+    border: 0;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .toc__bar:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
+
+  .toc__barcount {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent-red, #e5484d);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .toc__bartitle {
+    overflow: hidden;
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* plus that turns to a minus, like the accordions */
+  .toc__chev { position: relative; width: 12px; height: 12px; }
+  .toc__chev::before,
+  .toc__chev::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 0.75px);
+    left: 0;
+    width: 12px;
+    height: 1.5px;
+    background: var(--muted);
+    transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+  .toc__chev::after { transform: rotate(90deg); }
+  .toc.is-open .toc__chev::after { transform: rotate(0deg); }
+
+  /* the list unrolls down from the bar, and rolls back up on close */
+  .post .toc .toc__body {
+    display: none;
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      clip-path 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.22s ease,
+      display 0.3s allow-discrete;
+    max-height: calc(100dvh - var(--fixedbar-h, 56px) - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--line);
+  }
+
+  .post .toc.is-open .toc__body {
+    display: block;
+    clip-path: inset(0);
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .post .toc.is-open .toc__body {
+      clip-path: inset(0 0 100% 0);
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  /* the track sits inside the body's padding */
+  .post .toc .toc__track { top: 16px; bottom: 20px; left: 23px; }
+
+  .post .toc.has-active .toc__pin { transform: translate(-50%, calc(var(--pin-y, 0px) - 16px - 50%)) scale(1); }
+
+  .post .toc .toc__item a { padding: 8px 0; font-size: 14px; }
+}
+
+/* Phones: the about panel runs edge to edge (the post has 20px gutters). */
+@media (max-width: 720px) {
+  .post > .rail { margin-inline: -20px; }
+  .post > .rail .rail__inner { border-inline: 0; }
+}
+
+@media (max-width: 1080px) and (prefers-reduced-motion: reduce) {
+  .post .toc,
+  .post .toc.is-pinned,
+  .post .toc .toc__body,
+  .toc-scrim,
+  .toc-scrim.is-on,
+  .toc__chev::before,
+  .toc__chev::after { transition: none; }
+}

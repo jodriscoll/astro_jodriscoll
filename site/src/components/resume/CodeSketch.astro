@@ -1,0 +1,290 @@
+---
+/**
+ * A generic editor, drawn in the Home page's line style: the window, tabs,
+ * file tree and gutter draw in as hairlines, then the code writes itself in
+ * line by line as token strokes (read at a glance as code, not as text to
+ * parse), with a current-line highlight that walks down and a blinking caret.
+ * Decorative: aria-hidden and left out of the PDF.
+ */
+interface Props {
+  /** File name shown in the active tab. */
+  file?: string;
+}
+
+const { file = 'practice.ts' } = Astro.props;
+
+// Token runs per line: [indent, ...widths]; a negative width is an accent token.
+// Hand-shaped to look like a small TypeScript module: imports, a type, a function.
+const shape: number[][] = [
+  [0, 34, 22, -40, 30],
+  [0, 34, 26, -52, 30],
+  [],
+  [0, 30, -46, 12],
+  [1, 38, -28],
+  [1, 30, -34],
+  [1, 44, -22],
+  [0, 8],
+  [],
+  [0, 40, 50, 30, 16],
+  [1, 30, 26, -58],
+  [1, 18, 40, 12],
+  [2, 26, -36, 46],
+  [2, 52, -30],
+  [1, 8],
+  [1, 34, -44, 20],
+  [0, 8],
+];
+
+const X0 = 128; // code column start
+const Y0 = 70; // first baseline
+const LH = 17; // line height
+const IND = 18; // indent width
+const lines = shape.map((runs, row) => {
+  if (!runs.length) return { row, tokens: [] as { x: number; w: number; accent: boolean }[] };
+  const [indent, ...widths] = runs;
+  let x = X0 + indent * IND;
+  const tokens = widths.map((width) => {
+    const w = Math.abs(width);
+    const token = { x, w, accent: width < 0 };
+    x += w + 7;
+    return token;
+  });
+  return { row, tokens };
+});
+const last = lines[lines.length - 1];
+const caretX = last.tokens.length ? last.tokens[last.tokens.length - 1].x + last.tokens[last.tokens.length - 1].w + 6 : X0;
+const caretY = Y0 + (lines.length - 1) * LH;
+const tree = [0, 1, 1, 2, 2, 1, 0, 1, 1];
+---
+
+<figure class="ide" aria-hidden="true" data-print="hide" style={`--lines: ${lines.length}; --lh: ${LH}px`}>
+  <svg viewBox="0 0 520 380" fill="none">
+    <!-- Window -->
+    <g class="ide__frame">
+      <path pathLength="1" d="M8 8 H512 V372 H8 Z" />
+      <path pathLength="1" d="M8 34 H512" />
+      <path pathLength="1" d="M100 34 V352" />
+      <path pathLength="1" d="M100 52 H512" />
+      <path pathLength="1" d="M8 352 H512" />
+      <path pathLength="1" d="M180 34 V52" />
+    </g>
+    <g class="ide__dots">
+      <circle cx="24" cy="21" r="4" />
+      <circle cx="38" cy="21" r="4" />
+      <circle cx="52" cy="21" r="4" />
+    </g>
+    <text class="ide__label" x="260" y="25" text-anchor="middle">nomadic-digital</text>
+    <text class="ide__tab" x="112" y="47">{file}</text>
+    <path class="ide__tab-mark" d="M100 52 H180" />
+
+    <!-- File tree -->
+    <g class="ide__tree">
+      {tree.map((depth, i) => <path pathLength="1" style={`--i:${i}`} d={`M${20 + depth * 10} ${58 + i * 16} h${46 - depth * 10}`} />)}
+    </g>
+
+    <!-- Gutter -->
+    <g class="ide__gutter">
+      {lines.map((line) => <text x="118" y={Y0 + line.row * LH + 3} text-anchor="end">{line.row + 1}</text>)}
+    </g>
+
+    <!-- Current-line highlight -->
+    <rect class="ide__current" x="101" y={Y0 - LH / 2} width="410" height={LH} />
+
+    <!-- Code -->
+    <g class="ide__code">
+      {
+        lines.map((line) =>
+          line.tokens.map((token) => (
+            <path
+              pathLength="1"
+              class:list={[token.accent && 'is-accent']}
+              style={`--row:${line.row}`}
+              d={`M${token.x} ${Y0 + line.row * LH} h${token.w}`}
+            />
+          )),
+        )
+      }
+    </g>
+    <rect class="ide__caret" x={caretX} y={caretY - 6} width="2" height="12" />
+
+    <!-- Status bar -->
+    <text class="ide__status" x="20" y="366">main · ts · utf-8</text>
+    <text class="ide__status" x="500" y="366" text-anchor="end">Ln {lines.length}, Col 1</text>
+  </svg>
+</figure>
+
+<script>
+  // Start drawing once the sketch scrolls into view.
+  document.querySelectorAll<HTMLElement>('.ide').forEach((figure) => {
+    if (!('IntersectionObserver' in window)) return figure.classList.add('is-in');
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        figure.classList.add('is-in');
+        io.disconnect();
+      },
+      { threshold: 0.3 },
+    );
+    io.observe(figure);
+  });
+</script>
+
+<style>
+  .ide {
+    position: relative;
+    margin: 0;
+    color: var(--ds-fg);
+  }
+
+  .ide svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .ide__frame path,
+  .ide__tree path,
+  .ide__tab-mark {
+    stroke: var(--ds-ink-35);
+    stroke-width: 1;
+  }
+
+  .ide__frame path:first-child {
+    stroke: color-mix(in srgb, var(--ds-fg) 70%, transparent);
+  }
+
+  .ide__tab-mark {
+    stroke: var(--ds-accent);
+    stroke-width: 1.5;
+  }
+
+  .ide__dots circle {
+    fill: none;
+    stroke: var(--ds-fg-faint);
+  }
+
+  .ide__label,
+  .ide__tab,
+  .ide__gutter text,
+  .ide__status {
+    font-family: var(--ds-font-mono);
+    font-size: 9px;
+    fill: var(--ds-fg-faint);
+  }
+
+  .ide__tab {
+    fill: var(--ds-fg-muted);
+  }
+
+  .ide__code path {
+    stroke: color-mix(in srgb, var(--ds-fg) 55%, transparent);
+    stroke-width: 4;
+    stroke-linecap: round;
+  }
+
+  .ide__code path.is-accent {
+    stroke: color-mix(in srgb, var(--ds-accent) 80%, transparent);
+  }
+
+  .ide__current {
+    fill: color-mix(in srgb, var(--ds-fg) 5%, transparent);
+    opacity: 0;
+  }
+
+  .ide__caret {
+    fill: var(--ds-fg);
+    opacity: 0;
+  }
+
+  /* Scanlines over the whole window, as on the education cap. */
+  .ide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in srgb, var(--ds-bg) 35%, transparent) 2px 3px);
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .ide path[pathLength] {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    .ide.is-in .ide__frame path {
+      animation: ide-draw 1.2s cubic-bezier(0.6, 0, 0.2, 1) forwards;
+    }
+
+    .ide.is-in .ide__tree path {
+      animation: ide-draw 0.6s cubic-bezier(0.6, 0, 0.2, 1) calc(0.6s + var(--i) * 70ms) forwards;
+    }
+
+    /* The code writes itself in, one line after another. */
+    .ide.is-in .ide__code path {
+      animation: ide-draw 0.35s steps(6, end) calc(1s + var(--row) * 0.16s) forwards;
+    }
+
+    .ide.is-in .ide__current {
+      animation:
+        ide-show 0.3s 1s forwards,
+        ide-walk calc(var(--lines) * 0.16s) steps(var(--lines), end) 1s 1 forwards;
+    }
+
+    .ide.is-in .ide__caret {
+      animation: ide-blink 1.05s steps(2, jump-none) calc(1s + var(--lines) * 0.16s) infinite;
+    }
+
+    .ide__dots circle,
+    .ide__label,
+    .ide__tab,
+    .ide__gutter text,
+    .ide__status {
+      opacity: 0;
+    }
+
+    .ide.is-in .ide__dots circle,
+    .ide.is-in .ide__label,
+    .ide.is-in .ide__tab,
+    .ide.is-in .ide__gutter text,
+    .ide.is-in .ide__status {
+      animation: ide-show 0.6s 0.5s forwards;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ide__caret,
+    .ide__current {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ide-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ide-show {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes ide-walk {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(var(--lines) * var(--lh) - var(--lh)));
+    }
+  }
+
+  @keyframes ide-blink {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+import Base from '../layouts/Base.astro';
+import { getProject, listTechnologies } from '../gateway';
+import { translateProject } from '../gateway/translate';
+import { platformMarkup } from '../lib/platforms';
+import { apiNode } from '../agent';
+import { loadBundle } from '../agent/site';
+
+const technologies = listTechnologies();
+const sample = getProject('gamekal');
+if (!sample) throw new Error('Missing sample project');
+
+const previews = technologies.map((item) => ({
+  ...item,
+  payload: JSON.stringify(translateProject(sample, item.id), null, 2),
+  endpoint: `/api/content/projects/${sample.slug}?stack=${item.id}`,
+}));
+
+const bundle = await loadBundle(Astro.site);
+const api = apiNode(bundle.site, {
+  path: '/api/content',
+  name: "Joseph O'Driscoll content gateway",
+  description:
+    'Read-only JSON of the public profile, experience, projects and posts. ?stack= returns the same record in the shape Astro, Next.js, React, Angular, Ember, Svelte, Vue, WordPress or Drupal expects.',
+  docs: '/technologies',
+});
+---
+
+<Base
+  title="Stacks · Joseph O'Driscoll"
+  description="One canonical record, translated into the shape each front end already expects."
+  page={{ mainEntity: { '@id': api['@id'] } }}
+  schema={[api]}
+  crumbs={[{ name: 'Home', path: '/' }, { name: 'Stacks', path: '/technologies' }]}
+>
+  <section class="section wrap ds-page">
+    <p class="kicker">Content gateway</p>
+    <h2>Same record. Different stack.</h2>
+    <p class="lede" style="margin-left: 0;">
+      This site is the Astro front end. The other hosts are not booted yet. The gateway already
+      rewrites a public record into the props, posts, or nodes those apps expect. Drafts and
+      internal notes stay behind the allowlist.
+    </p>
+    <ul class="platforms platforms--pills">
+      {
+        previews.map((item) => (
+          <li>
+            <span class="platform-pill">
+              <span set:html={platformMarkup(item.id)} />
+              <span>{item.name} · {item.status === 'live' ? 'this site' : 'gateway'}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="switcher">
+      <div class="tabs" role="radiogroup" aria-label="Stack">
+        {
+          previews.map((item) => (
+            <div class="tab">
+              <input
+                type="radio"
+                name="stack"
+                id={`stack-${item.id}`}
+                checked={item.id === 'astro'}
+              />
+              <label for={`stack-${item.id}`}>{item.name}</label>
+            </div>
+          ))
+        }
+      </div>
+      {
+        previews.map((item) => (
+          <div class="panel" data-for={item.id}>
+            <p class="quiet" style="margin-top: 0;">
+              {item.status === 'live' ? 'Live' : 'Gateway ready'} · {item.host}
+            </p>
+            <p>{item.summary}</p>
+            <pre class="payload">{item.payload}</pre>
+            <p class="more">
+              <a class="text-link" href={item.endpoint}>Open this response</a>
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,10 @@
+{
+  "language": "en-US",
+  "siteName": "Joseph O'Driscoll",
+  "siteDescription": "Portfolio, resume and engineering notes of Joseph O'Driscoll, web application consultant and owner of Nomadic Digital.",
+  "handle": "jodriscoll",
+  "image": "/portrait.webp",
+  "imageAlt": "Portrait of Joseph O'Driscoll",
+  "location": { "region": "Florida", "country": "US", "remote": true },
+  "contact": { "label": "Contact form", "url": "/#contact" }
+}

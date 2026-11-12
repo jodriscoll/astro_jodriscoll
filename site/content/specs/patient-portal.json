@@ -1,0 +1,59 @@
+{
+  "slug": "patient-portal",
+  "org": "rehab-llc",
+  "kind": "Rehab LLC",
+  "role": "Senior Performance Engineer, Rehab.com",
+  "dek": "A Vue app inside the Symfony site that lets patients curate treatment providers, exchanging data with MySQL over a REST API.",
+  "short": "A Vue application inside Rehab.com's Symfony site that lets patients curate and compare treatment providers, exchanging data with MySQL over a REST API.",
+  "facts": [
+    {
+      "label": "App",
+      "value": "Vue"
+    },
+    {
+      "label": "Host app",
+      "value": "Symfony"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Vue"
+        },
+        {
+          "name": "Symfony"
+        },
+        {
+          "name": "REST API"
+        },
+        {
+          "name": "MySQL"
+        },
+        {
+          "name": "SCSS"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "AWS"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/rehab-com/patient_portal_login.webp",
+      "alt": "Patient portal sign-in",
+      "tall": true
+    },
+    {
+      "src": "/work/rehab-com/patient_portal_dashboard.webp",
+      "alt": "Patient portal dashboard",
+      "tall": true
+    }
+  ]
+}

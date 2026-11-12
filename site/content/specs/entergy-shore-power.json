@@ -1,0 +1,35 @@
+{
+  "slug": "entergy-shore-power",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A lead-generation site for Entergy’s Shore Power service.",
+  "short": "A lead-generation site for Entergy's Shore Power service, a custom WordPress theme on Bootstrap 4 with GitLab CI deploying to Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "Lando"
+        },
+        {
+          "name": "GitLab CI"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

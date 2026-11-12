@@ -1,0 +1,47 @@
+{
+  "slug": "file-and-serve-xpress",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "File & Serve Xpress is a legal e-filing and service platform. Its UI is an Angular application in an Nx monorepo, built on Angular Material and DevExtreme, tested with Jest, documented in Storybook, and shipped through Azure Pipelines.",
+  "short": "The Angular front end for File & Serve Xpress, a legal e-filing and service platform: an Nx monorepo on Angular Material and DevExtreme, tested with Jest, documented in Storybook and shipped through Azure Pipelines.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Angular"
+        },
+        {
+          "name": "Nx"
+        },
+        {
+          "name": "Angular Material"
+        },
+        {
+          "name": "DevExtreme"
+        },
+        {
+          "name": "RxJS"
+        },
+        {
+          "name": "TypeScript"
+        },
+        {
+          "name": "Jest"
+        },
+        {
+          "name": "Storybook"
+        },
+        {
+          "name": "Azure Pipelines"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

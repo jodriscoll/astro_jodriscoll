@@ -1,0 +1,40 @@
+{
+  "slug": "you-can-washington",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A campaign site for Washington State, animated with GSAP and ScrollMagic.",
+  "short": "YouCanWA.org, a Washington State youth campaign: a WordPress theme on Bootstrap and Pantheon, animated with GSAP and ScrollMagic.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "GSAP"
+        },
+        {
+          "name": "ScrollMagic"
+        },
+        {
+          "name": "Bootstrap"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": [
+    {
+      "src": "/work/you-can-washington/home.webp",
+      "alt": "YouCanWA.org Get Inspired page: interest picks for being active, book smarts, creativity, hanging out and less stress"
+    }
+  ]
+}

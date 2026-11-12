@@ -1,0 +1,29 @@
+{
+  "slug": "trl",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "TRL, the UK’s Transport Research Laboratory, on Drupal 7.",
+  "short": "The Drupal 7 site for TRL, the UK's Transport Research Laboratory, packaged as RPMs for deployment.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 7"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "RPM"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

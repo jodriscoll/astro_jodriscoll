@@ -1,0 +1,35 @@
+{
+  "slug": "dragos",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A redesign for the industrial-cybersecurity company, deployed by GitLab CI to Pantheon.",
+  "short": "A redesign for Dragos, the industrial-cybersecurity company: a custom WordPress theme on Bootstrap 4, with Lando locally and GitLab CI deploying to Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "Lando"
+        },
+        {
+          "name": "GitLab CI"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

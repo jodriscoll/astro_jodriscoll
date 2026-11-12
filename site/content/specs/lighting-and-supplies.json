@@ -1,0 +1,37 @@
+{
+  "slug": "lighting-and-supplies",
+  "org": "nomadic-digital",
+  "kind": "Client",
+  "role": "Consultant, through Nomadic Digital",
+  "period": {
+    "start": "2016-01",
+    "end": null
+  },
+  "dek": "LightingAndSupplies.com is a US wholesale and government supplier of commercial and residential lighting and electrical supplies. One of Nomadic Digital's first clients: I troubleshoot the functionality and performance of its online catalog and the WordPress applications around it.",
+  "short": "One of Nomadic Digital's first clients, since 2016: troubleshooting the functionality and performance of a lighting and electrical supplier's online catalog and the WordPress applications around it.",
+  "facts": [
+    {
+      "label": "Client since",
+      "value": "2016"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [
+    {
+      "title": "Since 2016",
+      "text": "Taken on as a side client while I worked full time at Jellyfish, and still in my care."
+    }
+  ],
+  "overview": [],
+  "images": []
+}

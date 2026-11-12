@@ -1,0 +1,120 @@
+{
+  "slug": "apta",
+  "org": "taoti",
+  "kind": "Taoti Creative",
+  "role": "Solutions Engineer, through Taoti Creative",
+  "dek": "The American Physical Therapy Association’s site runs on Bedrock WordPress, with ACF Pro, Redis and Taoti’s security scanner.",
+  "short": "The American Physical Therapy Association's site on Bedrock WordPress, with Composer-managed plugins, ACF Pro, Redis object caching and Taoti's security scanner, held to one security and version baseline.",
+  "facts": [
+    {
+      "label": "PHP",
+      "value": "8.3"
+    },
+    {
+      "label": "Server",
+      "value": "Apache 2.4 (local)"
+    },
+    {
+      "label": "Database",
+      "value": "MySQL 8.0"
+    }
+  ],
+  "stack": [
+    {
+      "group": "WordPress",
+      "items": [
+        {
+          "name": "Bedrock"
+        },
+        {
+          "name": "ACF Pro"
+        },
+        {
+          "name": "ACF Better Search"
+        },
+        {
+          "name": "Media Library Assistant"
+        },
+        {
+          "name": "Enable Media Replace"
+        },
+        {
+          "name": "Yoast SEO"
+        },
+        {
+          "name": "tawk.to",
+          "note": "live chat"
+        }
+      ]
+    },
+    {
+      "group": "Performance",
+      "items": [
+        {
+          "name": "Redis Object Cache"
+        },
+        {
+          "name": "EWWW Image Optimizer"
+        }
+      ]
+    },
+    {
+      "group": "Security",
+      "items": [
+        {
+          "name": "Solid Security"
+        },
+        {
+          "name": "Taoti Security Scanner"
+        },
+        {
+          "name": "GDPR Cookie Compliance"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Kinsta"
+    },
+    {
+      "label": "Local",
+      "value": "Lando: PHP 8.3, Apache 2.4, MySQL 8.0"
+    }
+  ],
+  "highlights": [],
+  "overview": [
+    {
+      "group": "Security",
+      "rows": [
+        {
+          "label": "Security Scanner",
+          "value": "1.2.3",
+          "state": "ok"
+        },
+        {
+          "label": "2FA",
+          "value": "Yes",
+          "state": "ok"
+        },
+        {
+          "label": "Consent notice",
+          "value": "In progress",
+          "state": "warn"
+        },
+        {
+          "label": "AppPass Removal",
+          "value": "Missing",
+          "state": "warn"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/apta/home.webp",
+      "alt": "APTA home page: Connecting Communities, Expanding Horizons, with a bus and a train"
+    }
+  ]
+}

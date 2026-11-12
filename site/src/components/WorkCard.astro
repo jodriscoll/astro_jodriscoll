@@ -1,0 +1,73 @@
+---
+import { getEntry } from 'astro:content';
+import type { PublicProject } from '../gateway';
+import { codeGraphSvg, languageMix } from '../lib/isometric';
+import { platformMarks } from '../lib/platforms';
+
+interface Props {
+  project: PublicProject;
+  track?: boolean;
+  index?: number;
+}
+
+const { project, track = false, index } = Astro.props;
+const spec = (await getEntry('specs', project.slug))?.data;
+
+const names = spec ? [...project.technologies, ...spec.stack.flatMap((group) => group.items.map((item) => item.name))] : project.technologies;
+const marks = platformMarks(names);
+// Repeat short lists so the marquee always has enough icons to run.
+const reps = Math.max(1, Math.ceil(12 / Math.max(1, marks.length)));
+const mix = languageMix({ measured: spec?.languages?.items, technologies: names });
+const kind = spec?.kind ?? (project.summary.startsWith('My own') ? 'Own product' : 'Agency project');
+const year = spec?.period?.start?.slice(0, 4);
+const summary = spec?.short ?? project.summary.replace(/^(Active client|My own (hobby )?project|My own product)\.\s*/, '');
+const host = project.links.demo ? new URL(project.links.demo).hostname.replace(/^www\./, '') : '';
+const shot = spec?.images?.[0];
+const live = project.availability !== 'offline' && Boolean(project.links.demo);
+---
+
+<a
+  class:list={["work", shot && "has-shot"]}
+  href={`/things-built/${project.slug}`}
+  data-track={track ? 'project' : undefined}
+  data-track-label={track ? project.title : undefined}
+  data-stacks={marks.map((mark) => mark.id).join(' ')}
+>
+  <Fragment set:html={codeGraphSvg(project.slug, mix.items, 46, 'work__graph')} />
+  {shot && <img class="work__shot" src={shot.src} alt="" loading="lazy" decoding="async" aria-hidden="true" />}
+  <p class:list={["work__meta", index !== undefined && "has-index"]}>
+    {index !== undefined && <span>{String(index).padStart(2, '0')}</span>}
+    <span>{kind}</span>
+    {year && <span>{year}</span>}
+    {host && <span class:list={['work__host', live && 'is-live']}>{host}</span>}
+  </p>
+  <h3 style={`view-transition-name: work-${project.slug}`}>{project.title}</h3>
+  <p class="work__summary">{summary}</p>
+  <div class="work__foot">
+    <div class="work__lane" style={`--run: ${Math.max(14, marks.length * reps * 2.4)}s`}>
+      {[0, 1].map((copy) => (
+        <ul class="work__marks" aria-label={copy ? undefined : 'Built with'} aria-hidden={copy ? 'true' : undefined}>
+          {Array.from({ length: reps }).flatMap((_, r) =>
+            marks.map((mark) => (
+              <li data-name={mark.name}>
+                <span set:html={mark.svg} />
+                {copy === 0 && r === 0 && <span class="sr-only">{mark.name}</span>}
+              </li>
+            )),
+          )}
+        </ul>
+      ))}
+    </div>
+    <p class="work__langs" aria-label={`Languages: ${mix.items.map((item) => `${item.name} ${Math.round(item.share * 100)}%`).join(', ')}`}>
+      <span class="work__langbar">
+        {mix.items.map((item) => (
+          <i
+            data-tip
+            data-name={`${item.name} · ${Math.round(item.share * 100)}%${mix.measured ? '' : ' (estimated)'}`}
+            style={`flex-basis: ${item.share * 100}%; background: ${item.color}`}
+          />
+        ))}
+      </span>
+    </p>
+  </div>
+</a>

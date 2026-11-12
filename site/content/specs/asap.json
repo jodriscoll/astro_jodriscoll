@@ -1,0 +1,29 @@
+{
+  "slug": "asap",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A WordPress multisite for ASAP. The theme is Social Driver’s; I maintained the site.",
+  "short": "A WordPress multisite for ASAP on Social Driver's theme: I maintained and extended the network on Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "WordPress Multisite"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

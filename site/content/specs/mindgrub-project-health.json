@@ -1,0 +1,38 @@
+{
+  "slug": "mindgrub-project-health",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "An internal tool at Mindgrub: a React dashboard on CoreUI and Reactstrap with Chart.js charts for project health.",
+  "short": "An internal React dashboard that tracked project health across the agency, built on CoreUI and Reactstrap with Chart.js reporting.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "React"
+        },
+        {
+          "name": "CoreUI"
+        },
+        {
+          "name": "Reactstrap"
+        },
+        {
+          "name": "Chart.js"
+        },
+        {
+          "name": "webpack"
+        },
+        {
+          "name": "Sass"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

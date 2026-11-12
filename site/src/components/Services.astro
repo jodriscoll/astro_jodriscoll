@@ -1,0 +1,195 @@
+---
+interface Service {
+  title: string;
+  text: string;
+}
+
+interface Props {
+  services: Service[];
+}
+
+const { services } = Astro.props;
+
+const accents = ['amber', 'green', 'teal', 'gold', 'blue', 'green'];
+
+const icons = [
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h3.2l2.2-4.2L13 16.2 15.2 12H20"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 4 8l8 4 8-4-8-4Z"/><path d="m4 12 8 4 8-4"/><path d="m4 16 8 4 8-4"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h11M4 16h11"/><path d="m12 5 4 3-4 3M16 13l4 3-4 3"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 8h16M4 16h16"/><circle cx="9" cy="8" r="2.1"/><circle cx="15" cy="16" r="2.1"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 7h12M6 12h12M6 17h8"/></svg>',
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><path d="m8.6 12.2 2.3 2.3 4.6-5"/></svg>',
+];
+---
+
+<div class="board" data-services>
+  <div class="board__list">
+    {
+      services.map((service, index) => (
+        <div class:list={['board__item', { 'is-open': index === 0 }]} data-service>
+          <button
+            type="button"
+            class="board__tab"
+            id={`service-tab-${index}`}
+            aria-expanded={index === 0 ? 'true' : 'false'}
+            aria-controls={`service-panel-${index}`}
+          >
+            <span class="board__icon" aria-hidden="true" style={`--tile: var(--accent-${accents[index] ?? 'teal'})`} set:html={icons[index] ?? icons[0]} />
+            <span class="board__copy">
+              <span class="board__name">{service.title}</span>
+            </span>
+            <svg class="board__chevron" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+              <path d="M4 6.2 8 10.2 12 6.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="board__panel" id={`service-panel-${index}`} role="region" aria-labelledby={`service-tab-${index}`} aria-hidden={index === 0 ? 'false' : 'true'}>
+            <p>{service.text}</p>
+          </div>
+          <span class="board__meter" aria-hidden="true" />
+        </div>
+      ))
+    }
+  </div>
+  <div class="board__stage gradient-frame" style="--frame-fill: var(--stage)">
+    <div class="board__scenes" aria-hidden="true">
+      {
+        services.map((_, index) => (
+          <div class:list={['board__scene', { 'is-on': index === 0 }]} data-scene>
+            {index === 0 && (
+              <div class="motion motion--pulse">
+                <span />
+              </div>
+            )}
+            {index === 1 && (
+              <div class="motion motion--fill">
+                <i />
+              </div>
+            )}
+            {index === 2 && (
+              <div class="motion motion--shift">
+                <i />
+                <i />
+                <i />
+              </div>
+            )}
+            {index === 3 && (
+              <div class="motion motion--stack">
+                <i />
+                <i />
+                <i />
+              </div>
+            )}
+            {index === 4 && (
+              <div class="motion motion--align">
+                <i />
+                <i />
+                <i />
+                <i />
+              </div>
+            )}
+            {index === 5 && (
+              <svg class="motion motion--check" viewBox="0 0 64 64" width="72" height="72">
+                <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35" />
+                <path d="M20 33.5 28 41.5 45 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
+              </svg>
+            )}
+          </div>
+        ))
+      }
+    </div>
+    <button type="button" class="board__toggle" data-services-toggle aria-pressed="false" aria-label="Pause services">
+      <svg class="board__pause" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+        <path d="M3.2 2.2h1.6v7.6H3.2zM7.2 2.2h1.6v7.6H7.2z" fill="currentColor" />
+      </svg>
+      <svg class="board__play" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+        <path d="M3.4 2.2v7.6L9.8 6 3.4 2.2Z" fill="currentColor" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    var root = document.querySelector('[data-services]');
+    if (!root || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    var items = Array.prototype.slice.call(root.querySelectorAll('[data-service]'));
+    var scenes = Array.prototype.slice.call(root.querySelectorAll('[data-scene]'));
+    var toggle = root.querySelector('[data-services-toggle]');
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var index = 0;
+    var playing = !reduced;
+
+    function restart(item) {
+      var meter = item.querySelector('.board__meter');
+      if (!meter) return;
+      meter.style.animation = 'none';
+      void meter.offsetWidth;
+      meter.style.animation = '';
+    }
+
+    function select(next) {
+      index = (next + items.length) % items.length;
+      items.forEach(function (item, n) {
+        var open = n === index;
+        var tab = item.querySelector('.board__tab');
+        var panel = item.querySelector('.board__panel');
+        item.classList.toggle('is-open', open);
+        if (tab) tab.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (panel) panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) restart(item);
+      });
+      scenes.forEach(function (scene, n) {
+        scene.classList.toggle('is-on', n === index);
+      });
+    }
+
+    function setPlaying(on) {
+      playing = Boolean(on) && !reduced;
+      root.classList.toggle('is-paused', !playing);
+      if (!toggle) return;
+      toggle.setAttribute('aria-pressed', playing ? 'false' : 'true');
+      toggle.setAttribute('aria-label', playing ? 'Pause services' : 'Play services');
+    }
+
+    items.forEach(function (item, n) {
+      var tab = item.querySelector('.board__tab');
+      if (!tab) return;
+      tab.addEventListener('click', function () {
+        select(n);
+      });
+    });
+
+    root.addEventListener('keydown', function (event) {
+      if (!event.target.closest || !event.target.closest('.board__tab')) return;
+      var next = null;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowRight') next = index + 1;
+      if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = index - 1;
+      if (event.key === 'Home') next = 0;
+      if (event.key === 'End') next = items.length - 1;
+      if (next === null) return;
+      event.preventDefault();
+      select(next);
+      var tab = items[index].querySelector('.board__tab');
+      if (tab) tab.focus();
+    });
+
+    root.addEventListener('animationend', function (event) {
+      if (!playing || event.animationName !== 'service-meter') return;
+      var current = items[index] && items[index].querySelector('.board__meter');
+      if (event.target !== current) return;
+      select(index + 1);
+    });
+
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        if (reduced) return;
+        setPlaying(!playing);
+      });
+    }
+
+    if (reduced) root.classList.add('is-static');
+    setPlaying(!reduced);
+  })();
+</script>

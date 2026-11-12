@@ -1,0 +1,138 @@
+{
+  "slug": "echoes-of-history",
+  "org": "nomadic-digital",
+  "kind": "Tutoring",
+  "role": "Tutoring and Technical Guidance",
+  "period": {
+    "start": "2026-08",
+    "end": null
+  },
+  "dek": "An educational site for evidence-based historical reasoning. Ask about an analogy, a claim or a piece of propaganda, and a report shows where the comparison holds, where it breaks, and how historians disagree.",
+  "short": "An educational app for evidence-based historical reasoning, built through tutoring: TanStack Start and React 19, Supabase auth and saved reports, Vercel's AI Gateway and BotID, with answer keys kept on the server.",
+  "facts": [
+    {
+      "label": "Commits",
+      "value": "16"
+    },
+    {
+      "label": "Window",
+      "value": "August 31 to November 6, 2026"
+    },
+    {
+      "label": "Status",
+      "value": "Live, MVP"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "TanStack Start",
+          "note": "server-rendered React"
+        },
+        {
+          "name": "React",
+          "version": "19"
+        },
+        {
+          "name": "Vite",
+          "version": "8"
+        },
+        {
+          "name": "TypeScript",
+          "version": "5.8"
+        },
+        {
+          "name": "Tailwind CSS",
+          "version": "4.2"
+        },
+        {
+          "name": "Radix UI"
+        }
+      ]
+    },
+    {
+      "group": "Accounts",
+      "items": [
+        {
+          "name": "Supabase",
+          "note": "auth, profiles and saved reports"
+        },
+        {
+          "name": "Google and Microsoft sign-in"
+        }
+      ]
+    },
+    {
+      "group": "Platform",
+      "items": [
+        {
+          "name": "Vercel",
+          "note": "hosting and AI Gateway"
+        },
+        {
+          "name": "Vercel BotID",
+          "note": "gates the content API"
+        },
+        {
+          "name": "Resend",
+          "note": "contact and feedback mail"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Vercel"
+    },
+    {
+      "label": "DNS",
+      "value": "Squarespace"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Answers stay on the server",
+      "text": "Example cards and Literacy Lab challenges load from /api/examples and /api/challenges, and answer keys stay server-side until a submission is graded."
+    },
+    {
+      "title": "An honest MVP",
+      "text": "What ships and what is parked is written down in MVP.md, and nothing parked appears in menus or copy."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Platform",
+      "rows": [
+        {
+          "label": "Framework",
+          "value": "TanStack Start",
+          "state": "ok"
+        },
+        {
+          "label": "Auth",
+          "value": "Supabase",
+          "state": "ok"
+        },
+        {
+          "label": "Bot check",
+          "value": "BotID",
+          "state": "ok"
+        },
+        {
+          "label": "Domain",
+          "value": "echoeshistory.org",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/echoes-of-history/home.webp",
+      "alt": "Echoes of History home page: the headline, analysis modes and the comparison search"
+    }
+  ]
+}

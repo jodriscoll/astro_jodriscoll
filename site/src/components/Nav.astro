@@ -1,0 +1,109 @@
+---
+import '../styles/sidenav.css';
+
+import { navLinks as links, isCurrent } from '../lib/nav';
+
+const path = Astro.url.pathname;
+const current = (href: string) => isCurrent(path, href);
+---
+
+<a class="mark" href="/" data-track="nav" data-track-label="jodriscoll">
+  <span class="mark__glyph" aria-hidden="true">jo</span>
+  <span class="mark__name">jodriscoll</span>
+</a>
+<nav class="sidenav" aria-label="Primary" data-sidenav>
+  <span class="sidenav__beam" aria-hidden="true" data-sidenav-beam></span>
+  {
+    links.map((link, i) => (
+      <a
+        href={link.href}
+        aria-current={current(link.href) ? 'page' : undefined}
+        data-track="nav"
+        data-track-label={link.label}
+      >
+        <span class="sidenav__idx" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <span class="sidenav__label" data-label={link.label}>{link.label}</span>
+      </a>
+    ))
+  }
+</nav>
+<button type="button" class="side__cta" data-open-contact data-side-cta aria-label="Let's Collaborate: Start a Conversation">
+  <span class="side__cta-run" aria-hidden="true"></span>
+  <span class="side__cta-row">
+    <span class="side__cta-dot" aria-hidden="true"></span>
+    <span class="side__cta-label" data-label="Let's Collaborate">Let's Collaborate</span>  </span>
+  <span class="side__cta-corner side__cta-corner--tl" aria-hidden="true"></span>
+  <span class="side__cta-corner side__cta-corner--br" aria-hidden="true"></span>
+</button>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-sidenav]');
+  const beam = nav?.querySelector<HTMLElement>('[data-sidenav-beam]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Hover decode: letters resolve out of block glyphs, left to right.
+  const GLYPHS = '▖▘▝▗▚▞░▒/\\_<>';
+  const timers = new WeakMap<HTMLElement, number>();
+  const decode = (label: HTMLElement, span = 260) => {
+    const text = label.dataset.label || '';
+    if (reduce || !text) return;
+    cancelAnimationFrame(timers.get(label) || 0);
+    const start = performance.now();
+    const tick = (now: number) => {
+      const done = Math.min(1, (now - start) / span);
+      const settled = Math.floor(done * text.length);
+      let out = text.slice(0, settled);
+      for (let i = settled; i < text.length; i++) {
+        out += text[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      }
+      label.textContent = out;
+      if (done < 1) timers.set(label, requestAnimationFrame(tick));
+      else label.textContent = text;
+    };
+    timers.set(label, requestAnimationFrame(tick));
+  };
+
+  const cta = document.querySelector<HTMLElement>('[data-side-cta]');
+  const ctaLabel = cta?.querySelector<HTMLElement>('.side__cta-label');
+  if (cta && ctaLabel) {
+    // Pin the width so the centred label doesn't wobble while it scrambles.
+    const go = () => {
+      if (!ctaLabel.style.width) ctaLabel.style.width = `${Math.ceil(ctaLabel.getBoundingClientRect().width)}px`;
+      decode(ctaLabel, 520);
+    };
+    cta.addEventListener('pointerenter', go);
+    cta.addEventListener('focus', go);
+  }
+
+  if (nav && beam) {
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('a'));
+    const active = links.find((a) => a.getAttribute('aria-current') === 'page');
+
+    // One beam glides between items; it rests on the current page.
+    const moveTo = (el: HTMLElement | undefined) => {
+      if (!el) {
+        beam.style.opacity = '0';
+        return;
+      }
+      beam.style.setProperty('--y', `${el.offsetTop}px`);
+      beam.style.setProperty('--h', `${el.offsetHeight}px`);
+      beam.style.opacity = '1';
+    };
+
+    moveTo(active);
+    requestAnimationFrame(() => nav.classList.add('is-ready'));
+
+    links.forEach((a) => {
+      const label = a.querySelector<HTMLElement>('.sidenav__label');
+      const enter = () => {
+        moveTo(a);
+        if (label && a !== active) decode(label);
+      };
+      a.addEventListener('pointerenter', enter);
+      a.addEventListener('focus', enter);
+      a.addEventListener('blur', () => moveTo(active));
+    });
+    nav.addEventListener('pointerleave', () => moveTo(active));
+    addEventListener('resize', () => moveTo(active), { passive: true });
+  }
+</script>

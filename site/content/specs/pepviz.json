@@ -1,0 +1,119 @@
+{
+  "slug": "pepviz",
+  "org": "ancient",
+  "kind": "Ancient LLC",
+  "role": "UI Architect Lead",
+  "period": {
+    "start": "2026-07",
+    "end": null
+  },
+  "dek": "Marketing landing pages for PepsiCo's Pepviz, built with one international designer. Each article ships as hand-authored HTML, one SCSS file and a few lines of vanilla JavaScript, staged on CodePen so the client can paste it into their own CMS.",
+  "short": "Seven marketing landing pages for PepsiCo's Pepviz, built with one international designer: hand-authored HTML, one SCSS file and a little vanilla JavaScript per page, staged on CodePen so the client can paste them into its own CMS.",
+  "facts": [
+    {
+      "label": "Pages",
+      "value": "Seven article landing pages, LP1 to LP7"
+    },
+    {
+      "label": "Hand-off",
+      "value": "CodePen, with minified and readable CSS"
+    },
+    {
+      "label": "Team",
+      "value": "One international designer and me"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Markup and style",
+      "items": [
+        {
+          "name": "HTML",
+          "note": "semantic, one .phyg wrapper per page"
+        },
+        {
+          "name": "Sass",
+          "note": "one flat SCSS file per page, BEM-style names, CSS custom properties"
+        },
+        {
+          "name": "CSS",
+          "note": "native nesting in the minified build"
+        },
+        {
+          "name": "Image maps",
+          "note": "superscript hotspots on SVG charts, one map per breakpoint"
+        }
+      ]
+    },
+    {
+      "group": "Script",
+      "items": [
+        {
+          "name": "JavaScript",
+          "note": "vanilla, one small file per page"
+        },
+        {
+          "name": "Splide",
+          "note": "the one carousel, on LP2"
+        }
+      ]
+    },
+    {
+      "group": "Delivery",
+      "items": [
+        {
+          "name": "CodePen",
+          "note": "Pro asset hosting; the client copies markup, SCSS and JS from the pens"
+        },
+        {
+          "name": "Figma",
+          "note": "assets exported per breakpoint"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Hand-off",
+      "value": "CodePen, then the client's own CMS"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Built to be pasted",
+      "text": "No framework, no build step, no npm. The client re-implements each page in its own CMS, so every page keeps the same markup patterns, naming and breakpoint from version to version."
+    },
+    {
+      "title": "Desktop and mobile art",
+      "text": "Charts, tables and infographics ship as separate desktop and mobile SVGs, swapped at 767px, with footnotes linked from superscripts inside the charts."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Delivery",
+      "rows": [
+        {
+          "label": "Pages",
+          "value": "7",
+          "state": "ok"
+        },
+        {
+          "label": "Framework",
+          "value": "None, by design",
+          "state": "ok"
+        },
+        {
+          "label": "Breakpoint",
+          "value": "767px",
+          "state": "ok"
+        },
+        {
+          "label": "Hand-off",
+          "value": "CodePen",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": []
+}

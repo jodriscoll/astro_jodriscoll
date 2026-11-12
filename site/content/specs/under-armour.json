@@ -1,0 +1,54 @@
+{
+  "slug": "under-armour",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "Under Armour was the most complex system I have worked in. The shopping experience sat inside a web of Jenkins build systems and CI automation from before CI was a common word, with layers of approvals and dynamic environments spun up to unit test new features against the latest builds. Alongside it I built the NEXT event application in Laravel for the USA and Canada.",
+  "short": "Under Armour's shopping experience, inside a web of Jenkins builds, approvals and per-build test environments from before CI was a common word, plus the NEXT event app in Laravel for the USA and Canada.",
+  "facts": [
+    {
+      "label": "Focus",
+      "value": "Shopping experience"
+    },
+    {
+      "label": "Pipeline",
+      "value": "Jenkins builds, approvals, per-build test environments"
+    },
+    {
+      "label": "Also",
+      "value": "NEXT event app, USA and Canada"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Jenkins"
+        },
+        {
+          "name": "Laravel"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "Gulp"
+        },
+        {
+          "name": "Bower"
+        },
+        {
+          "name": "PHPUnit"
+        },
+        {
+          "name": "phpspec"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

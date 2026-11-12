@@ -1,0 +1,29 @@
+{
+  "slug": "kahootz",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "Kahootz’s WordPress site, on AWS.",
+  "short": "WordPress for Kahootz, the UK collaboration-software company, hosted on AWS while at Jellyfish.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "AWS"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

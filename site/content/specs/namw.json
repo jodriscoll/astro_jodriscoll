@@ -1,0 +1,38 @@
+{
+  "slug": "namw",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A Composer-managed Drupal 8 site on Pantheon: Paragraphs for layout, Config Split for environments, and Behat for tests.",
+  "short": "A Composer-managed Drupal 8 site on Pantheon, with Paragraphs for page building, Config Split per environment, Docksal locally and Behat tests.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 8"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Docksal"
+        },
+        {
+          "name": "Paragraphs"
+        },
+        {
+          "name": "Config Split"
+        },
+        {
+          "name": "Behat"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

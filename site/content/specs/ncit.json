@@ -1,0 +1,38 @@
+{
+  "slug": "ncit",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A Composer-managed Drupal 8 site on Pantheon, with Feeds and Feeds Tamper importing content and Pantheon’s Solr behind search.",
+  "short": "A Composer-managed Drupal 8 site on Pantheon, with Feeds and Feeds Tamper importing content and Pantheon's Solr powering search.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 8"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Docksal"
+        },
+        {
+          "name": "Feeds"
+        },
+        {
+          "name": "Search API Pantheon"
+        },
+        {
+          "name": "Bootstrap"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

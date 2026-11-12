@@ -1,0 +1,35 @@
+{
+  "slug": "homeprotect",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "HomeProtect.co.uk’s insurance site on Joomla 3.7 with YOOtheme’s ZOO product system, themed with Gulp and Sass.",
+  "short": "HomeProtect.co.uk, the UK home-insurance site, on Joomla 3.7 with YOOtheme's ZOO product system and a Gulp and Sass theme build.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Joomla"
+        },
+        {
+          "name": "YOOtheme ZOO"
+        },
+        {
+          "name": "Gulp"
+        },
+        {
+          "name": "Sass"
+        },
+        {
+          "name": "PHP"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

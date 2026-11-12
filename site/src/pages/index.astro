@@ -1,0 +1,428 @@
+---
+import Base from '../layouts/Base.astro';
+import Isometric from '../components/Isometric.astro';
+import Reassurance from '../components/Reassurance.astro';
+import Services from '../components/Services.astro';
+
+// The Services section is kept but hidden on the home page.
+const SHOW_SERVICES = false;
+import WorkCard from '../components/WorkCard.astro';
+import NomadicNow from '../components/NomadicNow.astro';
+import { formatLongDate, getProfile, getResume, listPosts, listProjects } from '../gateway';
+import { stackIndex } from '../lib/stackindex';
+import { HEAD } from '../lib/isometric';
+import { ids, itemListNode } from '../agent';
+import { loadBundle } from '../agent/site';
+
+const profile = getProfile();
+const resume = getResume();
+const featured = resume.projects.filter((project) => project.featured);
+const recent = resume.roles.filter((role) => role.end === null && !role.parent);
+const stack = stackIndex(listProjects(), 12);
+const top = stack[0]?.count ?? 1;
+const posts = (await listPosts()).slice(0, 4);
+
+const bundle = await loadBundle(Astro.site);
+const featuredList = itemListNode(
+  bundle.site,
+  `${bundle.site.origin}/`,
+  'Selected work',
+  bundle.works.filter((work) => work.featured).map((work) => ({ url: work.url, name: work.title })),
+);
+// The headline's key phrase is set in the accent colour.
+const headlineParts = profile.headline.split(/(content-heavy)/);
+---
+
+<Base
+  title={`${profile.name} · ${profile.role}`}
+  description={profile.summary}
+  page={{ mainEntity: { '@id': ids.person(bundle.site) }, hasPart: { '@id': featuredList['@id'] } }}
+  schema={[featuredList]}
+>
+  <section class="wrap home-hero ds-page">
+    <div>
+      <p class="eyebrow">{profile.name} · {profile.role}</p>
+      <h1 class="display">{headlineParts.map((part) => (part === 'content-heavy' ? <span class="display__accent">{part}</span> : part))}</h1>
+      <p class="home-hero__lede">
+        I build and rescue content-heavy sites and apps: WordPress, Craft, and Drupal on the server, React, Vue, and
+        Angular in the browser, and Expo when it has to fit in a pocket.
+      </p>
+      <div class="home-hero__actions">
+        <a class="btn" href="/things-built">See the Work</a>
+        <button type="button" class="btn btn--ghost" data-open-contact>{profile.contact.action}</button>
+      </div>
+    </div>
+    <figure class="head">
+      <canvas data-head aria-label="A 3D line portrait of Joseph O'Driscoll that turns to follow the cursor" role="img"></canvas>
+    </figure>
+    <Reassurance />
+  </section>
+
+  <section class="wrap home-block">
+    <div class="rule-head">
+      <p class="eyebrow">01 · Selected work</p>
+      <a href="/things-built">All Work →</a>
+    </div>
+    <h2 class="h-section">Products worth sharing</h2>
+    <div class="workgrid">
+      {featured.map((project, i) => <WorkCard project={project} index={i + 1} />)}
+    </div>
+  </section>
+
+  <section class="wrap home-block">
+    <div class="rule-head">
+      <p class="eyebrow">02 · Stack index</p>
+    </div>
+    <h2 class="h-section">What the work actually runs on</h2>
+    <p class="home-hero__lede home-block__lede">
+      Counted from the {listProjects().length} public projects on this site, not from a list of things I've heard of.
+    </p>
+    <ol class="stackindex">
+      {
+        stack.map((row) => (
+          <li>
+            {/* <details> so phones get an accordion (like the resume's capability
+                meters); on wide screens it stays open and the summary isn't clickable. */}
+            <details class="stackindex__row" open data-stackrow>
+              <summary class="stackindex__sum">
+                <span class="stackindex__name">{row.name}</span>
+                <span class="stackindex__n">
+                  {row.count} {row.count === 1 ? 'project' : 'projects'}
+                </span>
+                <span class="stackindex__chev" aria-hidden="true" />
+                <span class="stackindex__bar" aria-hidden="true">
+                  <span style={`width: ${(row.count / top) * 100}%`} />
+                </span>
+              </summary>
+              <p class="stackindex__where">{row.projects.slice(0, 3).join(', ')}{row.projects.length > 3 ? ` and ${row.projects.length - 3} more` : ''}</p>
+            </details>
+          </li>
+        ))
+      }
+    </ol>
+    <script is:inline>
+      (function () {
+        var phone = matchMedia('(max-width: 720px)');
+        function sync() {
+          document.querySelectorAll('[data-stackrow]').forEach(function (el) {
+            var sum = el.querySelector('summary');
+            if (phone.matches) {
+              if (!el.dataset.touched) el.open = false;
+              sum.removeAttribute('tabindex');
+            } else {
+              el.open = true;
+              sum.setAttribute('tabindex', '-1');
+            }
+          });
+        }
+        document.addEventListener('click', function (event) {
+          var sum = event.target.closest && event.target.closest('[data-stackrow] > summary');
+          if (!sum) return;
+          if (!phone.matches) { event.preventDefault(); return; }
+          sum.parentElement.dataset.touched = '1';
+        });
+        phone.addEventListener('change', sync);
+        sync();
+      })();
+    </script>
+  </section>
+
+  {/* Services, hidden for now (kept to bring back later): set SHOW_SERVICES to true. */}
+  {SHOW_SERVICES && (
+  <section class="wrap home-block">
+    <div class="rule-head">
+      <p class="eyebrow">03 · Services</p>
+    </div>
+    <h2 class="h-section">What I'm hired for</h2>
+    <Services services={profile.services} />
+  </section>
+  )}
+
+  {
+    posts.length > 0 && (
+      <section class="wrap home-block">
+        <div class="rule-head">
+          <p class="eyebrow">03 · Writing</p>
+          <a href="/blog">All Writing →</a>
+        </div>
+        <h2 class="h-section">Notes from the work</h2>
+        <ul class="notes-list">
+          {posts.map((post) => (
+            <li>
+              <a href={`/blog/${post.id}`}>
+                <time datetime={post.data.date.toISOString()}>{formatLongDate(post.data.date)}</time>
+                <strong>{post.data.title}</strong>
+                <span>{post.data.description}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="wrap home-block">
+    <div class="rule-head">
+      <p class="eyebrow">04 · Now</p>
+      <a href="/resume">Full Resume →</a>
+    </div>
+    <h2 class="h-section">Current engagements</h2>
+    {
+      recent.map((role) => (
+        <NomadicNow practice={role} clients={resume.roles.filter((child) => child.parent === role.id && child.end === null)} />
+      ))
+    }
+  </section>
+
+  <section class="wrap home-block" id="contact">
+    <div class="rule-head">
+      <p class="eyebrow">05 · Contact</p>
+    </div>
+    <div class="home-close">
+      <div>
+        <h2 class="display" style="max-width: 14ch;">{profile.contact.title}</h2>
+        <div class="home-hero__actions">
+          <button type="button" class="btn" data-open-contact>{profile.contact.action}</button>
+          <a class="btn btn--ghost" href="/things-built">See the Work</a>
+        </div>
+      </div>
+      <Isometric seed="jodriscoll" size={13} count={11} tall={7} label="A line drawing of a small city of blocks" />
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ HEAD }}>
+    (function () {
+      var canvas = document.querySelector('[data-head]');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var rows = HEAD.rows, cols = HEAD.cols, aspect = HEAD.aspect;
+      var raw = Uint8Array.from(atob(HEAD.data), function (c) { return c.charCodeAt(0); });
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var BUCKETS = 10;
+      var PITCH = 0.12;
+      var W = 0, H = 0, dpr = 1, color = '#fff', start = 0, visible = true, raf = 0;
+      var mx = -9999, my = -9999, lx = 0, ly = 0, near = 0, nearTarget = 0;
+      // hover reveal: the photo the lines were traced from, seen through a soft lens
+      var photo = new Image(), photoReady = false;
+      photo.onload = function () { photoReady = true; warp(); };
+      var warped = document.createElement('canvas'), wctx = warped.getContext('2d');
+      photo.src = '/portrait.webp';
+      var off = document.createElement('canvas'), octx = off.getContext('2d');
+      var stripe = document.createElement('canvas'); stripe.width = 1; stripe.height = 3;
+      var sctx = stripe.getContext('2d'); sctx.fillRect(0, 2, 1, 1);
+      var stripes = null;
+
+      // Precompute the resting projection once; animation only nudges y and brightness.
+      var base = new Float32Array(rows * cols * 2);
+      var bright = new Float32Array(rows * cols);
+      var inside = new Uint8Array(rows * cols);
+      function project() {
+        var cp = Math.cos(PITCH), sp = Math.sin(PITCH);
+        // Stacked layout: the head is the hero's backdrop, so size it to the hero's
+        // height (top near the eyebrow) and let narrow screens crop its sides.
+        var stacked = matchMedia('(max-width: 960px)').matches;
+        var scale = stacked ? H / aspect : Math.min(W * 0.9, H / (aspect * 1.0));
+        var ox = W / 2, oy = H - (aspect / 2) * scale * 0.9;
+        for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+          var n = r * cols + c, i = n * 3;
+          inside[n] = raw[i + 2];
+          bright[n] = raw[i + 1] / 255;
+          var X = (c + 0.5) / cols - 0.5, Y = ((r + 0.5) / rows - 0.5) * aspect, Z = raw[i] / 255 * 0.22 - 0.1;
+          var y1 = Y * cp - Z * sp, z2 = Y * sp + Z * cp, f = 2.8 / (2.8 - z2);
+          base[n * 2] = ox + X * scale * f;
+          base[n * 2 + 1] = oy + y1 * scale * f;
+        }
+        warp();
+      }
+
+      // Stretch the photo over the same projected mesh as the lines, cell by cell,
+      // so every feature lands exactly under its line. Done once per resize.
+      function warp() {
+        if (!photoReady || !W) return;
+        warped.width = canvas.width; warped.height = canvas.height;
+        var sw = photo.naturalWidth / cols, sh = photo.naturalHeight / rows;
+        for (var r = 0; r < rows - 1; r++) for (var c = 0; c < cols - 1; c++) {
+          var n = r * cols + c;
+          if (!inside[n] && !inside[n + 1] && !inside[n + cols] && !inside[n + cols + 1]) continue;
+          var x0 = base[n * 2], y0 = base[n * 2 + 1];
+          var x1 = base[(n + 1) * 2], y1 = base[(n + 1) * 2 + 1];
+          var x2 = base[(n + cols) * 2], y2 = base[(n + cols) * 2 + 1];
+          wctx.setTransform(dpr * (x1 - x0) / sw, dpr * (y1 - y0) / sw, dpr * (x2 - x0) / sh, dpr * (y2 - y0) / sh, dpr * x0, dpr * y0);
+          wctx.drawImage(photo, (c + 0.5) * sw, (r + 0.5) * sh, sw * 1.08, sh * 1.08, 0, 0, sw * 1.08, sh * 1.08);
+        }
+        wctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+
+      function size() {
+        var r = canvas.getBoundingClientRect();
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        W = r.width; H = r.height;
+        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        off.width = canvas.width; off.height = canvas.height;
+        octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        stripes = octx.createPattern(stripe, 'repeat');
+        color = getComputedStyle(canvas).color;
+        project();
+      }
+
+      function draw(now, reveal) {
+        ctx.clearRect(0, 0, W, H);
+        var t = now / 1000;
+        var paths = [];
+        for (var k = 0; k < BUCKETS; k++) paths.push([]);
+        var shown = Math.ceil(rows * reveal);
+        // the scan: a soft band of light travelling down the face every 7 seconds
+        var band = ((t % 7) / 7) * (rows + 30) - 15;
+        for (var r = 0; r < shown; r++) {
+          var px = 0, py = 0, have = false;
+          var lift = Math.max(0, 1 - Math.abs(r - band) / 9);
+          lift = lift * lift * 0.55;
+          for (var c = 0; c < cols; c++) {
+            var n = r * cols + c;
+            if (!inside[n]) { have = false; continue; }
+            var x = base[n * 2], y = base[n * 2 + 1];
+            // breathing: a slow travelling wave, well under a pixel at rest
+            y += Math.sin(c * 0.22 + t * 1.3 + r * 0.05) * 0.6;
+            if (have) {
+              var b = Math.min(1, bright[n] + lift * (0.35 + bright[n]));
+              paths[Math.min(BUCKETS - 1, Math.floor(b * BUCKETS))].push(px, py, x, y);
+            }
+            px = x; py = y; have = true;
+          }
+        }
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.lineCap = 'round';
+        for (var k2 = 0; k2 < BUCKETS; k2++) {
+          var p = paths[k2];
+          if (!p.length) continue;
+          ctx.globalAlpha = 0.08 + 0.92 * Math.pow((k2 + 0.5) / BUCKETS, 1.4);
+          ctx.beginPath();
+          for (var j = 0; j < p.length; j += 4) { ctx.moveTo(p[j], p[j + 1]); ctx.lineTo(p[j + 2], p[j + 3]); }
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        if (near > 0.01 && photoReady) lens(t);
+      }
+
+      // The lens: lines part, and the photo shows through in the same scanlines.
+      function lens(t) {
+        var R = 40 + 110 * near + Math.sin(t * 2.1) * 3;
+        // knock the lines out under the lens
+        ctx.globalCompositeOperation = 'destination-out';
+        var g = ctx.createRadialGradient(lx, ly, 0, lx, ly, R);
+        g.addColorStop(0, 'rgba(0,0,0,' + (0.92 * near) + ')');
+        g.addColorStop(0.7, 'rgba(0,0,0,' + (0.6 * near) + ')');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(lx - R, ly - R, R * 2, R * 2);
+        // the photo, feathered to the lens, cut into scanlines
+        octx.globalCompositeOperation = 'source-over';
+        octx.clearRect(0, 0, W, H);
+        octx.setTransform(1, 0, 0, 1, 0, 0);
+        octx.drawImage(warped, 0, 0);
+        octx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        octx.globalCompositeOperation = 'destination-in';
+        var m = octx.createRadialGradient(lx, ly, R * 0.15, lx, ly, R);
+        m.addColorStop(0, 'rgba(0,0,0,' + near + ')');
+        m.addColorStop(0.75, 'rgba(0,0,0,' + (0.75 * near) + ')');
+        m.addColorStop(1, 'rgba(0,0,0,0)');
+        octx.fillStyle = m;
+        octx.fillRect(0, 0, W, H);
+        octx.globalCompositeOperation = 'destination-out';
+        octx.fillStyle = stripes;
+        octx.fillRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.drawImage(off, 0, 0, W, H);
+        // a hairline ring at the lens edge
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = 0.18 * near;
+        ctx.beginPath(); ctx.arc(lx, ly, R, 0, Math.PI * 2); ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+
+      function frame(now) {
+        raf = 0;
+        if (!start) start = now;
+        var t = Math.min(1, (now - start) / 1400);
+        near += (nearTarget - near) * (nearTarget ? 0.07 : 0.05);
+        lx += (mx - lx) * 0.18; ly += (my - ly) * 0.18;
+        draw(now, 1 - Math.pow(1 - t, 3));
+        if (visible) raf = requestAnimationFrame(frame);
+      }
+
+      canvas.addEventListener('pointermove', function (event) {
+        var r = canvas.getBoundingClientRect();
+        mx = event.clientX - r.left; my = event.clientY - r.top;
+        if (near < 0.02) { lx = mx; ly = my; }
+        nearTarget = 1;
+      });
+      canvas.addEventListener('pointerleave', function () { nearTarget = 0; });
+
+      size();
+      addEventListener('resize', function () { size(); if (reduce) draw(0, 1); });
+      new MutationObserver(function () { size(); if (reduce) draw(0, 1); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      if (reduce) { draw(0, 1); return; }
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible && !raf) raf = requestAnimationFrame(frame);
+      }).observe(canvas);
+    })();
+  </script>
+</Base>
+
+<style>
+  /* The hero text starts at the shared page top; the portrait keeps its own place. */
+  .home-hero > div:first-child { align-self: start; }
+
+  /* Stacked (tablet and phone): the portrait becomes the hero's backdrop.
+     It shares the text's cell at full width, sits behind the words, and is
+     turned down so it stays visible without competing with them. The text
+     keeps its full width. */
+  @media (max-width: 960px) {
+    .home-hero {
+      grid-template-columns: 1fr;
+      isolation: isolate;
+    }
+
+    /* Same row, so the portrait sits behind the text; the column comes from
+       the hero's breakout layout (shell.css), never a fixed track number. */
+    .home-hero > div:first-child {
+      grid-row: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-hero > :global(.head) {
+      grid-row: 1;
+      z-index: 0;
+      align-self: stretch;
+      justify-self: stretch;
+      width: auto;
+      margin: 0;
+      opacity: 0.22;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
+      mask-image: linear-gradient(180deg, #000 70%, transparent);
+    }
+
+    .home-hero > :global(.head) :global(canvas) {
+      min-height: 0;
+      height: 100%;
+      max-height: none;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .home-hero > :global(.head) { opacity: 0.16; }
+  }
+
+  /* Dark mode: thin light lines on black read fainter, so turn the backdrop up. */
+  @media (max-width: 960px) {
+    :global([data-theme="dark"]) .home-hero > :global(.head) { opacity: 0.34; }
+  }
+  @media (max-width: 560px) {
+    :global([data-theme="dark"]) .home-hero > :global(.head) { opacity: 0.28; }
+  }
+</style>

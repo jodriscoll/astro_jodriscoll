@@ -1,0 +1,82 @@
+---
+/**
+ * Progressive detail. The content stays in the HTML (parsers and agents read
+ * it); on screen it is folded, and it is always left out of the PDF.
+ */
+interface Props {
+  summary: string;
+  count?: number;
+}
+
+const { summary, count } = Astro.props;
+---
+
+<details class="ds-disclosure" data-print="hide">
+  <summary>
+    <span class="ds-disclosure__mark" aria-hidden="true"></span>
+    {summary}
+    {count !== undefined && <span class="ds-disclosure__count">{count}</span>}
+  </summary>
+  <div class="ds-disclosure__body">
+    <slot />
+  </div>
+</details>
+
+<style>
+  .ds-disclosure {
+    margin: 0;
+  }
+
+  .ds-disclosure summary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-2);
+    color: var(--ds-fg-faint);
+    font-size: var(--ds-text-xs);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--ds-dur-fast);
+  }
+
+  .ds-disclosure summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .ds-disclosure summary:hover,
+  .ds-disclosure[open] summary {
+    color: var(--ds-fg);
+  }
+
+  .ds-disclosure__mark {
+    position: relative;
+    width: 9px;
+    height: 9px;
+  }
+
+  .ds-disclosure__mark::before,
+  .ds-disclosure__mark::after {
+    content: "";
+    position: absolute;
+    inset: 4px 0 auto;
+    height: 1px;
+    background: currentColor;
+    transition: transform var(--ds-dur) var(--ds-ease);
+  }
+
+  .ds-disclosure__mark::after {
+    transform: rotate(90deg);
+  }
+
+  .ds-disclosure[open] .ds-disclosure__mark::after {
+    transform: rotate(0deg);
+  }
+
+  .ds-disclosure__count {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+  }
+
+  .ds-disclosure__body {
+    padding-top: var(--ds-space-3);
+  }
+</style>

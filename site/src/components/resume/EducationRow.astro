@@ -1,0 +1,366 @@
+---
+/**
+ * One degree or program, drawn as a transcript rather than another card:
+ * graph-paper ground, the GPA as a ring out of 4.0, and the program's years as
+ * a term calendar (Winter / Spring / Summer / Fall) with each honors term
+ * stamped in red. In print it stays a plain ledger row.
+ * Marked up as h-event inside the page's h-resume (p-education).
+ */
+import type { EducationView } from '../../lib/resume';
+
+interface Props {
+  item: EducationView;
+}
+
+const { item } = Astro.props;
+const SEASONS = ['Winter', 'Spring', 'Summer', 'Fall'];
+const first = Number(item.start);
+const last = Number(item.end);
+const years = Number.isFinite(first) && Number.isFinite(last) && last >= first ? Array.from({ length: last - first + 1 }, (_, i) => first + i) : [];
+const honored = new Set(item.honorTerms);
+const gpa = Number.parseFloat(item.score);
+const share = Number.isFinite(gpa) ? Math.min(gpa / 4, 1) : 0;
+let order = 0;
+---
+
+<li class="edu p-education h-event" style={`--gpa: ${share}`}>
+  <div class="edu__text">
+    <p class="edu__kicker">
+      Transcript · {item.credential} ·
+      <time class="dt-start" datetime={item.start}>{item.when}</time>
+      <time class="dt-end" datetime={item.end} hidden />
+    </p>
+    <h3 class="edu__title">
+      <span class="p-name">{item.studyType}, {item.area}</span>
+      <span class="edu__school p-location">{item.institution}</span>
+    </h3>
+    <ul class="edu__facts" data-print="only">
+      {item.score && <li><strong>{item.score}</strong> GPA</li>}
+      {item.honors && <li>{item.honors}, {item.honorTerms.length} terms</li>}
+    </ul>
+    {item.summary && <p class="edu__summary p-summary">{item.summary}</p>}
+  </div>
+
+  <div class="edu__record" data-print="hide">
+    {
+      Number.isFinite(gpa) && (
+        <figure class="edu__ring" aria-label={`${item.score} GPA out of 4.0`}>
+          <span class="edu__ring-value">{item.score}</span>
+          <figcaption>GPA / 4.0</figcaption>
+        </figure>
+      )
+    }
+
+    {
+      years.length > 0 && (
+        <div class="edu__terms">
+          <table class="edu__cal" aria-label={`${item.honors} by term`}>
+            <thead>
+              <tr>
+                <td />
+                {SEASONS.map((season) => <th scope="col">{season.slice(0, 2)}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {years.map((year) => (
+                <tr>
+                  <th scope="row">{year}</th>
+                  {SEASONS.map((season) => {
+                    const term = `${season} ${year}`;
+                    const on = honored.has(term);
+                    return (
+                      <td class:list={['edu__cell', on && 'is-on']} style={on ? `--n: ${order++}` : undefined} data-tip={on ? `${term}: ${item.honors}` : undefined}>
+                        <span class="sr-only">{on ? `${term}, ${item.honors}` : ''}</span>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="edu__legend">
+            <i aria-hidden="true" />
+            {item.honors} · {item.honorTerms.length} terms
+          </p>
+        </div>
+      )
+    }
+  </div>
+</li>
+
+<style>
+  @property --edu-fill {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 1;
+  }
+
+  /* Graph paper, not the showcase surface: a hairline frame and a faint grid. */
+  .edu {
+    --edu-fill: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) auto;
+    gap: var(--ds-space-10);
+    align-items: center;
+    margin-top: var(--ds-space-4);
+    padding: var(--ds-space-8);
+    border: var(--ds-hairline) solid var(--ds-rule);
+    background:
+      linear-gradient(color-mix(in srgb, var(--ds-fg) 4%, transparent) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, color-mix(in srgb, var(--ds-fg) 4%, transparent) 1px, transparent 1px) 0 0 / 24px 24px;
+    view-timeline: --edu block;
+  }
+
+  .edu__text {
+    display: grid;
+    gap: var(--ds-space-3);
+    min-width: 0;
+  }
+
+  .edu__kicker {
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-accent);
+  }
+
+  .edu__title {
+    display: grid;
+    gap: var(--ds-space-2);
+    margin: 0;
+    font-size: var(--ds-text-2xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: var(--ds-leading-tight);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-fg);
+  }
+
+  .edu__school {
+    font-size: var(--ds-text-md);
+    font-weight: var(--ds-weight-regular);
+    letter-spacing: 0;
+    color: var(--ds-fg-muted);
+  }
+
+  .edu__summary {
+    max-width: var(--ds-measure);
+    margin: var(--ds-space-2) 0 0;
+    font-size: var(--ds-text-md);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  .edu__record {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-8);
+  }
+
+  /* GPA ring: the arc is the share of 4.0, drawn once as it scrolls in. */
+  .edu__ring {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    width: 132px;
+    height: 132px;
+    margin: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--ds-accent) calc(var(--gpa) * var(--edu-fill) * 360deg), var(--ds-rule) 0);
+  }
+
+  .edu__ring::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    background: var(--ds-bg);
+  }
+
+  .edu__ring-value,
+  .edu__ring figcaption {
+    position: relative;
+  }
+
+  .edu__ring-value {
+    font-family: var(--ds-font-mono);
+    font-size: 34px;
+    font-weight: var(--ds-weight-medium);
+    line-height: 1;
+    color: var(--ds-fg);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .edu__ring figcaption {
+    margin-top: 6px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    color: var(--ds-fg-faint);
+  }
+
+  /* Term calendar: one row per year, one column per season. */
+  .edu__terms {
+    display: grid;
+    gap: var(--ds-space-3);
+  }
+
+  .edu__cal {
+    border-collapse: separate;
+    border-spacing: 4px;
+    /* The one deliberate negative margin: a separated table also puts its
+       border-spacing around the outside, and nothing else removes that outer
+       ring without dropping table semantics or shifting the column labels. */
+    margin: -4px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .edu__cal th {
+    font-weight: var(--ds-weight-regular);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+  }
+
+  .edu__cal tbody th {
+    padding-right: var(--ds-space-2);
+    text-align: right;
+  }
+
+  .edu__cell {
+    width: 30px;
+    height: 30px;
+    border: var(--ds-hairline) solid var(--ds-rule);
+    background: var(--ds-bg);
+  }
+
+  .edu__cell.is-on {
+    border-color: var(--ds-accent);
+    background: var(--ds-accent);
+  }
+
+  .edu__legend {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-space-2);
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-muted);
+  }
+
+  .edu__legend i {
+    width: 8px;
+    height: 8px;
+    background: var(--ds-accent);
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .edu {
+        animation: edu-ring linear both;
+        animation-timeline: --edu;
+        animation-range: cover 10% cover 40%;
+      }
+
+      .edu__cell.is-on {
+        animation: edu-stamp linear both;
+        animation-timeline: --edu;
+        animation-range: cover calc(20% + var(--n) * 4%) cover calc(24% + var(--n) * 4%);
+      }
+    }
+  }
+
+  @keyframes edu-ring {
+    from {
+      --edu-fill: 0;
+    }
+    to {
+      --edu-fill: 1;
+    }
+  }
+
+  @keyframes edu-stamp {
+    from {
+      background: var(--ds-bg);
+      transform: scale(0.6);
+    }
+    to {
+      background: var(--ds-accent);
+      transform: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .edu {
+      grid-template-columns: 1fr;
+      gap: var(--ds-space-6);
+    }
+
+    /* Stacked under the text, the GPA ring and term grid sit centered. */
+    .edu__record {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .edu {
+      padding: var(--ds-space-5);
+    }
+
+    .edu__record {
+      flex-direction: column;
+      align-items: center;
+      gap: var(--ds-space-6);
+    }
+
+    .edu__terms {
+      justify-items: center;
+    }
+
+    .edu__legend {
+      justify-content: center;
+    }
+  }
+
+  @media print {
+    .edu {
+      grid-template-columns: 1fr;
+      margin: 0;
+      padding: var(--ds-space-4) 0;
+      border: 0;
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+      background: none;
+      break-inside: avoid;
+    }
+
+    .edu__kicker {
+      color: var(--ds-fg-faint);
+    }
+
+    .edu__title {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 var(--ds-space-3);
+      font-size: var(--ds-text-md);
+      font-weight: var(--ds-weight-bold);
+    }
+
+    .edu__facts {
+      display: flex;
+      gap: var(--ds-space-5);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: var(--ds-text-sm);
+    }
+
+    .edu__summary {
+      max-width: none;
+      font-size: var(--ds-text-sm);
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+{
+  "slug": "samsung-display-pid",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "Samsung Display's product-information site, formerly pid.samsungdisplay.com and now part of samsungdisplay.com, on Drupal 7, packaged as RPMs and deployed to AWS with CodeDeploy.",
+  "short": "Samsung Display's product-information site, formerly pid.samsungdisplay.com, on Drupal 7, packaged as RPMs and deployed to AWS with CodeDeploy.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 7"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "AWS CodeDeploy"
+        },
+        {
+          "name": "RPM"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,455 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Isometric from '../../components/Isometric.astro';
+import '../../styles/tags.css';
+import '../../styles/post-phone.css';
+import { getPostEntry, listPosts } from '../../gateway';
+import { ids, postNode } from '../../agent';
+import { loadBundle } from '../../agent/site';
+
+export async function getStaticPaths() {
+  const posts = await listPosts();
+  return posts.map((post) => ({ params: { slug: post.id } }));
+}
+
+const slug = Astro.params.slug ?? '';
+const post = await getPostEntry(slug);
+if (!post) throw new Error(`Missing post ${slug}`);
+const { Content, headings } = await render(post);
+const tags: string[] = (post.data as { tags?: string[] }).tags ?? [];
+
+// Table of contents: every h2, with h3s nested under the h2 before them.
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const sections = toc.filter((heading) => heading.depth === 2);
+let sectionNo = 0;
+const tocItems = toc.map((heading) => ({ ...heading, n: heading.depth === 2 ? ++sectionNo : 0 }));
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const posts = await listPosts();
+const at = posts.findIndex((item) => item.id === slug);
+const newer = at > 0 ? posts[at - 1] : undefined;
+const older = at < posts.length - 1 ? posts[at + 1] : undefined;
+
+// Dates: written, and updated when the frontmatter says so.
+const date = post.data.date;
+const updated = (post.data as { updated?: Date }).updated;
+const longDate = (d: Date) => d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const weekday = date.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' });
+const isoDay = (d: Date) => d.toISOString().slice(0, 10);
+
+// Reading time from the prose only: code and figure fences don't count.
+const prose = (post.body ?? '').replace(/```[\s\S]*?```/g, ' ').replace(/[#>*_`[\]()!|-]/g, ' ');
+const wordCount = prose.split(/\s+/).filter(Boolean).length;
+const minutes = Math.max(1, Math.round(wordCount / 230));
+
+// Each tag knows how many posts carry it, drawn as one tick per post.
+const tagKey = (tag: string) => tag.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const tagCounts = new Map<string, number>();
+for (const item of posts) for (const tag of ((item.data as { tags?: string[] }).tags ?? [])) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+
+const bundle = await loadBundle(Astro.site);
+const record = bundle.posts.find((item) => item.slug === slug);
+if (!record) throw new Error(`Missing agent record for ${slug}`);
+// The shared BlogPosting node, plus what only this page knows: the real modified
+// date, reading time, its section, and each section as a linkable part.
+const postGraph = {
+  ...postNode(bundle.site, record, bundle.person),
+  dateModified: isoDay(updated ?? date),
+  timeRequired: `PT${minutes}M`,
+  articleSection: tags[0],
+  hasPart: sections.map((heading) => ({
+    '@type': 'WebPageElement',
+    '@id': `${record.url}#${heading.slug}`,
+    name: heading.text,
+    url: `${record.url}#${heading.slug}`,
+  })),
+};
+---
+
+<Base
+  title={`${post.data.title} · Joseph O'Driscoll`}
+  description={post.data.description}
+  ogType="article"
+  published={date}
+  modified={updated}
+  tags={tags}
+  page={{ mainEntity: { '@id': ids.post(record.url) } }}
+  schema={[postGraph]}
+  crumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Writing', path: '/blog' },
+    { name: post.data.title, path: `/blog/${slug}` },
+  ]}
+>
+  <div class="post">
+    <article aria-labelledby="post-title">
+      <header class="post__header">
+        <p class="crumbs">
+          <a class="crumbs__back" href="/blog" aria-label="Back to Writing">‹</a>
+          <a href="/blog">Writing</a>
+          {tags[0] && (
+            <>
+              <span aria-hidden="true">/</span>
+              <span>{tags[0]}</span>
+            </>
+          )}
+        </p>
+        <h1 class="post__title" id="post-title">{post.data.title}</h1>
+        <Isometric seed={post.id} class="post__cover" label={`Line drawing for ${post.data.title}`} />
+        <p class="post__byline">
+          {/* The author is in the JSON-LD (it's his site), so the byline is just the date. */}
+          <span class="post__meta">
+            <time datetime={isoDay(date)}>{longDate(date)}</time>
+            <span aria-hidden="true">·</span>
+            <span>{minutes} min read</span>
+          </span>
+        </p>
+      </header>
+      <div class="post__rule ds-pulse" aria-hidden="true"></div>
+      <div class="post__body" data-post-body>
+        <Content />
+      </div>
+    </article>
+
+    <aside class="rail" aria-label="About this post">
+      <div class="rail__inner">
+        <div>
+          <p class="rail__label">Written date</p>
+          <p>
+            <time datetime={isoDay(date)}><strong>{weekday}</strong>, {longDate(date)}</time>
+          </p>
+          {updated && (
+            <p class="rail__updated">
+              Updated <time datetime={isoDay(updated)}>{longDate(updated)}</time>
+            </p>
+          )}
+          <p class="rail__reading">{minutes} min read · {wordCount.toLocaleString('en-US')} words</p>
+        </div>
+        {tags.length > 0 && (
+          <div>
+            <p class="rail__label">Tags</p>
+            <ul class="rail__tags">
+              {tags.map((tag) => {
+                const count = tagCounts.get(tag) ?? 1;
+                return (
+                  <li>
+                    <a href={`/blog?tag=${tagKey(tag)}`} rel="tag" title={`${count} ${count === 1 ? 'post' : 'posts'} tagged ${tag}`}>
+                      <span class="rail__hash" aria-hidden="true">#</span>
+                      <span class="rail__tagname" data-label={tag}>{tag}</span>
+                      <span class="rail__ticks" aria-hidden="true">{Array.from({ length: Math.min(count, 12) }, () => <i />)}</span>
+                      <span class="rail__count">{String(count).padStart(2, '0')}</span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
+        {sections.length > 1 && (
+          <nav class="toc" aria-labelledby="toc-label" data-toc>
+            <p class="rail__label toc__label" id="toc-label">
+              In this post
+              <span class="toc__count" aria-hidden="true" data-toc-count>{pad(1)} / {pad(sections.length)}</span>
+            </p>
+            {/* Phones and tablets: the contents ride a pinned bar (section, count,
+                reading progress) that opens into the full list. Hidden on desktop. */}
+            <button class="toc__bar" type="button" aria-expanded="false" aria-controls="toc-body" data-toc-toggle>
+              <span class="toc__barcount" data-toc-count>{pad(1)} / {pad(sections.length)}</span>
+              <span class="toc__bartitle" data-toc-current>{sections[0]?.text}</span>
+              <span class="toc__chev" aria-hidden="true" />
+              <span class="sr-only">Show contents</span>
+            </button>
+            <div class="toc__body" id="toc-body">
+              <div class="toc__track" aria-hidden="true">
+                <span class="toc__fill" />
+                <span class="toc__pin" />
+              </div>
+              <ol class="toc__list">
+              {tocItems.map((heading) => (
+                <li class:list={['toc__item', heading.depth === 3 && 'is-sub']}>
+                  <a href={`#${heading.slug}`} data-toc-link={heading.slug}>
+                    {heading.n > 0 && <span class="toc__n" aria-hidden="true">{pad(heading.n)}</span>}
+                    <span class="toc__text">{heading.text}</span>
+                  </a>
+                </li>
+              ))}
+              </ol>
+            </div>
+          </nav>
+        )}
+      </div>
+    </aside>
+
+    <nav class="post__pager" aria-label="More writing">
+      {older ? (
+        <a href={`/blog/${older.id}`} rel="prev">
+          <span>Previous</span>
+          {older.data.title}
+        </a>
+      ) : (
+        <span />
+      )}
+      {newer && (
+        <a class="is-next" href={`/blog/${newer.id}`} rel="next">
+          <span>Next</span>
+          {newer.data.title}
+        </a>
+      )}
+    </nav>
+  </div>
+
+  <p class="sr-only" aria-live="polite" data-post-live></p>
+
+  <script is:inline>
+    (function () {
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var live = document.querySelector('[data-post-live]');
+      function say(text) {
+        if (!live) return;
+        live.textContent = '';
+        setTimeout(function () { live.textContent = text; }, 30);
+      }
+      function copy(text) {
+        if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+        return new Promise(function (resolve, reject) {
+          var area = document.createElement('textarea');
+          area.value = text;
+          area.setAttribute('readonly', '');
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.appendChild(area);
+          area.select();
+          try { document.execCommand('copy') ? resolve() : reject(); } catch (e) { reject(e); }
+          area.remove();
+        });
+      }
+      var LINK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>';
+      var CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
+
+      // 1. Heading anchors: a link icon on hover; clicking copies the section's URL.
+      document.querySelectorAll('[data-post-body] :is(h2, h3, h4)[id]').forEach(function (heading) {
+        var anchor = document.createElement('a');
+        anchor.className = 'heading-anchor';
+        anchor.href = '#' + heading.id;
+        anchor.setAttribute('aria-label', 'Copy link to section: ' + heading.textContent.trim());
+        anchor.innerHTML = LINK + '<span class="heading-anchor__note" aria-hidden="true">Copied</span>';
+        anchor.addEventListener('click', function (event) {
+          event.preventDefault();
+          var url = location.origin + location.pathname + '#' + heading.id;
+          history.replaceState(null, '', '#' + heading.id);
+          heading.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          copy(url).then(function () {
+            anchor.classList.add('is-copied');
+            anchor.querySelector('svg').outerHTML = CHECK;
+            say('Link to "' + heading.textContent.trim() + '" copied');
+            setTimeout(function () {
+              anchor.classList.remove('is-copied');
+              anchor.querySelector('svg').outerHTML = LINK;
+            }, 1600);
+          }).catch(function () {});
+        });
+        heading.appendChild(anchor);
+      });
+
+      // 2. Code blocks: a file tab (title="…" on the fence, else the language) and a copy button.
+      var LANGS = { js: 'JavaScript', jsx: 'JSX', ts: 'TypeScript', tsx: 'TSX', css: 'CSS', scss: 'SCSS', html: 'HTML', json: 'JSON', bash: 'Terminal', sh: 'Terminal', shell: 'Terminal', zsh: 'Terminal', text: 'Output', txt: 'Output', md: 'Markdown', php: 'PHP', py: 'Python', yaml: 'YAML', yml: 'YAML', astro: 'Astro', twig: 'Twig', sql: 'SQL', diff: 'Diff' };
+      var FILE = '<svg class="codeblock__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M10 12.5 8 15l2 2.5M14 12.5l2 2.5-2 2.5M14 2v4a2 2 0 0 0 2 2h4M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></svg>';
+      var TERM = '<svg class="codeblock__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="m5 8 4 4-4 4M12 17h7"/></svg>';
+      var COPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v10H9zM5 15V5h10"/></svg>';
+      document.querySelectorAll('[data-post-body] pre').forEach(function (pre) {
+        if (pre.closest('.codeblock')) return;
+        var lang = pre.getAttribute('data-language') || '';
+        var title = pre.getAttribute('data-title') || LANGS[lang] || (lang ? lang.toUpperCase() : 'Code');
+        var isTerm = /^(bash|sh|shell|zsh|console)$/.test(lang);
+        var figure = document.createElement('figure');
+        figure.className = 'codeblock';
+        if (lang) figure.setAttribute('data-lang', lang);
+        var bar = document.createElement('div');
+        bar.className = 'codeblock__bar';
+        var tab = document.createElement('span');
+        tab.className = 'codeblock__tab';
+        tab.innerHTML = (isTerm ? TERM : FILE);
+        tab.appendChild(document.createTextNode(title));
+        var button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'codeblock__copy';
+        button.setAttribute('aria-label', 'Copy code: ' + title);
+        button.innerHTML = COPY + '<span>Copy</span>';
+        button.addEventListener('click', function () {
+          var code = pre.querySelector('code') || pre;
+          copy(code.innerText.replace(/\n$/, '')).then(function () {
+            button.classList.add('is-copied');
+            button.querySelector('span').textContent = 'Copied';
+            say('Code copied');
+            setTimeout(function () {
+              button.classList.remove('is-copied');
+              button.querySelector('span').textContent = 'Copy';
+            }, 1600);
+          }).catch(function () {});
+        });
+        bar.appendChild(tab);
+        bar.appendChild(button);
+        pre.parentNode.insertBefore(figure, pre);
+        figure.appendChild(bar);
+        figure.appendChild(pre);
+      });
+
+      // 3. Table of contents: the pin rides to the section being read; the fill shows progress.
+      var toc = document.querySelector('[data-toc]');
+      if (toc) {
+        var links = [].slice.call(toc.querySelectorAll('[data-toc-link]'));
+        var heads = links.map(function (link) { return document.getElementById(link.getAttribute('data-toc-link')); });
+        var counts = [].slice.call(toc.querySelectorAll('[data-toc-count]'));
+        var currentText = toc.querySelector('[data-toc-current]');
+        var toggle = toc.querySelector('[data-toc-toggle]');
+        var header = document.querySelector('.post__header');
+        var endOf = document.querySelector('[data-post-body]');
+        var narrow = matchMedia('(max-width: 1080px)');
+        var pinned = false;
+        var body = document.querySelector('[data-post-body]');
+        var total = links.filter(function (link) { return link.querySelector('.toc__n'); }).length;
+        var current = -1;
+        var ticking = false;
+
+        function update() {
+          ticking = false;
+          var line = innerHeight * 0.28;
+          var active = -1;
+          for (var i = 0; i < heads.length; i++) {
+            if (heads[i] && heads[i].getBoundingClientRect().top <= line) active = i;
+          }
+          if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) active = heads.length - 1;
+          if (active !== current) {
+            current = active;
+            links.forEach(function (link, i) {
+              if (i === active) link.setAttribute('aria-current', 'location');
+              else link.removeAttribute('aria-current');
+            });
+            toc.classList.toggle('has-active', active >= 0);
+            if (active >= 0) {
+              placePin();
+              var section = 0, title = null;
+              for (var j = 0; j <= active; j++) if (links[j].querySelector('.toc__n')) { section++; title = links[j]; }
+              var label = String(Math.max(1, section)).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+              counts.forEach(function (el) { el.textContent = label; });
+              if (currentText && title) currentText.textContent = title.querySelector('.toc__text').textContent;
+            }
+          }
+          // Narrow screens: pin the bar once the header has scrolled away, and let
+          // it go as the article ends, before the about block and the pager.
+          var pin = false;
+          if (narrow.matches && header && endOf) {
+            var bar = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fixedbar-h')) || 56;
+            pin = header.getBoundingClientRect().bottom < bar && endOf.getBoundingClientRect().bottom > bar * 2;
+          }
+          if (pin !== pinned) {
+            pinned = pin;
+            toc.classList.toggle('is-pinned', pin);
+            if (!pin) setOpen(false);
+          }
+          if (body) {
+            var rect = body.getBoundingClientRect();
+            var progress = Math.min(1, Math.max(0, (line - rect.top) / Math.max(1, rect.height - innerHeight * 0.5)));
+            toc.style.setProperty('--read', progress.toFixed(3));
+          }
+        }
+        // links sit inside .toc__body (position: relative), the track's box
+        function placePin() {
+          if (current < 0) return;
+          var link = links[current];
+          toc.style.setProperty('--pin-y', (link.offsetTop + link.offsetHeight / 2) + 'px');
+        }
+        var scrim = null;
+        if (toggle) {
+          scrim = document.createElement('div');
+          scrim.className = 'toc-scrim';
+          scrim.setAttribute('aria-hidden', 'true');
+          document.body.appendChild(scrim);
+        }
+        function setOpen(open) {
+          if (!toggle) return;
+          toc.classList.toggle('is-open', open);
+          scrim.classList.toggle('is-on', open);
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+          if (open) {
+            placePin();
+            var on = links[current];
+            if (on) on.scrollIntoView({ block: 'nearest' });
+          }
+        }
+        if (toggle) {
+          toggle.addEventListener('click', function () { setOpen(!toc.classList.contains('is-open')); });
+          document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && toc.classList.contains('is-open')) { setOpen(false); toggle.focus(); }
+          });
+          document.addEventListener('click', function (event) {
+            if (toc.classList.contains('is-open') && !toc.contains(event.target)) setOpen(false);
+          });
+        }
+        function request() {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+        addEventListener('scroll', request, { passive: true });
+        addEventListener('resize', request);
+        update();
+
+        links.forEach(function (link, i) {
+          link.addEventListener('click', function (event) {
+            var head = heads[i];
+            if (!head) return;
+            event.preventDefault();
+            setOpen(false);
+            head.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+            history.replaceState(null, '', '#' + head.id);
+            head.setAttribute('tabindex', '-1');
+            head.focus({ preventScroll: true });
+          });
+        });
+      }
+
+      // 4. Tag names resolve out of block glyphs on hover, like the sidebar.
+      if (reduce) return;
+      var GLYPHS = '▖▘▝▗▚▞░▒/\\_<>';
+      document.querySelectorAll('.rail__tags a').forEach(function (a) {
+        var label = a.querySelector('[data-label]');
+        if (!label) return;
+        function go() {
+          var text = label.getAttribute('data-label') || '';
+          if (!label.style.minWidth) label.style.minWidth = Math.ceil(label.getBoundingClientRect().width) + 'px';
+          cancelAnimationFrame(label._raf || 0);
+          var start = performance.now();
+          (function tick(now) {
+            var done = Math.min(1, (now - start) / 260);
+            var settled = Math.floor(done * text.length);
+            var out = text.slice(0, settled);
+            for (var i = settled; i < text.length; i++) out += text[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+            label.textContent = out;
+            if (done < 1) label._raf = requestAnimationFrame(tick);
+            else label.textContent = text;
+          })(start);
+        }
+        a.addEventListener('pointerenter', go);
+        a.addEventListener('focus', go);
+      });
+    })();
+  </script>
+</Base>
+
+<style>
+  /* The byline sits right under the cover; the rule (with the light that runs
+     along it) separates the byline from the article. */
+  .post__byline {
+    margin: 24px 0 16px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .post__rule {
+    height: 0;
+    margin-bottom: 32px;
+    border-top: 1px solid var(--line);
+  }
+</style>

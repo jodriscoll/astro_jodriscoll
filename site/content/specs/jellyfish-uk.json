@@ -1,0 +1,29 @@
+{
+  "slug": "jellyfish-uk",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "Jellyfish’s UK website on Drupal 7, including a patched reCAPTCHA module that every contact form depended on.",
+  "short": "Jellyfish's own UK website on Drupal 7, including a patched reCAPTCHA module that every contact form relied on.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Drupal 7"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "MySQL"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,99 @@
+{
+  "slug": "pawdings",
+  "org": "nomadic-digital",
+  "kind": "Creator",
+  "role": "Product, Design and Engineering",
+  "dek": "PawDings is a startup app for iPhone, Android and the web that holds dog owners to being more active with their dogs. It is location-aware, sends one thoughtful, weather-aware idea a day, and tracks how active you actually are through GPS, check-ins and fully customizable notifications and reminders.",
+  "short": "An app I created for iOS, Android and the web that keeps dog owners active: one weather- and location-aware idea a day, GPS arrival checks and fully customizable reminders, on Expo with a typed OpenAPI backend.",
+  "facts": [
+    {
+      "label": "Status",
+      "value": "Working Expo MVP, in progress"
+    },
+    {
+      "label": "Platforms",
+      "value": "iOS, Android and web from one codebase"
+    },
+    {
+      "label": "API",
+      "value": "Versioned OpenAPI contract"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Expo",
+          "version": "57"
+        },
+        {
+          "name": "React Native",
+          "version": "0.86"
+        },
+        {
+          "name": "React",
+          "version": "19.2"
+        },
+        {
+          "name": "TypeScript",
+          "version": "6.0"
+        }
+      ]
+    },
+    {
+      "group": "Device",
+      "items": [
+        {
+          "name": "expo-location",
+          "note": "opt-in, with arrival checks once an activity starts"
+        },
+        {
+          "name": "expo-notifications",
+          "note": "daily or weekly, at a chosen time"
+        },
+        {
+          "name": "expo-task-manager"
+        },
+        {
+          "name": "expo-image-picker",
+          "note": "a private memory scrapbook"
+        }
+      ]
+    },
+    {
+      "group": "Planned backend",
+      "items": [
+        {
+          "name": "Node.js",
+          "note": "OpenAPI-validated TypeScript service"
+        },
+        {
+          "name": "PostgreSQL",
+          "note": "with PostGIS for place queries"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [
+    {
+      "title": "One nudge, not a feed",
+      "text": "A single daily recommendation ranked by the pet's energy and size, the weather, distance and opening hours, with a few alternatives."
+    },
+    {
+      "title": "Activity you can see",
+      "text": "Starting an idea arms an on-device arrival check, so a walk counts as a walk. Reminders, their days and their times are all the owner's to set."
+    },
+    {
+      "title": "Privacy by restraint",
+      "text": "Location is asked for only when it is needed, stored coarse for learning, and never sold. Sponsored places are always labelled and never outrank safety or fit."
+    },
+    {
+      "title": "Built to swap the backend",
+      "text": "The UI talks to a typed repository interface: sample data today, the HTTP API tomorrow, with no screen rewritten."
+    }
+  ],
+  "overview": [],
+  "images": []
+}

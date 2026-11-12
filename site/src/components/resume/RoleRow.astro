@@ -1,0 +1,463 @@
+---
+/**
+ * An earlier role as a node on the career trail: the start year, dates,
+ * duration meter and employment type ride a sticky column on the left, a
+ * spine with a node runs down the middle, and the role reads on the right.
+ * The node lights as it crosses the middle of the screen (scroll-driven,
+ * no JS). In print it falls back to a two-column ledger row.
+ */
+import Disclosure from '../ui/Disclosure.astro';
+import type { RoleView } from '../../lib/resume';
+
+interface Props {
+  role: RoleView;
+  /** Longest role in the list, for the duration meter. */
+  maxMonths?: number;
+  /** Title and dates only in the PDF. */
+  brief?: boolean;
+}
+
+const { role, maxMonths = 0, brief = false } = Astro.props;
+const meta = role.location;
+const year = role.start ? role.start.slice(0, 4) : '';
+const SHOWN = 8;
+const PRINTED = 10;
+const firstWork = role.work.slice(0, SHOWN);
+const moreWork = role.work.slice(SHOWN);
+const printed = role.work.slice(0, PRINTED).map((item) => item.title.split(' · ')[0]);
+const meter = maxMonths > 0 && role.months > 0 ? Math.max(4, Math.round((role.months / maxMonths) * 100)) : 0;
+---
+
+<li class:list={['row', 'p-experience', 'h-event', brief && 'row--brief']} data-track="role" data-track-label={role.title}>
+  <div class="row__when">
+    {year && <span class="row__year" aria-hidden="true" data-print="hide">{year}</span>}
+    <p class="row__dates">
+      {role.start && <time class="dt-start" datetime={role.start}>{role.when}</time>}
+      {role.end && <time class="dt-end" datetime={role.end} hidden />}
+      {role.duration && <span>{role.duration}</span>}
+      {role.kind && <span class="row__kind">{role.kind}</span>}
+    </p>
+    {meter > 0 && (
+      <span class="row__meter" aria-hidden="true" data-print="hide">
+        <i style={`width: ${meter}%`} />
+      </span>
+    )}
+  </div>
+  <span class="row__spine" aria-hidden="true" data-print="hide"><i class="row__fill" /></span>
+  <div class="row__body">
+    <h3 class="row__title">
+      <span class="p-name">{role.title}</span>
+      <span class="row__org">{role.orgName}{role.suffix && <span class="row__suffix">{role.suffix}</span>}</span>
+    </h3>
+    {meta && <p class="row__meta">{meta}</p>}
+    {role.summary && <p class="row__summary p-summary">{role.summary}</p>}
+    {
+      role.work.length > 0 && (
+        <div class="row__work">
+          <p class="row__work-line" data-print="hide">
+            <span class="row__work-label">Work · {role.work.length}</span>
+            {firstWork.map((item, index) => (
+              <>
+                {index > 0 && <span aria-hidden="true">, </span>}
+                <a class="ds-link" href={item.href} data-track="project" data-track-label={item.title}>{item.title}</a>
+              </>
+            ))}
+          </p>
+          {moreWork.length > 0 && (
+            <Disclosure summary={`${moreWork.length} more`}>
+              <p class="row__work-line">
+                {moreWork.map((item, index) => (
+                  <>
+                    {index > 0 && <span aria-hidden="true">, </span>}
+                    <a class="ds-link" href={item.href} data-track="project" data-track-label={item.title}>{item.title}</a>
+                  </>
+                ))}
+              </p>
+            </Disclosure>
+          )}
+          <p class="row__work-print" data-print="only">
+            Clients: {printed.join(', ')}{role.work.length > PRINTED ? `, and ${role.work.length - PRINTED} more` : ''}.
+          </p>
+        </div>
+      )
+    }
+  </div>
+</li>
+
+<style>
+  .row {
+    --row-spine: 56px;
+    display: grid;
+    grid-template-columns: 200px var(--row-spine) minmax(0, 1fr);
+    view-timeline: --row block;
+  }
+
+  /* ---- Left: sticky date column ---- */
+  .row__when {
+    position: sticky;
+    top: var(--ds-space-8);
+    align-self: start;
+    display: grid;
+    justify-items: end;
+    gap: var(--ds-space-2);
+    padding: var(--ds-space-6) 0 var(--ds-space-8);
+    text-align: right;
+  }
+
+  .row__year {
+    font-size: var(--ds-text-3xl);
+    font-weight: var(--ds-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--ds-tracking-tight);
+    font-variant-numeric: tabular-nums;
+    color: var(--ds-fg-faint);
+    transition: color var(--ds-dur) var(--ds-ease);
+  }
+
+  .row__dates {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .row__kind {
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    font-size: var(--ds-text-2xs);
+    white-space: nowrap;
+  }
+
+  .row__meter {
+    display: block;
+    width: 120px;
+    height: 2px;
+    background: var(--ds-rule);
+  }
+
+  .row__meter i {
+    display: block;
+    height: 100%;
+    margin-left: auto;
+    background: var(--ds-fg-muted);
+  }
+
+  /* ---- Middle: the spine and its node ---- */
+  .row__spine {
+    position: relative;
+  }
+
+  /* The line itself is one continuous rail drawn by the trail list
+     (.rows--trail in resume.astro); each row only places its node on it. */
+  .row__fill {
+    display: none;
+  }
+
+  .row__spine::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--ds-space-6) + 10px);
+    /* 11px, centred on the rail's pixel column (see .rows--trail) */
+    left: calc(50% - 7px);
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--ds-fg-faint);
+    border-radius: 50%;
+    background: var(--ds-bg);
+    z-index: 2;
+    transition:
+      background-color var(--ds-dur) var(--ds-ease),
+      border-color var(--ds-dur) var(--ds-ease),
+      box-shadow var(--ds-dur) var(--ds-ease);
+  }
+
+  /* ---- Right: the role ---- */
+  .row__body {
+    display: grid;
+    align-content: start;
+    gap: var(--ds-space-2);
+    min-width: 0;
+    padding: var(--ds-space-6) 0 var(--ds-space-12);
+  }
+
+  .row__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--ds-space-3);
+    margin: 0;
+    font-size: var(--ds-text-xl);
+    font-weight: var(--ds-weight-medium);
+    letter-spacing: -0.015em;
+    color: var(--ds-fg);
+  }
+
+  .row__org {
+    font-size: var(--ds-text-md);
+    font-weight: var(--ds-weight-regular);
+    letter-spacing: 0;
+    color: var(--ds-fg-muted);
+  }
+
+  .row__meta {
+    margin: 0;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .row__summary {
+    max-width: var(--ds-measure);
+    margin: 0;
+    font-size: var(--ds-text-md);
+    line-height: var(--ds-leading-body);
+    color: var(--ds-fg-muted);
+  }
+
+  .row__work {
+    display: grid;
+    gap: var(--ds-space-1);
+    max-width: var(--ds-measure);
+  }
+
+  .row__work-line {
+    margin: 0;
+    color: var(--ds-fg-faint);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-body);
+  }
+
+  .row__work-label {
+    margin-right: var(--ds-space-2);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+  }
+
+  .row__work-line a {
+    color: var(--ds-fg-muted);
+  }
+
+  .row__bullets {
+    display: grid;
+    gap: var(--ds-space-2);
+    max-width: var(--ds-measure);
+    margin: 0;
+    padding-left: var(--ds-space-4);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-body);
+  }
+
+  /* Hover wakes the node and year even where scroll timelines aren't supported. */
+  .row:hover .row__year {
+    color: var(--ds-fg);
+  }
+
+  .row:hover .row__spine::after {
+    border-color: var(--ds-accent);
+    background: var(--ds-accent);
+  }
+
+  /* Scroll-driven: the trail's single rail fills down to mid-screen; each node
+     lights the moment the rail reaches it, flashes the accent, then settles. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .row__spine::after {
+        animation: row-node linear both;
+        animation-timeline: --row;
+        animation-range: cover calc(50vh + var(--ds-space-6) + 10px) cover calc(50vh + var(--ds-space-6) + 220px);
+      }
+
+      /* Focus: rows fade toward the top and bottom of the viewport. */
+      .row__when,
+      .row__body {
+        animation: row-focus linear both;
+        animation-timeline: --row;
+        animation-range: cover 0% cover 100%;
+      }
+
+      .row__year {
+        animation: row-year linear both;
+        animation-timeline: --row;
+        animation-range: cover calc(50vh + var(--ds-space-6) - 10px) cover calc(50vh + var(--ds-space-6) + 260px);
+      }
+    }
+  }
+
+  @keyframes row-focus {
+    0% {
+      opacity: 0.12;
+    }
+
+    28%,
+    72% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0.12;
+    }
+  }
+
+  @keyframes row-node {
+    0% {
+      border-color: var(--ds-fg-faint);
+      background: var(--ds-bg);
+      box-shadow: none;
+    }
+
+    2%,
+    40% {
+      border-color: var(--ds-accent);
+      background: var(--ds-accent);
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--ds-accent) 18%, transparent);
+    }
+
+    100% {
+      border-color: var(--ds-fg);
+      background: var(--ds-fg);
+      box-shadow: none;
+    }
+  }
+
+  @keyframes row-year {
+    0%,
+    100% {
+      color: var(--ds-fg-faint);
+    }
+
+    35%,
+    65% {
+      color: var(--ds-fg);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .row {
+      --row-spine: 28px;
+      grid-template-columns: var(--row-spine) minmax(0, 1fr);
+    }
+
+    .row__when {
+      position: static;
+      grid-column: 2;
+      grid-row: 1;
+      justify-items: start;
+      padding-bottom: 0;
+      text-align: left;
+    }
+
+    .row__spine {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .row__body {
+      grid-column: 2;
+      padding-top: var(--ds-space-3);
+    }
+
+    .row__year {
+      font-size: var(--ds-text-xl);
+    }
+  }
+
+  /* Phones: the company sits on its own line under the title. */
+  @media screen and (max-width: 720px) {
+    .row__title {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--ds-space-1);
+    }
+  }
+
+  /* ---- Print: a plain two-column ledger row ---- */
+  @media print {
+    /* No scroll effects on paper: every row prints at full strength. */
+    .row__when,
+    .row__body,
+    .row__year {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+
+    .row {
+      grid-template-columns: 1.45in minmax(0, 1fr);
+      gap: 0 var(--ds-space-5);
+      padding: var(--ds-space-4) 0;
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+      break-inside: avoid;
+    }
+
+    .row__when {
+      position: static;
+      grid-column: 1;
+      grid-row: auto;
+      display: block;
+      padding: 1pt 0 0;
+      text-align: left;
+    }
+
+    .row__dates {
+      display: block;
+      font-size: var(--ds-text-2xs);
+      line-height: var(--ds-leading-body);
+      text-align: left;
+    }
+
+    .row__dates span {
+      white-space: nowrap;
+    }
+
+    .row__dates time.dt-start {
+      display: block;
+    }
+
+    .row__dates span + span::before {
+      content: " · ";
+    }
+
+    .row__body {
+      grid-column: 2;
+      gap: var(--ds-space-2);
+      padding: 0;
+      border-bottom: 0;
+    }
+
+    .row__title {
+      font-size: var(--ds-text-md);
+      font-weight: var(--ds-weight-bold);
+    }
+
+    .row__org {
+      font-size: var(--ds-text-md);
+    }
+
+    .row__meta {
+      display: none;
+    }
+
+    .row__summary {
+      max-width: none;
+      font-size: var(--ds-text-sm);
+      line-height: var(--ds-leading-body);
+    }
+
+    .row--brief .row__summary {
+      display: none;
+    }
+
+    .row__work-print {
+      margin: var(--ds-space-1) 0 0;
+      color: var(--ds-fg-muted);
+      font-size: var(--ds-text-2xs);
+    }
+  }
+  .row__suffix { color: var(--ds-fg-faint); }
+</style>

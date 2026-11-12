@@ -1,0 +1,28 @@
+---
+import { minimap, type LanguageShare } from '../lib/codegraph';
+
+interface Props {
+  seed: string;
+  mix: LanguageShare[];
+  rows?: number;
+  class?: string;
+}
+
+const { seed, mix, rows = 46, class: className } = Astro.props;
+const lines = minimap(seed, mix, rows);
+const height = rows * 3;
+---
+
+<svg class:list={['codegraph', className]} viewBox={`0 0 100 ${height}`} preserveAspectRatio="none" aria-hidden="true">
+  <g class="codegraph__scroll">
+    {
+      [0, 1].map((copy) =>
+        lines.map((tokens, row) =>
+          tokens.map((token) => (
+            <rect x={token.x} y={row * 3 + copy * height} width={token.w} height="1.6" rx="0.8" fill={token.color} />
+          )),
+        ),
+      )
+    }
+  </g>
+</svg>

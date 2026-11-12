@@ -1,0 +1,38 @@
+{
+  "slug": "entergy-tlg",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress theme for Entergy’s TLG, deployed by GitLab CI to Pantheon.",
+  "short": "A custom WordPress theme for Entergy's TLG, on Bootstrap 4, with Lando locally and GitLab CI deploying to Pantheon through Terminus.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "Lando"
+        },
+        {
+          "name": "Terminus"
+        },
+        {
+          "name": "GitLab CI"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

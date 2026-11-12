@@ -1,0 +1,95 @@
+---
+/**
+ * A flat list of short terms (stack, skills, tools).
+ * On screen: hairline chips. In print: one line, middot-separated, so an
+ * ATS reads it as plain comma-like text.
+ */
+interface Props {
+  items: string[];
+  label?: string;
+  size?: 'sm' | 'md';
+  max?: number;
+}
+
+const { items, label, size = 'md', max } = Astro.props;
+const shown = max ? items.slice(0, max) : items;
+const hidden = max ? items.slice(max) : [];
+---
+
+{
+  items.length > 0 && (
+    <ul class:list={['ds-tags', `ds-tags--${size}`]} aria-label={label}>
+      {shown.map((item) => <li class="ds-tags__item">{item}</li>)}
+      {hidden.map((item) => <li class="ds-tags__item ds-tags__item--extra">{item}</li>)}
+      {hidden.length > 0 && (
+        <li class="ds-tags__more" aria-hidden="true" data-print="hide">
+          +{hidden.length}
+        </li>
+      )}
+    </ul>
+  )
+}
+
+<style>
+  .ds-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-1) var(--ds-space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ds-tags__item,
+  .ds-tags__more {
+    padding: 3px 9px;
+    border: var(--ds-hairline) solid var(--ds-rule-strong);
+    border-radius: var(--ds-radius-pill);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-xs);
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .ds-tags--sm .ds-tags__item,
+  .ds-tags--sm .ds-tags__more {
+    padding: 1px 7px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+  }
+
+  .ds-tags__item--extra {
+    display: none;
+  }
+
+  .ds-tags__more {
+    border-style: dashed;
+    color: var(--ds-fg-faint);
+  }
+
+  @media print {
+    .ds-tags {
+      display: block;
+      color: var(--ds-fg-muted);
+      font-size: var(--ds-text-xs);
+    }
+
+    .ds-tags .ds-tags__item {
+      display: inline;
+      padding: 0;
+      border: 0;
+      font-family: inherit;
+      font-size: inherit;
+      white-space: normal;
+    }
+
+    .ds-tags .ds-tags__item--extra {
+      display: none;
+    }
+
+    .ds-tags__item + .ds-tags__item::before {
+      content: " · ";
+      color: var(--ds-fg-faint);
+    }
+  }
+</style>

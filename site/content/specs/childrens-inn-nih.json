@@ -1,0 +1,56 @@
+{
+  "slug": "childrens-inn-nih",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "Composer-managed WordPress with FacetWP, Gravity Forms and Behat and PHPUnit tests, deployed through GitLab CI.",
+  "short": "Composer-managed WordPress for The Children's Inn at NIH, with FacetWP search, Gravity Forms and WP All Import, tested with Behat and PHPUnit and deployed through Dockerized GitLab CI to Pantheon.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Composer"
+        },
+        {
+          "name": "GitLab CI"
+        },
+        {
+          "name": "Docker"
+        },
+        {
+          "name": "ACF Pro"
+        },
+        {
+          "name": "FacetWP"
+        },
+        {
+          "name": "Gravity Forms"
+        },
+        {
+          "name": "WP All Import"
+        },
+        {
+          "name": "Sentry"
+        },
+        {
+          "name": "Behat"
+        },
+        {
+          "name": "PHPUnit"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "ptc-bio",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "PTC Therapeutics ran as headless WordPress: content and languages managed in WordPress, served over the REST API to a separate React front end.",
+  "short": "Headless WordPress for PTC Therapeutics: content and languages managed in WordPress and served over the REST API to a separate React front end.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "WP REST API"
+        },
+        {
+          "name": "React"
+        },
+        {
+          "name": "Lando"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

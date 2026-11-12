@@ -1,0 +1,915 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Group from '../components/resume/Group.astro';
+import ActivityPanel from '../components/resume/ActivityPanel.astro';
+import { aiMark } from '../lib/aitools';
+import editorial from '../../content/resume.json';
+import EducationRow from '../components/resume/EducationRow.astro';
+import RoleRow from '../components/resume/RoleRow.astro';
+import PlatformMatrix from '../components/resume/PlatformMatrix.astro';
+import TimeOnRecord from '../components/resume/TimeOnRecord.astro';
+import PlotField from '../components/resume/PlotField.astro';
+import TrailEducation from '../components/resume/TrailEducation.astro';
+import Button from '../components/ui/Button.astro';
+import CycleText from '../components/ui/CycleText.astro';
+import Meter from '../components/ui/Meter.astro';
+import Section from '../components/ui/Section.astro';
+import SplitBar from '../components/ui/SplitBar.astro';
+import Stat from '../components/ui/Stat.astro';
+import StatGrid from '../components/ui/StatGrid.astro';
+import Tags from '../components/ui/Tags.astro';
+import { background } from '../lib/background';
+import { facets } from '../lib/practice';
+import { buildResume } from '../lib/resume';
+import { ids } from '../agent';
+import { loadBundle } from '../agent/site';
+import '../design/tokens.css';
+
+const bundle = await loadBundle(Astro.site);
+
+// The career timeline now lives on /things-built; flip this to show it here too.
+const SHOW_TIMELINE = false;
+// The activity panel now lives on /things-built; flip this to show it in the masthead too.
+const SHOW_ACTIVITY = false;
+const aiTools: string[] = editorial.aiTools ?? [];
+
+const specs = (await getCollection('specs')).map((entry) => entry.data);
+const resume = await buildResume(specs);
+const { profile, stats, glance, groups, earlier, education, timeline, skillGroups, selected, contributions } = resume;
+
+const location = groups.find((group) => group.id === 'nomadic-digital')?.location ?? '';
+const host = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const mix = stats.employment.map((item) => ({ id: item.id, label: item.label, value: item.months }));
+const platformMix = background.map((item) => ({ id: item.id, label: item.label, value: item.weight }));
+const featured = selected.filter((item) => item.featured);
+const others = selected.filter((item) => !item.featured);
+
+// The career trail: earlier roles newest first, with study periods slotted in by year.
+type TrailItem = { type: 'role'; role: (typeof earlier)[number] } | { type: 'edu'; item: (typeof education)[number] };
+const trail: TrailItem[] = earlier.map((role) => ({ type: 'role' as const, role }));
+for (const item of education) {
+  const at = trail.findIndex((entry) => entry.type === 'role' && (entry.role.start ?? '0') < `${item.start}-13`);
+  trail.splice(at === -1 ? trail.length : at, 0, { type: 'edu', item });
+}
+const longest = Math.max(1, ...earlier.map((role) => role.months));
+const sinceYear = resume.recentSince.slice(0, 4);
+// Employers that have closed (Rehab LLC) open the earlier section; open ones stay in 01.
+const currentGroups = groups.filter((group) => group.current);
+const pastGroups = groups.filter((group) => !group.current);
+const fullTimeYear = pastGroups.map((group) => group.end?.slice(0, 4)).filter(Boolean).sort().pop() ?? sinceYear;
+const updated = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date());
+---
+
+<Base
+  mode="document"
+  title={`Resume · ${profile.name}`}
+  description={resume.positioning}
+  pageType="ProfilePage"
+  ogType="profile"
+  page={{ mainEntity: { '@id': ids.person(bundle.site) }, dateModified: new Date().toISOString().slice(0, 10) }}
+  crumbs={[{ name: 'Home', path: '/' }, { name: 'Resume', path: '/resume' }]}
+>
+
+  <div class="resume h-resume">
+    <!-- Masthead -->
+    <header class="wrap mast">
+      <PlotField />
+      <div class="mast__bar">
+        <p class="mast__eyebrow">Resume · updated {updated}</p>
+      </div>
+
+      <div class="mast__id p-contact h-card">
+        <h1 class="mast__name p-name">{profile.name}</h1>
+        <p class="mast__role">
+          <CycleText text={resume.title} words={resume.titles} textClass="p-job-title" />
+        </p>
+      </div>
+
+      <div class:list={["mast__body", !SHOW_ACTIVITY && "mast__body--solo"]}>
+      <div class="mast__main">
+      <p class="mast__lede p-summary">{resume.positioning}</p>
+
+      <p class="mast__contact" data-print="only">
+        <span>jodriscoll.com</span>
+        <span>{host(profile.links.github)}</span>
+        <span>{host(profile.links.linkedin)}</span>
+        {location && <span>{location}</span>}
+      </p>
+
+      <div class="mast__actions" data-print="hide">
+        <Button data-open-contact data-track="contact-open" data-track-label={profile.contact.action}>{profile.contact.action}</Button>
+        <Button variant="ghost" href={profile.links.github} target="_blank" rel="noopener noreferrer" data-track="link" data-track-label="GitHub" class="u-url mast__social" aria-label="GitHub"><Fragment set:html={`<svg class="mast__btn-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>`} /><span class="mast__social-label">GitHub</span></Button>
+        <Button variant="ghost" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer" data-track="link" data-track-label="LinkedIn" class="u-url mast__social" aria-label="LinkedIn"><Fragment set:html={`<svg class="mast__btn-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="1.5" width="21" height="21" rx="3.5" fill="#0A66C2"/><circle cx="7.2" cy="7.3" r="1.6" fill="#fff"/><path fill="#fff" d="M5.8 9.7h2.8v8.6H5.8zM10.4 9.7h2.7v1.2c.5-.8 1.5-1.4 2.8-1.4 2.2 0 3.1 1.4 3.1 3.7v4.9h-2.8v-4.4c0-1.1-.3-1.8-1.3-1.8-1.1 0-1.6.8-1.6 1.8v4.4h-2.8z"/></svg>`} /><span class="mast__social-label">LinkedIn</span></Button>
+      </div>
+      </div>
+
+      {SHOW_ACTIVITY && <ActivityPanel contributions={contributions} id="mast-hm" class="mast__activity" />}
+      </div>
+
+      <div class="mast__ai" data-print="hide">
+        <span class="mast__ai-label">AI in the daily work</span>
+        <ul class="mast__ai-list">
+          {
+            aiTools.map((name) => (
+              <li>
+                <svg viewBox="0 0 24 24" aria-hidden="true" set:html={aiMark(name)} />
+                {name}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="mast__glance ds-pulse ds-pulse--center">
+        <StatGrid label="At a glance">
+          {glance.map((metric) => <Stat value={metric.value} label={metric.label} note={metric.note} tone={metric.tone} />)}
+        </StatGrid>
+      </div>
+    </header>
+
+    <!-- 01 Recent clients: the practice and its open work -->
+    <Section index="01" eyebrow={`Clients since ${sinceYear}`} title="One practice, current clients" id="clients" action={{ href: '/things-built', label: 'All Work' }}>
+      {currentGroups.map((group) => <Group group={group} />)}
+    </Section>
+
+    <!-- 02 Before the practice went full time: closed employers (Rehab LLC), then the trail -->
+    <Section index="02" eyebrow={`${stats.startYear}–${fullTimeYear}`} title="Before the practice went full time" id="earlier">
+      {pastGroups.map((group) => <Group group={group} />)}
+      <ol class="rows rows--trail">
+        {
+          trail.map((entry) =>
+            entry.type === 'role' ? (
+              <RoleRow role={entry.role} maxMonths={longest} />
+            ) : (
+              <TrailEducation item={entry.item} />
+            ),
+          )
+        }
+      </ol>
+    </Section>
+
+    <!-- Education: the record (and microformat). On screen it lives on the trail. -->
+    <Section eyebrow="Education" id="education" class="edu-section">
+      <ol class="rows">
+        {education.map((item) => <EducationRow item={item} />)}
+      </ol>
+    </Section>
+
+    <!-- 03 Capabilities -->
+    <Section index="03" eyebrow="Capabilities" title="Comfort, by platform and practice" id="skills">
+      <!-- The keyword list prints for ATS readers; on screen the meters carry it. -->
+      <dl class="skillset" data-print="only">
+        {
+          skillGroups.map((group) => (
+            <div class="skillset__group">
+              <dt>{group.label}</dt>
+              <dd>
+                <Tags items={group.items} label={group.label} />
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="levels" data-print="hide">
+        <div class="levels__grid">
+          {
+            facets.map((facet) => (
+              <Meter
+                label={facet.label}
+                value={facet.fill}
+                reading={facet.depth}
+                note={facet.text}
+                tone={facet.depth === 'Comfortable' ? 'quiet' : facet.fill >= 90 ? 'accent' : 'default'}
+              />
+            ))
+          }
+        </div>
+        {/* "Where the public record sits" (SplitBar of platformMix) is hidden for now (Nov 11). */}
+      </div>
+    </Section>
+
+    <!-- 04 Selected work -->
+    <Section index="04" eyebrow="Selected work" title={`${selected.length} projects, platform by platform`} lede={`Featured work first, marked in red. Column counts are how many of these projects run on each platform.`} id="work" action={{ href: '/things-built', label: 'Case Studies' }} print="hide">
+      <PlatformMatrix items={[...featured, ...others]} />
+    </Section>
+
+    <!-- Time on record: hidden here for now; it lives at the bottom of /things-built.
+         Set SHOW_TIMELINE to true to bring it back (and renumber About to 06). -->
+    {
+      SHOW_TIMELINE && (
+        <Section index="05" eyebrow="Time on record" title={`${stats.spanYears} years on one axis`} id="timeline" print="hide">
+          <TimeOnRecord rows={timeline} start={resume.timelineStart} end={resume.now} mix={mix} />
+        </Section>
+      )
+    }
+
+    <!-- "In my words" moved to the Work page, above Time on record. -->
+  </div>
+
+  <!-- PDF download: floats bottom right on desktop; on phones a full-width bar
+       stuck to the bottom of the screen that stops at the end of the content,
+       so it never covers the footer. It sits last in the content for that. -->
+  <button type="button" class="pdf-fab" data-print-trigger data-track="print" data-track-label="PDF" data-print="hide" aria-label="Download resume as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 19h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+    <span>Download Resume (PDF)</span>
+  </button>
+
+  <style>
+    /* On screen, section heads have no visible hairline: only the light that
+       runs along where the line would be. Print keeps the rule for structure. */
+    @media screen {
+      .resume :global(.ds-section__head) {
+        border-top-color: transparent;
+      }
+    }
+
+    /* The last group in a section hands its space to the section gap, so the
+       space between sections matches the home page. */
+    .resume :global(.grp:nth-last-child(1 of .grp)) {
+      padding-bottom: 0;
+    }
+
+    /* Masthead */
+    .mast {
+      position: relative;
+      isolation: isolate;
+      padding-top: var(--ds-page-top);
+    }
+
+    .mast > :global(*:not(.plotfield)) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .mast__bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start; /* eyebrow starts at the shared page top */
+      gap: var(--ds-space-4);
+      margin-bottom: var(--ds-space-8);
+    }
+
+    .mast__eyebrow {
+      margin: 0;
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-xs);
+      letter-spacing: var(--ds-tracking-caps);
+      text-transform: uppercase;
+      color: var(--ds-fg-faint);
+    }
+
+    /* One fixed-width column: the rotating role line can't widen it, so the
+       name keeps the same line breaks while the role decodes. */
+    .mast__id {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--ds-space-3);
+    }
+
+    .mast__name {
+      margin: 0;
+      font-size: var(--ds-text-display);
+      font-weight: var(--ds-weight-medium);
+      line-height: 0.98;
+      letter-spacing: var(--ds-tracking-display);
+      color: var(--ds-fg);
+    }
+
+    .mast__role {
+      margin: 0;
+      font-size: var(--ds-text-2xl);
+      letter-spacing: var(--ds-tracking-tight);
+      color: var(--ds-fg-muted);
+    }
+
+    /* Fit-to-width role line: it keeps its normal size (--ds-text-2xl) and
+       only shrinks when the column is too narrow for the longest title to sit
+       on one line. 100cqi is the width of .mast__id; 14.4em is the longest
+       title (13.4em) plus the caret and a little slack. Re-measure if a much
+       longer title is added. */
+    @media screen and (max-width: 640px) {
+      .mast__id {
+        container-type: inline-size;
+      }
+
+      .mast__role {
+        min-width: 0;
+        font-size: min(var(--ds-text-2xl), calc(100cqi / 14.4));
+        white-space: nowrap;
+      }
+
+      /* AI tools: label and marks centered under the buttons, so a short
+         last row sits in the middle instead of hanging left. */
+      .mast__ai {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .mast__ai-list {
+        justify-content: center;
+      }
+    }
+
+    /* Two columns under the name: the pitch on the left, live activity on the right. */
+    .mast__body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.82fr);
+      gap: var(--ds-space-12);
+      align-items: start;
+      margin-top: var(--ds-space-8);
+    }
+
+    .mast__body--solo {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .mast__main {
+      min-width: 0;
+    }
+
+    .mast__lede {
+      max-width: 58ch;
+      margin: 0;
+      font-size: var(--ds-text-lg);
+      line-height: var(--ds-leading-body);
+      color: var(--ds-fg-muted);
+    }
+
+    .mast__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--ds-space-2);
+      margin-top: var(--ds-space-8);
+    }
+
+    .mast__ai {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--ds-space-2) var(--ds-space-5);
+      margin-top: var(--ds-space-8);
+    }
+
+    .mast__ai-label {
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-2xs);
+      letter-spacing: var(--ds-tracking-caps);
+      text-transform: uppercase;
+      color: var(--ds-fg-faint);
+    }
+
+    .mast__ai-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--ds-space-2) var(--ds-space-5);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--ds-fg-muted);
+      font-size: var(--ds-text-sm);
+    }
+
+    .mast__ai-list li {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mast__ai-list svg {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      color: var(--ds-fg);
+    }
+
+    .mast__ai-list {
+      row-gap: var(--ds-space-3);
+    }
+
+    /* Brand marks inside the outline buttons. */
+    .mast__actions :global(.mast__btn-icon) {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      flex: none;
+      vertical-align: -3px;
+    }
+
+    /* At a glance: the figures settle in one by one, then a light runs the rule. */
+    @media (prefers-reduced-motion: no-preference) {
+      .mast__glance :global(.ds-stat) {
+        animation: glance-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+
+      .mast__glance :global(.ds-stat:nth-child(1)) { animation-delay: 0.15s; }
+      .mast__glance :global(.ds-stat:nth-child(2)) { animation-delay: 0.25s; }
+      .mast__glance :global(.ds-stat:nth-child(3)) { animation-delay: 0.35s; }
+      .mast__glance :global(.ds-stat:nth-child(4)) { animation-delay: 0.45s; }
+      .mast__glance :global(.ds-stat:nth-child(5)) { animation-delay: 0.55s; }
+      .mast__glance :global(.ds-stat:nth-child(6)) { animation-delay: 0.65s; }
+      .mast__glance :global(.ds-stat:nth-child(7)) { animation-delay: 0.75s; }
+      .mast__glance :global(.ds-stat:nth-child(8)) { animation-delay: 0.85s; }
+
+      .mast__glance {
+        --pulse-delay: 0.9s;
+      }
+    }
+
+    @keyframes glance-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(3px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+    }
+
+    .mast__glance {
+      margin-top: var(--ds-space-10);
+    }
+
+    .mast__contact {
+      margin: var(--ds-space-3) 0 0;
+      color: var(--ds-fg-muted);
+      font-size: var(--ds-text-sm);
+    }
+
+    .mast__contact span + span::before {
+      content: " · ";
+      color: var(--ds-fg-faint);
+    }
+
+    /* Sections */
+    /* Lists sit straight under the section rule: one line per section, not two. */
+    .rows {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* Career trail: one continuous rail behind every node. The fill runs from
+       the top of the list down to mid-screen as you scroll, so a single line
+       travels through the nodes and lights each one as it arrives (RoleRow). */
+    /* Rehab LLC opens section 02; the trail starts a section-space below it. */
+    :global(.grp) ~ .rows--trail {
+      margin-top: var(--ds-space-section);
+    }
+
+    /* Phones: the full section space reads as a hole under Rehab's properties. */
+    @media screen and (max-width: 720px) {
+      :global(.grp) ~ .rows--trail {
+        margin-top: var(--ds-space-8);
+      }
+    }
+
+    .rows--trail {
+      --rail-x: calc(200px + 28px);
+      --rail-top: calc(var(--ds-space-6) + 15px);
+      position: relative;
+      view-timeline: --trail block;
+    }
+
+    .rows--trail::before,
+    .rows--trail::after {
+      content: '';
+      position: absolute;
+      top: var(--rail-top);
+      bottom: var(--ds-space-16);
+      /* Whole-pixel geometry: the rail is the 1px column just left of
+         --rail-x, and every node centres on that same column (RoleRow,
+         TrailEducation), so nothing lands on a half pixel. */
+      left: calc(var(--rail-x) - 1px);
+      width: 1px;
+      pointer-events: none;
+    }
+
+    .rows--trail::before {
+      background: var(--ds-rule-strong);
+    }
+
+    .rows--trail::after {
+      z-index: 1;
+      background: linear-gradient(to bottom, var(--ds-fg) calc(100% - 48px), var(--ds-accent));
+      transform-origin: top;
+      transform: scaleY(1);
+    }
+
+    @supports (animation-timeline: view()) {
+      @media (prefers-reduced-motion: no-preference) {
+        .rows--trail::after {
+          animation: trail-fill linear both;
+          animation-timeline: --trail;
+          animation-range: cover calc(50vh + var(--rail-top)) cover calc(100% - 50vh - var(--ds-space-16));
+        }
+      }
+    }
+
+    @keyframes trail-fill {
+      from {
+        transform: scaleY(0);
+      }
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .rows--trail {
+        --rail-x: 14px;
+      }
+    }
+
+    /* Phones: the rail ends at the last role's node. The last row covers the
+       rail from just under its node down (the same covering strip the study
+       years use for their dashes); the node itself keeps its accent fade. */
+    @media screen and (max-width: 720px) {
+      .rows--trail > :global(li:last-child) {
+        position: relative;
+      }
+
+      .rows--trail > :global(li:last-child)::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        top: calc(var(--ds-space-6) + 21px);
+        bottom: 0;
+        left: calc(var(--rail-x) - 2px);
+        width: 3px;
+        background: var(--ds-bg);
+        pointer-events: none;
+      }
+    }
+
+    @media print {
+      .rows--trail::before,
+      .rows--trail::after {
+        display: none;
+      }
+    }
+
+    .sub {
+      margin: var(--ds-space-12) 0 var(--ds-space-4);
+      font-size: var(--ds-text-md);
+      font-weight: var(--ds-weight-medium);
+      color: var(--ds-fg);
+    }
+
+    .skillset {
+      display: grid;
+      margin: 0;
+      border-top: var(--ds-hairline) solid var(--ds-rule-strong);
+    }
+
+    .skillset__group {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: var(--ds-space-6);
+      align-items: baseline;
+      padding: var(--ds-space-4) 0;
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .skillset__group dt {
+      font-family: var(--ds-font-mono);
+      font-size: var(--ds-text-xs);
+      letter-spacing: var(--ds-tracking-caps);
+      text-transform: uppercase;
+      color: var(--ds-fg-faint);
+    }
+
+    .skillset__group dd {
+      margin: 0;
+    }
+
+    /* Row-major, so an odd count ends on the left instead of leaving a hole. */
+    /* Three roomy columns; row-major, so an odd count ends on the left. */
+    .levels__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+      gap: var(--ds-space-4) var(--ds-space-12);
+    }
+
+    /* Phones: the meters are an accordion list; their own padding is the rhythm. */
+    @media screen and (max-width: 720px) {
+      .levels__grid {
+        row-gap: 0;
+      }
+    }
+
+    .levels .sub {
+      margin-top: var(--ds-space-16);
+    }
+
+    .shape {
+      max-width: 720px;
+    }
+
+
+    .activity {
+      margin-top: var(--ds-space-8);
+    }
+
+
+
+
+
+
+
+    @media (max-width: 1100px) {
+      .mast__body {
+        grid-template-columns: 1fr;
+        gap: var(--ds-space-8);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .skillset__group {
+        grid-template-columns: 1fr;
+        gap: var(--ds-space-2);
+      }
+    }
+
+    @media print {
+      .mast {
+        padding-top: 0;
+      }
+
+      .mast__bar {
+        display: none;
+      }
+
+      .mast__id {
+        grid-template-columns: auto 1fr;
+        align-items: baseline;
+        gap: var(--ds-space-4);
+      }
+
+      .mast__name {
+        font-weight: var(--ds-weight-bold);
+        letter-spacing: -0.02em;
+      }
+
+      .mast__role {
+        font-size: var(--ds-text-xl);
+        color: var(--ds-fg-muted);
+      }
+
+      .mast__body {
+        display: block;
+        margin-top: var(--ds-space-3);
+      }
+
+      .mast__lede {
+        max-width: none;
+        margin-top: 0;
+        font-size: var(--ds-text-md);
+        color: var(--ds-fg);
+      }
+
+      .mast__ai {
+        margin-top: var(--ds-space-3);
+        padding: var(--ds-space-2) 0;
+      }
+
+      .mast__ai-list {
+        font-size: var(--ds-text-xs);
+      }
+
+      .mast__ai-list svg {
+        display: none;
+      }
+
+      .mast__glance {
+        margin-top: var(--ds-space-2);
+      }
+
+      .skillset__group {
+        grid-template-columns: 1.45in minmax(0, 1fr);
+        gap: var(--ds-space-5);
+        padding: var(--ds-space-2) 0;
+        border-bottom: 0;
+      }
+
+      .skillset__group dd {
+        font-size: var(--ds-text-sm);
+        line-height: var(--ds-leading-body);
+      }
+
+      .skillset {
+        border-top: 0;
+      }
+    }
+  </style>
+
+  <style is:global>
+    /* Download PDF: a floating action button, bottom right, like a chat launcher */
+    .pdf-fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 52px;
+      padding: 0 22px 0 18px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--text);
+      color: var(--bg);
+      font: 500 15px/1 var(--sans);
+      box-shadow: var(--shadow-lift), 0 0 0 1px color-mix(in srgb, var(--text) 20%, transparent);
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s, background-color 0.2s;
+    }
+    .pdf-fab svg { width: 20px; height: 20px; flex: none; }
+    /* Phones: GitHub and LinkedIn become icon-only circles beside the main
+       button; the names stay as their accessible labels. */
+    @media (max-width: 640px) {
+      .mast__social {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 0;
+        padding: 0 !important;
+        gap: 0 !important;
+        justify-content: center;
+        border-radius: 50% !important;
+      }
+      .mast__social .mast__btn-icon { margin: 0 !important; }
+      .mast__social-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+    }
+    .pdf-fab:hover { transform: translateY(-2px); background: var(--accent-red, #e5484d); color: var(--on-accent); }
+    .pdf-fab:focus-visible { outline: 2px solid var(--accent-red, #e5484d); outline-offset: 3px; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pdf-fab { animation: pdf-fab-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s both; }
+    }
+    @keyframes pdf-fab-in { from { opacity: 0; transform: translateY(16px) scale(0.92); } }
+    /* Phones: a labelled bar pinned to the bottom of the screen, so it reads
+       as "Download Resume (PDF)", not a mystery arrow. The page gets room at
+       the bottom so the bar never covers the footer. */
+    @media (max-width: 640px) {
+      .pdf-fab {
+        position: sticky;
+        left: auto;
+        right: auto;
+        bottom: 0;
+        display: flex;
+        width: 100%;
+        height: auto;
+        min-height: 56px;
+        margin-top: var(--ds-space-section-sm, 64px);
+        padding: 0 20px env(safe-area-inset-bottom, 0px);
+        justify-content: center;
+        border-radius: 0;
+        box-shadow: 0 -1px 0 color-mix(in srgb, var(--text) 18%, transparent);
+        font-size: 15px;
+      }
+      .pdf-fab:hover { transform: none; }
+      /* The bar is the last thing in the content, so it lands flush on the footer. */
+      main#content:has(> .pdf-fab) { padding-bottom: 0; }
+      .pdf-fab span { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+    }
+    @media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+      .pdf-fab { animation: none; }
+    }
+    @media print { .pdf-fab { display: none !important; } }
+
+
+    /* Page-level print frame: strip the site chrome so only the resume prints. */
+    @page {
+      size: letter;
+      margin: 0.4in 0.45in 0.4in;
+    }
+
+    @media print {
+      body.document {
+        display: block;
+        background: #fff !important;
+        color: #111;
+        font-size: 9pt;
+        line-height: 1.38;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body.document .side,
+      body.document .foot,
+      body.document .crumbbar,
+      body.document .skip,
+      body.document .tip,
+      body.document .glow,
+      body.document #contact-dialog {
+        display: none !important;
+      }
+
+      body.document .shell {
+        display: block;
+        padding-left: 0 !important;
+      }
+
+      body.document main {
+        padding: 0 !important;
+      }
+
+      body.document .resume .wrap {
+        width: auto !important;
+        max-width: none !important;
+        margin: 0 !important;
+      }
+
+      body.document .rule-head::before {
+        content: none !important;
+      }
+
+      body.document a {
+        color: inherit;
+      }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var endpoint = '/api/events';
+      var lastKey = '';
+      var lastAt = 0;
+      function send(event, label, kind) {
+        var body = JSON.stringify({ event: event, label: label, kind: kind });
+        try {
+          if (navigator.sendBeacon) {
+            var blob = new Blob([body], { type: 'application/json' });
+            if (navigator.sendBeacon(endpoint, blob)) return;
+          }
+        } catch (error) {}
+        fetch(endpoint, { method: 'POST', headers: { 'content-type': 'application/json' }, body: body, keepalive: true }).catch(function () {});
+      }
+      function once(event, label, kind) {
+        var key = event + '|' + label + '|' + kind;
+        var now = Date.now();
+        if (key === lastKey && now - lastAt < 400) return;
+        lastKey = key;
+        lastAt = now;
+        send(event, label, kind);
+      }
+      window.__track = once;
+      function hit(event) {
+        var el = event.target.closest && event.target.closest('[data-track]');
+        if (el) once(el.getAttribute('data-track'), el.getAttribute('data-track-label') || '', 'click');
+      }
+      document.addEventListener('click', hit);
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' || event.key === ' ') hit(event);
+      });
+      var pending = null;
+      var timer = 0;
+      var lastHover = 0;
+      document.addEventListener('pointerover', function (event) {
+        var el = event.target.closest && event.target.closest('[data-track]');
+        if (!el) return;
+        pending = el;
+        if (timer) return;
+        var delay = Math.max(200, 350 - (Date.now() - lastHover));
+        timer = window.setTimeout(function () {
+          timer = 0;
+          if (!pending) return;
+          lastHover = Date.now();
+          send(pending.getAttribute('data-track'), pending.getAttribute('data-track-label') || '', 'hover');
+          pending = null;
+        }, delay);
+      });
+    })();
+  </script>
+
+  <script is:inline>
+    (function () {
+      if (window.__resumePrintBound) return;
+      window.__resumePrintBound = true;
+      var title = document.title;
+      document.addEventListener('click', function (event) {
+        if (event.target.closest && event.target.closest('[data-print-trigger]')) window.print();
+      });
+      // The PDF file name comes from the document title.
+      window.addEventListener('beforeprint', function () {
+        title = document.title;
+        document.title = "Joseph O'Driscoll - Resume";
+        var dialog = document.getElementById('contact-dialog');
+        if (dialog && dialog.open) dialog.close();
+      });
+      window.addEventListener('afterprint', function () {
+        document.title = title;
+      });
+    })();
+  </script>
+</Base>

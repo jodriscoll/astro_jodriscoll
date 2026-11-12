@@ -1,0 +1,44 @@
+{
+  "slug": "bge",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "Baltimore Gas & Electric: a custom WordPress theme for the site, and part of the interface work on BGE's iOS app, written in Swift.",
+  "short": "Baltimore Gas & Electric's custom WordPress theme on Bootstrap 4 and Pantheon, plus part of the interface for BGE's iOS app, written in Swift.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "jQuery"
+        },
+        {
+          "name": "Lando"
+        }
+      ]
+    },
+    {
+      "group": "Mobile",
+      "items": [
+        {
+          "name": "Swift",
+          "note": "iOS app interface"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

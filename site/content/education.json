@@ -1,0 +1,16 @@
+[
+  {
+    "id": "itt",
+    "institution": "ITT Technical Institute",
+    "studyType": "Associate of Applied Science",
+    "credential": "A.A.S.",
+    "area": "Specialized Technology, Multimedia",
+    "start": "2006",
+    "end": "2008",
+    "score": "3.8",
+    "honors": "Highest and High Honors",
+    "honorTerms": ["Winter 2006", "Spring 2007", "Summer 2007", "Summer 2008", "Fall 2008"],
+    "summary": "The multimedia track of the IT program, focused on designing and producing interactive multimedia communications. Both of the next roles grew out of it: the HealthcareSource internship and the Aptima position.",
+    "hiredWhileEnrolled": ["healthcaresource", "aptima"]
+  }
+]

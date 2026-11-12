@@ -1,0 +1,227 @@
+{
+  "slug": "election-center",
+  "org": "taoti",
+  "kind": "Taoti Creative",
+  "role": "Solutions Engineer, through Taoti Creative",
+  "dek": "The Election Center trains and certifies election officials. Its site is Bedrock WordPress with a Timber theme, WP Rocket and Redis, and visual regression tests in its CI folder.",
+  "short": "The Election Center trains and certifies election officials. Its site is Bedrock WordPress with a Timber and Twig theme, WP Rocket and Redis for speed, and BackstopJS visual regression tests in CI.",
+  "facts": [
+    {
+      "label": "PHP",
+      "value": "8.3"
+    },
+    {
+      "label": "Server",
+      "value": "Apache 2.4"
+    },
+    {
+      "label": "Database",
+      "value": "MySQL 8.0"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Server",
+      "items": [
+        {
+          "name": "WordPress",
+          "note": "Bedrock layout, Composer-managed"
+        },
+        {
+          "name": "PHP",
+          "version": "8.2 to 8.4",
+          "note": "Lando runs 8.3"
+        },
+        {
+          "name": "Timber",
+          "version": "2",
+          "note": "Twig views"
+        },
+        {
+          "name": "Twig"
+        },
+        {
+          "name": "Composer",
+          "version": "2"
+        },
+        {
+          "name": "ACF Pro",
+          "version": "6.8"
+        },
+        {
+          "name": "Yoast SEO",
+          "version": "28",
+          "note": "with ACF content analysis"
+        },
+        {
+          "name": "FileBird",
+          "note": "media folders"
+        },
+        {
+          "name": "Duplicate Post"
+        }
+      ]
+    },
+    {
+      "group": "Performance",
+      "items": [
+        {
+          "name": "WP Rocket",
+          "version": "3.17"
+        },
+        {
+          "name": "Redis Object Cache"
+        },
+        {
+          "name": "EWWW Image Optimizer"
+        }
+      ]
+    },
+    {
+      "group": "Security",
+      "items": [
+        {
+          "name": "WP 2FA"
+        },
+        {
+          "name": "Taoti Security Scanner",
+          "note": "kept in place by the security-update workflow"
+        }
+      ]
+    },
+    {
+      "group": "Theme build",
+      "items": [
+        {
+          "name": "JavaScript"
+        },
+        {
+          "name": "jQuery",
+          "version": "3"
+        },
+        {
+          "name": "Gulp",
+          "version": "4"
+        },
+        {
+          "name": "Sass"
+        },
+        {
+          "name": "webpack",
+          "version": "5"
+        },
+        {
+          "name": "Babel"
+        },
+        {
+          "name": "PostCSS",
+          "note": "Autoprefixer and cssnano"
+        }
+      ]
+    },
+    {
+      "group": "Testing",
+      "items": [
+        {
+          "name": "BackstopJS",
+          "note": "visual regression, .ci/test/visual-regression"
+        },
+        {
+          "name": "Behat",
+          "note": "with Mink and the Chrome extension"
+        },
+        {
+          "name": "Nightwatch",
+          "note": "manual GitHub Actions run"
+        },
+        {
+          "name": "PHP_CodeSniffer",
+          "note": "WPCS 3 and PHPCompatibility across PHP 8.2, 8.3 and 8.4"
+        }
+      ]
+    },
+    {
+      "group": "Delivery",
+      "items": [
+        {
+          "name": "GitHub Actions",
+          "note": "deploy, promote, clone, security update and code checks"
+        },
+        {
+          "name": "AWS",
+          "note": "deploys, database and file clones, CDN clears"
+        },
+        {
+          "name": "Lando",
+          "note": "Apache 2.4, MariaDB 11, Redis, Node 24"
+        },
+        {
+          "name": "Apache",
+          "version": "2.4"
+        },
+        {
+          "name": "MariaDB",
+          "version": "11"
+        },
+        {
+          "name": "Node",
+          "version": "24"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "AWS, deployed by GitHub Actions"
+    },
+    {
+      "label": "Local",
+      "value": "Lando: PHP 8.3, Apache 2.4, MariaDB 11, Redis"
+    }
+  ],
+  "highlights": [],
+  "overview": [
+    {
+      "group": "Versions",
+      "rows": [
+        {
+          "label": "PHP",
+          "value": "8.3",
+          "state": "warn"
+        },
+        {
+          "label": "MySQL",
+          "value": "8.0",
+          "state": "ok"
+        }
+      ]
+    },
+    {
+      "group": "Security",
+      "rows": [
+        {
+          "label": "Security Scanner",
+          "value": "1.2.3",
+          "state": "ok"
+        },
+        {
+          "label": "2FA",
+          "value": "Yes",
+          "state": "ok"
+        },
+        {
+          "label": "AppPass Removal",
+          "value": "2.0.12",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/election-center/home.webp",
+      "alt": "Election Center home page: We serve those who serve democracy"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+---
+import { level, type Cell } from '../lib/contributions';
+
+interface Props {
+  cells: Cell[];
+  mode: 'public' | 'private' | 'both';
+}
+
+const { cells, mode } = Astro.props;
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthWeeks = [0, 4, 8, 13, 17, 22, 26, 30, 35, 39, 43, 48];
+const dayNames = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+---
+
+<div class="year">
+  <div class="year__months" aria-hidden="true">
+    {
+      monthWeeks.length &&
+        Array.from({ length: 53 }, (_, week) => {
+          const month = monthWeeks.indexOf(week);
+          return <span>{month >= 0 ? months[month] : ''}</span>;
+        })
+    }
+  </div>
+  <div class="year__body">
+    <div class="year__dow" aria-hidden="true">
+      {dayNames.map((name) => <span>{name}</span>)}
+    </div>
+    <div class="year__cells" role="img" aria-label={`${mode} contribution pattern`}>
+      {
+        cells.map((cell, index) => {
+          const week = Math.floor(index / 7) + 1;
+          const day = (index % 7) + 1;
+          const shared = cell.public > 0;
+          const shown = mode === 'public' ? cell.public : mode === 'private' ? cell.private : shared ? cell.public : cell.private;
+          const fill = mode === 'both' && !shared && cell.private > 0 ? 'private' : undefined;
+          return (
+            <span
+              class="day"
+              data-level={level(shown)}
+              data-fill={fill}
+              style={`--i: ${index}`}
+              data-track="contribution-cell"
+              data-track-label={`${mode} week ${week} day ${day}`}
+            />
+          );
+        })
+      }
+    </div>
+  </div>
+</div>

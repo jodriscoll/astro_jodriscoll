@@ -1,0 +1,32 @@
+{
+  "slug": "eqrx",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "A custom WordPress theme for EQRx with IMRE, plus a plugin that syncs careers daily from a jobs API.",
+  "short": "A custom WordPress theme for EQRx, built with IMRE, plus a plugin that syncs open roles from a jobs API every day on WP Cron.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "Pantheon"
+        },
+        {
+          "name": "Bootstrap 4"
+        },
+        {
+          "name": "WP Cron"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

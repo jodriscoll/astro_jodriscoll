@@ -1,0 +1,65 @@
+[
+  {
+    "id": "astro",
+    "name": "Astro",
+    "host": "jodriscoll.com",
+    "status": "live",
+    "summary": "This site. Static HTML on Vercel, with almost no client JavaScript."
+  },
+  {
+    "id": "next",
+    "name": "Next.js",
+    "host": "next.jodriscoll.com",
+    "status": "gateway",
+    "summary": "App Router shell, not booted yet. The gateway already returns its props."
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "host": "react.jodriscoll.com",
+    "status": "gateway",
+    "summary": "A client React shell. Not booted. The gateway returns component props."
+  },
+  {
+    "id": "angular",
+    "name": "Angular",
+    "host": "angular.jodriscoll.com",
+    "status": "gateway",
+    "summary": "The shape the previous Angular portfolio used. The host is not booted yet."
+  },
+  {
+    "id": "ember",
+    "name": "Ember",
+    "host": "ember.jodriscoll.com",
+    "status": "gateway",
+    "summary": "Ember Data JSON:API. Not booted. The gateway returns a resource object."
+  },
+  {
+    "id": "svelte",
+    "name": "Svelte",
+    "host": "svelte.jodriscoll.com",
+    "status": "gateway",
+    "summary": "Svelte props. Not booted. Same record, different keys."
+  },
+  {
+    "id": "vue",
+    "name": "Vue",
+    "host": "vue.jodriscoll.com",
+    "status": "gateway",
+    "summary": "Vue props. Not booted. Same record, different keys."
+  },
+  {
+    "id": "wordpress",
+    "name": "WordPress",
+    "host": "wordpress.jodriscoll.com",
+    "status": "gateway",
+    "summary": "A post-shaped record a theme can read. The WordPress app is not booted yet."
+  },
+  {
+    "id": "drupal",
+    "name": "Drupal",
+    "host": "drupal.jodriscoll.com",
+    "status": "gateway",
+    "summary": "A node-shaped record. The Drupal app is not booted yet."
+  }
+]

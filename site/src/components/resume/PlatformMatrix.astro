@@ -1,0 +1,463 @@
+---
+/**
+ * Projects × platforms. Rows are projects, columns are the platforms they
+ * run on (most-used first), and a cell carries the platform's mark where the
+ * two meet. It is a real <table>, so agents read it as data, and the column
+ * counts double as a stack index.
+ */
+import { platformMarkup, platformsFor } from '../../lib/platforms';
+
+interface Item {
+  slug: string;
+  title: string;
+  href: string;
+  short: string;
+  kind: string;
+  stack: string[];
+  featured: boolean;
+}
+
+interface Props {
+  items: Item[];
+  maxColumns?: number;
+  /** Rows shown before "Show all". Every row stays in the HTML for parsers. */
+  initialRows?: number;
+}
+
+const { items, maxColumns = 20, initialRows = 20 } = Astro.props;
+
+// The platforms a project is built on (CMS, framework, language) always get a
+// column, however rare; hosting and tooling fill the rest by how often they appear.
+const CORE = new Set([
+  'wordpress', 'drupal', 'craft', 'webflow', 'shopify', 'symfony',
+  'next', 'react', 'react-native', 'vue', 'angular', 'svelte', 'ember',
+  'php', 'typescript', 'javascript', 'node', 'python', 'ruby',
+]);
+
+const rows = items.map((item) => {
+  // The one-line description counts as evidence too ("Bedrock WordPress on Kinsta").
+  const marks = platformsFor(item.stack, item.short)
+    .map((platform) => ({ ...platform, svg: platformMarkup(platform.id) }))
+    .filter((platform) => platform.svg);
+  return { ...item, marks, ids: new Set(marks.map((mark) => mark.id)) };
+});
+
+const tally = new Map<string, { id: string; name: string; svg: string; count: number }>();
+for (const row of rows) {
+  for (const mark of row.marks) {
+    const hit = tally.get(mark.id) ?? { ...mark, count: 0 };
+    hit.count += 1;
+    tally.set(mark.id, hit);
+  }
+}
+const all = [...tally.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+const core = all.filter((column) => CORE.has(column.id));
+const rest = all.filter((column) => !CORE.has(column.id));
+const columns = [...core, ...rest.slice(0, Math.max(0, maxColumns - core.length))];
+const shownIds = new Set(columns.map((column) => column.id));
+---
+
+<figure class="mx">
+  <div class="mx__scroll">
+    <table class="mx__table" data-matrix>
+      <caption class="sr-only">Projects and the platforms each one runs on</caption>
+      <thead>
+        <tr>
+          <th scope="col" class="mx__corner">
+            <span>Project</span>
+            <span class="mx__hint">{all.length} platforms →</span>
+          </th>
+          {
+            columns.map((column, index) => (
+              <th scope="col" class="mx__head" data-col={index} data-tip={`${column.name}: ${column.count} ${column.count === 1 ? 'project' : 'projects'}`}>
+                <span class="mx__icon" set:html={column.svg} />
+                <span class="sr-only">{column.name}</span>
+                <b>{column.count}</b>
+              </th>
+            ))
+          }
+          <th scope="col" class="mx__head mx__head--more" data-tip="Other platforms">
+            <span aria-hidden="true">+</span>
+            <span class="sr-only">Other platforms</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((row, rowIndex) => {
+            const extra = row.marks.filter((mark) => !shownIds.has(mark.id));
+            return (
+              <tr class:list={['mx__row', 'ds-link-host', row.featured && 'is-featured', rowIndex >= initialRows && 'is-more']}>
+                <th scope="row" class="mx__project">
+                  <a class="ds-link ds-link--quiet" href={row.href} data-track="project" data-track-label={row.title}>
+                    {row.title}
+                  </a>
+                  {row.kind && <span class="mx__kind">{row.kind}</span>}
+                  <span class="mx__short">{row.short}</span>
+                  <span class="mx__marks" aria-hidden="true">
+                    {row.marks.map((mark) => <span class="mx__icon" title={mark.name} set:html={mark.svg} />)}
+                  </span>
+                </th>
+                {columns.map((column, index) =>
+                  row.ids.has(column.id) ? (
+                    <td class="mx__cell is-hit" data-col={index} data-tip={`${row.title} · ${column.name}`}>
+                      <span class="mx__icon" set:html={column.svg} />
+                      <span class="sr-only">{column.name}</span>
+                    </td>
+                  ) : (
+                    <td class="mx__cell" data-col={index}>
+                      <i aria-hidden="true" />
+                    </td>
+                  ),
+                )}
+                <td class="mx__cell mx__cell--more" data-tip={extra.length ? extra.map((mark) => mark.name).join(', ') : undefined}>
+                  {extra.length > 0 ? `+${extra.length}` : ''}
+                  {extra.length > 0 && <span class="sr-only">{extra.map((mark) => mark.name).join(', ')}</span>}
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+  {
+    rows.length > initialRows && (
+      <button type="button" class="mx__more" data-matrix-more aria-expanded="false">
+        <span data-more-label>Show All {rows.length} Projects</span>
+        <span class="mx__more-count">+{rows.length - initialRows}</span>
+      </button>
+    )
+  }
+</figure>
+
+<script is:inline>
+  (function () {
+    document.querySelectorAll('[data-matrix]').forEach(function (table) {
+      if (table.getAttribute('data-ready') === 'true') return;
+      table.setAttribute('data-ready', 'true');
+      var lit = null;
+      function light(col) {
+        if (col === lit) return;
+        table.querySelectorAll('.is-col').forEach(function (el) { el.classList.remove('is-col'); });
+        lit = col;
+        if (col === null) return;
+        table.querySelectorAll('[data-col="' + col + '"]').forEach(function (el) { el.classList.add('is-col'); });
+      }
+      table.addEventListener('pointerover', function (event) {
+        var cell = event.target.closest && event.target.closest('[data-col]');
+        light(cell ? cell.getAttribute('data-col') : null);
+      });
+      table.addEventListener('pointerleave', function () { light(null); });
+      var more = table.closest('figure') && table.closest('figure').querySelector('[data-matrix-more]');
+      if (more) {
+        more.addEventListener('click', function () {
+          var open = table.classList.toggle('is-open');
+          more.setAttribute('aria-expanded', open ? 'true' : 'false');
+          var label = more.querySelector('[data-more-label]');
+          if (label) label.textContent = open ? 'Show Fewer' : 'Show All ' + table.querySelectorAll('.mx__row').length + ' Projects';
+        });
+      }
+    });
+  })();
+</script>
+
+<style>
+  .mx {
+    --mx-cell: 36px;
+    margin: 0;
+  }
+
+  .mx__scroll {
+    overflow-x: auto;
+  }
+
+  .mx__table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+  }
+
+  .mx__corner {
+    padding: var(--ds-space-3) var(--ds-space-4) var(--ds-space-3) 0;
+    vertical-align: bottom;
+    text-align: left;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    font-weight: var(--ds-weight-regular);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .mx__hint {
+    display: block;
+    margin-top: 2px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .mx__head {
+    width: var(--mx-cell);
+    min-width: var(--mx-cell);
+    padding: var(--ds-space-3) 0 var(--ds-space-2);
+    vertical-align: bottom;
+    font-weight: var(--ds-weight-regular);
+    border-bottom: var(--ds-hairline) solid var(--ds-rule-strong);
+    cursor: default;
+  }
+
+  .mx__head b {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    font-weight: var(--ds-weight-regular);
+    color: var(--ds-fg-faint);
+  }
+
+  .mx__head--more {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .mx__icon {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .mx__icon :global(svg) {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
+  .mx__corner {
+    border-bottom: var(--ds-hairline) solid var(--ds-rule-strong);
+  }
+
+  .mx__project {
+    padding: var(--ds-space-4) var(--ds-space-6) var(--ds-space-4) 0;
+    text-align: left;
+    font-weight: var(--ds-weight-regular);
+    vertical-align: top;
+    min-width: 380px;
+  }
+
+  .mx__project a {
+    color: var(--ds-fg);
+    font-size: var(--ds-text-lg);
+    font-weight: var(--ds-weight-medium);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .mx__kind {
+    margin-left: var(--ds-space-3);
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    letter-spacing: var(--ds-tracking-caps);
+    text-transform: uppercase;
+    color: var(--ds-fg-faint);
+  }
+
+  .mx__short {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    max-width: 60ch;
+    margin-top: var(--ds-space-1);
+    color: var(--ds-fg-muted);
+    font-size: var(--ds-text-sm);
+    line-height: var(--ds-leading-snug);
+  }
+
+  .mx__row {
+    transition: background-color var(--ds-dur-fast);
+  }
+
+  .mx__row:hover {
+    background: var(--ds-ink-5);
+  }
+
+  /* Featured rows carry the accent tick on the left edge. */
+  .mx__row.is-featured .mx__project {
+    box-shadow: inset 2px 0 0 var(--ds-accent);
+    padding-left: var(--ds-space-4);
+  }
+
+  .mx__row:not(.is-featured) .mx__project {
+    padding-left: var(--ds-space-4);
+  }
+
+  /* Collapsed rows: out of the layout until "Show all"; still in the HTML. */
+  .mx__table:not(.is-open) .mx__row.is-more {
+    display: none;
+  }
+
+  .mx__more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-space-3);
+    height: var(--ds-control-h-sm);
+    margin-top: var(--ds-space-5);
+    padding: 0 var(--ds-space-4);
+    border: var(--ds-hairline) solid var(--ds-rule-strong);
+    border-radius: var(--ds-radius-pill);
+    background: transparent;
+    color: var(--ds-fg);
+    font: inherit;
+    font-size: var(--ds-text-sm);
+    cursor: pointer;
+    transition: border-color var(--ds-dur-fast);
+  }
+
+  .mx__more:hover {
+    border-color: var(--ds-fg);
+  }
+
+  .mx__more-count {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+  }
+
+  .mx__cell {
+    width: var(--mx-cell);
+    height: var(--mx-cell);
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    border-left: var(--ds-hairline) solid var(--ds-ink-5);
+  }
+
+  .mx__cell i {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--ds-rule-strong);
+  }
+
+  .mx__cell.is-hit .mx__icon {
+    transition: transform var(--ds-dur) var(--ds-ease-out);
+  }
+
+  .mx__cell.is-hit:hover .mx__icon {
+    transform: scale(1.18);
+  }
+
+  .mx__cell--more {
+    font-family: var(--ds-font-mono);
+    font-size: var(--ds-text-2xs);
+    color: var(--ds-fg-faint);
+    cursor: default;
+  }
+
+  /* Column under the pointer lights up top to bottom. */
+  .mx__table :global(.is-col) {
+    background: var(--ds-ink-5);
+  }
+
+  .mx__table :global(.mx__head.is-col b) {
+    color: var(--ds-fg);
+  }
+
+  .mx__table :global(.mx__cell.is-col i) {
+    background: var(--ds-fg-faint);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .mx__cell.is-hit .mx__icon {
+      animation: mx-in var(--ds-dur-slow) var(--ds-ease-out) both;
+    }
+  }
+
+  @keyframes mx-in {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+  }
+
+  /* The marks row under each project only shows in the stacked layout. */
+  .mx__marks {
+    display: none;
+  }
+
+  /* Tablet and phone: the grid of columns needs ~1100px, so each project
+     becomes a row of its own with its platform marks underneath. Same
+     table in the HTML, so agents still read projects x platforms. */
+  @media screen and (max-width: 900px) {
+    .mx__scroll {
+      overflow: visible;
+    }
+
+    .mx__table,
+    .mx__table tbody,
+    .mx__table tr,
+    .mx__project {
+      display: block;
+      width: 100%;
+    }
+
+    .mx__table thead {
+      display: block;
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .mx__table thead tr {
+      display: block;
+    }
+
+    .mx__head,
+    .mx__cell {
+      display: none;
+    }
+
+    .mx__corner {
+      display: block;
+      padding-left: 0;
+    }
+
+    .mx__hint {
+      display: none;
+    }
+
+    .mx__project {
+      min-width: 0;
+      padding-right: 0;
+      border-bottom: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .mx__short {
+      max-width: none;
+    }
+
+    .mx__marks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: var(--ds-space-3);
+    }
+
+    .mx__marks .mx__icon {
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border: var(--ds-hairline) solid var(--ds-rule);
+    }
+
+    .mx__marks .mx__icon :global(svg) {
+      width: 16px;
+      height: 16px;
+    }
+
+    .mx__table:not(.is-open) .mx__row.is-more {
+      display: none;
+    }
+  }
+</style>

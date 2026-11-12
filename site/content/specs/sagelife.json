@@ -1,0 +1,95 @@
+{
+  "slug": "sagelife",
+  "kind": "Mindgrub Technologies",
+  "role": "WordPress Engineer, through Mindgrub Technologies",
+  "dek": "A WordPress multisite on Pantheon for a senior-living operator, with each community on its own domain through AWS name servers.",
+  "short": "A WordPress multisite on Pantheon for SageLife, the senior-living operator: each community runs on its own domain through AWS name servers, on a Bootstrap and webpack theme with Animate on Scroll.",
+  "facts": [
+    {
+      "label": "Platform",
+      "value": "WordPress multisite"
+    },
+    {
+      "label": "Host",
+      "value": "Pantheon"
+    },
+    {
+      "label": "DNS",
+      "value": "AWS"
+    }
+  ],
+  "stack": [
+    {
+      "group": "WordPress",
+      "items": [
+        {
+          "name": "Multisite",
+          "note": "one site per community"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "Bootstrap",
+          "version": "4"
+        },
+        {
+          "name": "SCSS"
+        },
+        {
+          "name": "Webpack"
+        },
+        {
+          "name": "Animate on Scroll"
+        }
+      ]
+    },
+    {
+      "group": "Runtime",
+      "items": [
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "MySQL"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "Pantheon"
+    },
+    {
+      "label": "DNS",
+      "value": "AWS name servers for community domains"
+    }
+  ],
+  "highlights": [],
+  "images": [
+    {
+      "src": "/work/sagelife/home.webp",
+      "alt": "SageLife homepage",
+      "tall": true
+    },
+    {
+      "src": "/work/sagelife/locations.webp",
+      "alt": "Locations index",
+      "tall": true
+    },
+    {
+      "src": "/work/sagelife/location.webp",
+      "alt": "A community page",
+      "tall": true
+    },
+    {
+      "src": "/work/sagelife/resources.webp",
+      "alt": "Resources page",
+      "tall": true
+    }
+  ],
+  "org": "mindgrub"
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "jason-perry",
+  "org": "nomadic-digital",
+  "kind": "Client",
+  "role": "Consultant, through Nomadic Digital",
+  "dek": "JasonMPerry.com was the 1.0 site Jason Perry used to get his business off the ground. I built it on WordPress as a contractor under Nomadic Digital.",
+  "short": "JasonMPerry.com, the 1.0 site Jason Perry used to get his business off the ground: a WordPress build I delivered as a contractor under Nomadic Digital.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "WordPress"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

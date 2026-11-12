@@ -1,0 +1,902 @@
+{
+  "_about": "Evidence-backed attribution and technical scope for codebases in source-index.json that the site doesn't describe yet. Every entry cites what in the code proves the employer and the stack. confidence: confirmed = the files name the employer; likely = era and setup match but nothing names it (needs Joey's OK); unknown = no signal. role: built = theme/app authored by that employer; maintained = another agency's theme kept running under that employer. Nothing here is public until Joey approves and it is moved into projects.json/specs.",
+  "scanned": "2026-11-11",
+  "entries": [
+    {
+      "id": "wp_aarp_pharmacy",
+      "client": "AARP Pharmacy",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme style.css Author: Mindgrub; Theme URI aarppharmacy.com",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Lando",
+        "Bootstrap 4",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_aarp_pharmacy"
+    },
+    {
+      "id": "wp_bge_comed",
+      "client": "ComEd (Exelon) · Powering Lives",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: production copy of poweringlives.comed.com; database via managedservices@mindgrub.com; GitLab CI pushes upstream to Azure DevOps",
+      "platforms": [
+        "WordPress Multisite",
+        "Lando",
+        "GitLab CI",
+        "Azure DevOps"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bge_comed"
+    },
+    {
+      "id": "wp_bge_now",
+      "client": "BGE (Exelon)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme is the Mindgrub Starter Theme (git.mindgrub.net/creative-engineering)",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Lando",
+        "Bootstrap 4",
+        "jQuery"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bge_now"
+    },
+    {
+      "id": "wp_bgl",
+      "client": "Brown Goldstein Levy",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/bgl/bgl-theme with CI auto-deploy to Pantheon; theme Author: Mindgrub Technologies",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Lando",
+        "Terminus",
+        "GitLab CI",
+        "Bootstrap"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_bgl"
+    },
+    {
+      "id": "wp_check_to_protect",
+      "client": "Check To Protect (national vehicle-recall campaign)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: MindGrub Technologies; 2018 theme",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_check_to_protect"
+    },
+    {
+      "id": "wp_childrens_inn",
+      "client": "The Children's Inn at NIH",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/NIH/childrens-inn pipelines; Mindgrub Starter Theme; Mindgrub private Satispress plugin repo",
+      "platforms": [
+        "WordPress (Composer)",
+        "Pantheon",
+        "GitLab CI",
+        "Docker",
+        "ACF Pro",
+        "FacetWP",
+        "Gravity Forms",
+        "WP All Import",
+        "Sentry",
+        "Behat",
+        "PHPUnit"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_childrens_inn"
+    },
+    {
+      "id": "wp_cis",
+      "client": "Communities In Schools",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub Technologies; CIS Custom 2018 theme",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_cis"
+    },
+    {
+      "id": "wp_cloudtamer",
+      "client": "Cloudtamer.io",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub Technologies; 'October 2019 MVP Theme'",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "FacetWP",
+        "Bootstrap 4",
+        "jQuery"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_cloudtamer"
+    },
+    {
+      "id": "wp_dragos",
+      "client": "Dragos (redesign)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/Dragos/dragos-redesign, GitLab CI deploys to Pantheon on master; theme Author: Mindgrub",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "GitLab CI",
+        "Lando",
+        "Xdebug",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_dragos"
+    },
+    {
+      "id": "entergy-shore-power",
+      "client": "Entergy · Shore Power",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub, Entergy; README: lead-generation site for Entergy's Shore Power service",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Lando",
+        "GitLab CI",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/entergy-shore-power"
+    },
+    {
+      "id": "entergy-tlg",
+      "client": "Entergy · TLG (Thomas LaGuardia)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/entergy/tlg, CI deploys to Pantheon dev",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Lando",
+        "Terminus",
+        "GitLab CI",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/entergy-tlg"
+    },
+    {
+      "id": "wp_eqrx",
+      "client": "EQRx (with IMRE)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub, IMRE",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_eqrx"
+    },
+    {
+      "id": "wp_gilchrist",
+      "client": "Gilchrist Hospice · Infoweb intranet",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub; 'Custom WordPress theme for the Gilchrist Hospice Intranet'",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_gilchrist"
+    },
+    {
+      "id": "wp_iamcatholic",
+      "client": "Archdiocese of Baltimore · #iamcatholic",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub (+Sizeable)",
+      "platforms": [
+        "WordPress",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_iamcatholic"
+    },
+    {
+      "id": "wp_insource_solutions",
+      "client": "InSource Solutions",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme is the Mindgrub Starter Theme (insource2020)",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_insource_solutions"
+    },
+    {
+      "id": "wp_nbu",
+      "client": "New Braunfels Utilities",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub; 'Custom theme for the New Braunfels Utilities website'. The Energy Rate Calculator project (nbutexas.com/bill-calculator) is part of this.",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "ACF",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_nbu"
+    },
+    {
+      "id": "wp_ndpi",
+      "client": "NDPI",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme header has no author; same Bootstrap 4 header format and Pantheon/Lando setup as the Mindgrub themes; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_ndpi"
+    },
+    {
+      "id": "wp_think_babies",
+      "client": "Think Babies (ZERO TO THREE)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_think_babies"
+    },
+    {
+      "id": "wp_venture_trailers",
+      "client": "Venture Trailers",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub Technologies; 2019 theme",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_venture_trailers"
+    },
+    {
+      "id": "wp_volexity",
+      "client": "Volexity",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": ".gitlab-ci.yml pushes via git.mindgrub.net as ci@mindgrub.com; Mindgrub Starter Theme; Gulp build",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "GitLab CI",
+        "Gulp",
+        "jQuery"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_volexity"
+    },
+    {
+      "id": "wp_vyleesi",
+      "client": "Vyleesi",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "Bootstrap 4"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_vyleesi"
+    },
+    {
+      "id": "wp_youcanwa",
+      "client": "Washington State · You Can campaign",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Mindgrub Technologies; tags GSAP, ScrollMagic",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "GSAP",
+        "ScrollMagic",
+        "Bootstrap"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_youcanwa"
+    },
+    {
+      "id": "wp_alive_and_thrive",
+      "client": "Alive & Thrive",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "maintained",
+      "evidence": "theme Author: GMMB (Underscores); kept in the Mindgrub Pantheon/Lando setup; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_alive_and_thrive"
+    },
+    {
+      "id": "wp_chemonics",
+      "client": "Chemonics",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "maintained",
+      "evidence": "theme Author: The Web Development Group (WDG); kept in the Mindgrub Pantheon/Lando setup; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_chemonics"
+    },
+    {
+      "id": "wpmulti_asap",
+      "client": "ASAP",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "maintained",
+      "evidence": "child theme of Social Driver's theme; WordPress multisite on Pantheon; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress Multisite",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wpmulti_asap"
+    },
+    {
+      "id": "wp_viaplace",
+      "client": "Viaplace",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "maintained",
+      "evidence": "Genesis Framework + Epik child theme (Appfinite); confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Genesis",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_viaplace"
+    },
+    {
+      "id": "wp_mindbuzz",
+      "client": "MindBuzz",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "maintained",
+      "evidence": "Themify Float commercial theme; 'mind' prefix suggests a Mindgrub property; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_mindbuzz"
+    },
+    {
+      "id": "wp_driveempower",
+      "client": "Drive Empower",
+      "employer": "nomadic-digital",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme Author: Joseph O'Driscoll; theme modified Dec 2022, after Mindgrub. Ask Joey: Nomadic/freelance?; attributed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress",
+        "Gutenberg",
+        "Bootstrap",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_driveempower"
+    },
+    {
+      "id": "drupal8_umbc_miechv",
+      "client": "UMBC · Maryland MIECHV home-visiting training (homevisitingtraining.umbc.edu)",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/umbc/miechv/jarvis; production homevisitingtraining.umbc.edu",
+      "platforms": [
+        "Drupal 8",
+        "Pantheon",
+        "Lando",
+        "GitLab CI",
+        "GraphQL",
+        "OpenAPI",
+        "Simple OAuth",
+        "Paragraphs",
+        "Search API",
+        "BackstopJS",
+        "Behat"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal8_umbc_miechv"
+    },
+    {
+      "id": "drupal8_unisys",
+      "client": "Unisys",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/Unisys/cantore and mindgrub.atlassian.net JIRA board",
+      "platforms": [
+        "Drupal 8",
+        "Pantheon",
+        "Docksal",
+        "Migrate Plus",
+        "Migrate Source CSV",
+        "Paragraphs",
+        "RELAXed/Deploy"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal8_unisys"
+    },
+    {
+      "id": "drupal8_ncit",
+      "client": "NCIT",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "composer.mindgrub.json in repo root",
+      "platforms": [
+        "Drupal 8",
+        "Pantheon",
+        "Docksal",
+        "Lando",
+        "Feeds",
+        "Search API Pantheon (Solr)",
+        "Bootstrap"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal8_ncit"
+    },
+    {
+      "id": "drupal8_namw",
+      "client": "NAMW",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "same Pantheon Composer + Docksal + GitLab CI scaffold as NCIT (2019); confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "Drupal 8",
+        "Pantheon",
+        "Docksal",
+        "Paragraphs",
+        "Config Split",
+        "Behat"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal8_namw"
+    },
+    {
+      "id": "drupal8_relief_wizard",
+      "client": "Relief Wizard",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "plain Drupal 8.8 on Pantheon, 2020; Webform-based; no employer marker; attributed by Joey, Nov 11 2026",
+      "platforms": [
+        "Drupal 8",
+        "Pantheon",
+        "Lando",
+        "Webform",
+        "Bootstrap"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal8_relief_wizard"
+    },
+    {
+      "id": "drupal7_samsung_pid",
+      "client": "Samsung Display · PID",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README upstream git@github.com:JellyfishGroup/drupal_sams.git",
+      "platforms": [
+        "Drupal 7",
+        "AWS CodeDeploy",
+        "RPM packaging",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal7_samsung_pid"
+    },
+    {
+      "id": "drupal7_trl",
+      "client": "TRL · Transport Research Laboratory (UK)",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README upstream git@github.com:JellyfishGroup/trl-drupal.git",
+      "platforms": [
+        "Drupal 7",
+        "RPM packaging",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal7_trl"
+    },
+    {
+      "id": "drupal7_jellyfish",
+      "client": "Jellyfish UK website",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: 'Jellyfish UK Drupal Website'; patched reCAPTCHA",
+      "platforms": [
+        "Drupal 7",
+        "MySQL",
+        "PHP"
+      ],
+      "path": "Engineering/Projects/Drupal/drupal7_jellyfish"
+    },
+    {
+      "id": "laravel_cvs_ssiccca",
+      "client": "CVS Health · SilverScript Call Center Application",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README links jellyfish.atlassian.net SSICCCA space",
+      "platforms": [
+        "Laravel",
+        "Vue",
+        "Bootstrap",
+        "Laravel Mix",
+        "PHPUnit",
+        "AWS CodeDeploy"
+      ],
+      "path": "Engineering/Projects/Laravel/laravel_cvs_ssiccca"
+    },
+    {
+      "id": "laravel_ua-next",
+      "client": "Under Armour · NEXT event (USA and Canada)",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "ua-next-event.spec references jfh-proxyout.jellyfish.local",
+      "platforms": [
+        "Laravel",
+        "Gulp",
+        "Bower",
+        "PHPUnit",
+        "phpspec"
+      ],
+      "path": "Engineering/Projects/Laravel/laravel_ua-next-usa"
+    },
+    {
+      "id": "tc_dashboard",
+      "client": "Trinity Cyber · customer dashboard",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README: git.mindgrub.net/trinity-cyber/Dashboard, Mindgrub container registry, mindgrub.atlassian.net",
+      "platforms": [
+        "React",
+        "Redux",
+        "Redux-Saga",
+        "D3",
+        "react-vis",
+        "styled-components",
+        "Express",
+        "Docker (Deis)",
+        "GitLab CI"
+      ],
+      "path": "Engineering/Projects/React/tc_dashboard"
+    },
+    {
+      "id": "tc_apib",
+      "client": "Trinity Cyber · API blueprint",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "API Blueprint auto-pushed to Apiary; paired with the Trinity Cyber dashboard; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "API Blueprint",
+        "Apiary",
+        "GitLab CI"
+      ],
+      "path": "Engineering/Projects/React/tc_apib"
+    },
+    {
+      "id": "project-health-dashboard",
+      "client": "Mindgrub · internal project health dashboard",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "package name mg-project-health-dashboard",
+      "platforms": [
+        "React",
+        "CoreUI",
+        "Reactstrap",
+        "Chart.js",
+        "webpack"
+      ],
+      "path": "Engineering/Projects/React/project-health-dashboard"
+    },
+    {
+      "id": "rofo",
+      "client": "ROFO Rewards · web services and admin portal",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "2018, GitLab CI, Dockerized services; no employer named; confirmed by Joey, Nov 11 2026",
+      "platforms": [
+        "React",
+        "Redux",
+        "Jest",
+        "Enzyme",
+        "Docker",
+        "Skygear",
+        "nginx"
+      ],
+      "path": "Engineering/Projects/React/rf_web_services"
+    },
+    {
+      "id": "black_and_decker",
+      "client": "Black & Decker · 'Nostos'",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "2018 Create React App with react-intl; no employer named; attributed by Joey, Nov 11 2026",
+      "platforms": [
+        "React",
+        "Reactstrap",
+        "react-intl",
+        "Sass"
+      ],
+      "path": "Engineering/Projects/React/black_and_decker"
+    },
+    {
+      "id": "ptcbio",
+      "client": "PTC Therapeutics · headless WordPress + React",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "how-to-work.md: headless WordPress (REST API) backend + React frontend, multilingual; 2021; attributed by Joey, Nov 11 2026",
+      "platforms": [
+        "WordPress (headless)",
+        "WP REST API",
+        "React",
+        "Lando"
+      ],
+      "path": "Engineering/Projects/React/ptcbio"
+    },
+    {
+      "id": "angular_fsx",
+      "client": "File & Serve Xpress · UI",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "2021 Nx monorepo; Azure DevOps wiki at dev.azure.com/fileandserve; attributed by Joey, Nov 11 2026",
+      "platforms": [
+        "Angular",
+        "Nx",
+        "Angular Material",
+        "DevExtreme",
+        "RxJS",
+        "Jest",
+        "Storybook",
+        "Azure Pipelines"
+      ],
+      "path": "Engineering/Projects/Angular/angular_fsx"
+    },
+    {
+      "id": "wp_channel5",
+      "client": "Channel 5",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "README forks github.com/JellyfishGroup/channel5_wordpress",
+      "platforms": [
+        "WordPress",
+        "AWS"
+      ],
+      "path": "Engineering/Projects/WordPress/AWS/wp_channel5"
+    },
+    {
+      "id": "wp_kahootz",
+      "client": "Kahootz",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "same Jellyfish dev-container README scaffold as Samsung/TRL; Joey: Jellyfish",
+      "platforms": [
+        "WordPress",
+        "AWS"
+      ],
+      "path": "Engineering/Projects/WordPress/AWS/wp_kahootz"
+    },
+    {
+      "id": "wp_avention",
+      "client": "Avention",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme style.css Author: Jellyfish",
+      "platforms": [
+        "WordPress",
+        "AWS"
+      ],
+      "path": "Engineering/Projects/WordPress/AWS/wp_avention"
+    },
+    {
+      "id": "wp_casepoint",
+      "client": "Casepoint",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "same 2017 Jellyfish AWS scaffold; Joey: Jellyfish",
+      "platforms": [
+        "WordPress",
+        "AWS"
+      ],
+      "path": "Engineering/Projects/WordPress/AWS/wp_casepoint"
+    },
+    {
+      "id": "joomla_homeprotect",
+      "client": "Homeprotect",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "RPM .spec + fork/pull README like other Jellyfish repos; Joey: Jellyfish",
+      "platforms": [
+        "Joomla 3.7",
+        "YOOtheme ZOO",
+        "Gulp",
+        "Sass"
+      ],
+      "path": "Engineering/Projects/Joomla/joomla3.7_homeprotect"
+    },
+    {
+      "id": "magento_paul",
+      "client": "PAUL UK",
+      "employer": "jellyfish",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "RPM .spec + Jellyfish dev-container README; Joey: Jellyfish",
+      "platforms": [
+        "Magento"
+      ],
+      "path": "Engineering/Projects/Magento/magento_paul"
+    },
+    {
+      "id": "wpe_focuson",
+      "client": "Focus On",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "theme style.css Author: Mindgrub",
+      "platforms": [
+        "WordPress",
+        "WP Engine"
+      ],
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_focuson"
+    },
+    {
+      "id": "jobs-sync",
+      "client": "EQRx · Jobs API Sync plugin",
+      "employer": "mindgrub",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "plugin classes prefixed MG_ (MG_Job, mg_jobs_update cron)",
+      "platforms": [
+        "WordPress plugin",
+        "WP Cron"
+      ],
+      "path": "Engineering/Projects/WordPress/Plugins/jobs-sync"
+    },
+    {
+      "id": "wp_jasonmperry",
+      "client": "Jason Perry · jasonmperry.com (1.0)",
+      "employer": "nomadic-digital",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "Joey: contractor work under Nomadic Digital",
+      "platforms": [
+        "WordPress",
+        "Pantheon"
+      ],
+      "path": "Engineering/Projects/WordPress/Pantheon/wp_jasonmperry"
+    },
+    {
+      "id": "perrylabs",
+      "client": "Jason Perry · PerryLabs",
+      "employer": "nomadic-digital",
+      "confidence": "confirmed",
+      "role": "built",
+      "evidence": "Joey: Jason Perry work under Nomadic; README documents custom URL structure and blocks (2025)",
+      "platforms": [
+        "WordPress",
+        "Pantheon",
+        "webpack",
+        "@wordpress/scripts"
+      ],
+      "path": "Web/JPerry/perrylabs"
+    },
+    {
+      "id": "wpe_buildinit",
+      "client": "Build Initiative",
+      "employer": "unknown",
+      "confidence": "unknown",
+      "role": "maintained",
+      "evidence": "theme Author: Interactive Strategies; WP Engine, 2022. Ask Joey.",
+      "platforms": [
+        "WordPress",
+        "WP Engine"
+      ],
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_buildinit"
+    },
+    {
+      "id": "wpe_gmmb",
+      "client": "GMMB",
+      "employer": "unknown",
+      "confidence": "unknown",
+      "role": "maintained",
+      "evidence": "Social Driver parent theme; WP Engine, 2022. Ask Joey.",
+      "platforms": [
+        "WordPress",
+        "WP Engine"
+      ],
+      "path": "Engineering/Projects/WordPress/WP Engine/wpe_gmmb"
+    },
+    {
+      "id": "gateshosting-pvalcomm",
+      "client": "Gates Postsecondary Value Commission",
+      "employer": "unknown",
+      "confidence": "unknown",
+      "role": "built",
+      "evidence": "Forum One Buildkite pipeline, Capistrano, Docker; 2021. Ask Joey.",
+      "platforms": [
+        "WordPress",
+        "Buildkite",
+        "Capistrano",
+        "Docker"
+      ],
+      "path": "Engineering/Projects/Ruby/gateshosting-pvalcomm"
+    },
+    {
+      "id": "biobuzz",
+      "client": "BioBuzz",
+      "employer": "unknown",
+      "confidence": "unknown",
+      "role": "maintained",
+      "evidence": "Newspaper commercial theme in Web/JPerry. Ask Joey.",
+      "platforms": [
+        "WordPress"
+      ],
+      "path": "Web/JPerry/biobuzz"
+    }
+  ],
+  "notScannedYet": [
+    "Web/LocalWP/* (local copies of Taoti and millermedia7 sites already on file)"
+  ],
+  "joey": "Nov 11 2026: Under Armour (Jellyfish) was a Jenkins-driven ecosystem with CI automation before CI was common, layered approvals, and dynamic environments to unit test features against the latest builds, focused on the shopping experience. Trinity Cyber (trinitycyber.com) was a startup; ROFO Rewards was for Royal Farms; both were his first React apps.",
+  "published": "Nov 11 2026: 52 of these added to projects.json + specs (Joey approved). The 4 unknowns above are held back."
+}

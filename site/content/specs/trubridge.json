@@ -1,0 +1,157 @@
+{
+  "slug": "trubridge",
+  "org": "millermedia7",
+  "kind": "MillerMedia7",
+  "role": "Web Engineering Lead, through millermedia7",
+  "dek": "TruBridge sells revenue-cycle and EHR services to community hospitals. Its site is a custom Timber theme on WordPress, hosted on WP Engine, with resources, events and products as their own content types.",
+  "short": "TruBridge's site, for a healthcare IT company: a custom Timber and Twig WordPress theme on WP Engine, with events, products and resources as their own content types and an admin trimmed to what editors use.",
+  "facts": [
+    {
+      "label": "Platform",
+      "value": "WordPress on WP Engine"
+    },
+    {
+      "label": "Theme",
+      "value": "Custom, Timber and Twig"
+    },
+    {
+      "label": "Content types",
+      "value": "Events, products, resources"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Server",
+      "items": [
+        {
+          "name": "WordPress"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "Timber",
+          "note": "Twig templates, custom classList and SVG filters"
+        },
+        {
+          "name": "Twig",
+          "note": "about 60 templates and partials"
+        },
+        {
+          "name": "ACF",
+          "note": "options pages, custom post types and taxonomies kept in acf-json"
+        },
+        {
+          "name": "Custom post types",
+          "note": "event, product and resource archives"
+        }
+      ]
+    },
+    {
+      "group": "Front end",
+      "items": [
+        {
+          "name": "JavaScript",
+          "note": "one bundled main.js with a source map, cache-busted by file time"
+        },
+        {
+          "name": "Alpine.js",
+          "note": "with the Collapse plugin; header store"
+        },
+        {
+          "name": "Swiper",
+          "note": "testimonials, galleries and resource carousels"
+        },
+        {
+          "name": "Lottie",
+          "note": "lottie-web, the Why TruBridge animation"
+        },
+        {
+          "name": "Plyr",
+          "note": "video player"
+        },
+        {
+          "name": "Vimeo Player",
+          "note": "@vimeo/player"
+        },
+        {
+          "name": "Headroom.js",
+          "note": "hide-on-scroll header"
+        },
+        {
+          "name": "Quicklink",
+          "note": "prefetches in-view links"
+        },
+        {
+          "name": "CSS",
+          "note": "one compiled main.css"
+        }
+      ]
+    },
+    {
+      "group": "Marketing",
+      "items": [
+        {
+          "name": "Google Tag Manager"
+        },
+        {
+          "name": "Adobe Fonts",
+          "note": "Typekit"
+        },
+        {
+          "name": "Ninja Forms",
+          "note": "a local fix script, nf-fix.js"
+        }
+      ]
+    },
+    {
+      "group": "Admin",
+      "items": [
+        {
+          "name": "Editor clean-up",
+          "note": "trimmed dashboard widgets, meta boxes, media buttons and Customizer sections"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Host",
+      "value": "WP Engine"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "An admin built for the editors",
+      "text": "The theme removes what editors never use: dashboard widgets, extra meta boxes, view buttons on custom types, and Customizer style sections, and adds resource columns to the list screen."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Platform",
+      "rows": [
+        {
+          "label": "CMS",
+          "value": "WordPress",
+          "state": "ok"
+        },
+        {
+          "label": "Templates",
+          "value": "Timber and Twig",
+          "state": "ok"
+        },
+        {
+          "label": "Host",
+          "value": "WP Engine",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/trubridge/home.png",
+      "alt": "The TruBridge homepage: \"Clear the way for care\" over a photo of two colleagues at a laptop"
+    }
+  ]
+}

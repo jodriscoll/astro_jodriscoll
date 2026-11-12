@@ -1,0 +1,56 @@
+{
+  "slug": "rofo-rewards",
+  "org": "mindgrub",
+  "kind": "Mindgrub Technologies",
+  "role": "Senior Software Engineer, through Mindgrub Technologies",
+  "dek": "ROFO Rewards is the loyalty program for Royal Farms, a large Maryland convenience chain. The work covered the web services behind the rewards app (authentication, scheduled tasks, persistence, cloud functions, Dockerized environments) and a React and Redux admin portal with Jest and Enzyme tests.",
+  "short": "The ROFO Rewards loyalty program for Royal Farms: web services behind the rewards app and a React and Redux admin portal, Dockerized and tested with Jest and Enzyme. One of my first React applications.",
+  "facts": [
+    {
+      "label": "Client",
+      "value": "Royal Farms, Maryland"
+    },
+    {
+      "label": "Note",
+      "value": "One of my first React applications"
+    }
+  ],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "React"
+        },
+        {
+          "name": "Redux"
+        },
+        {
+          "name": "Jest"
+        },
+        {
+          "name": "Enzyme"
+        },
+        {
+          "name": "webpack"
+        },
+        {
+          "name": "Docker"
+        },
+        {
+          "name": "nginx"
+        },
+        {
+          "name": "Skygear"
+        },
+        {
+          "name": "GitLab CI"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

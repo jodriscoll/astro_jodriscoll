@@ -1,0 +1,29 @@
+{
+  "slug": "paul-uk",
+  "org": "jellyfish",
+  "kind": "Jellyfish",
+  "role": "Senior Front-End Engineer, through Jellyfish",
+  "dek": "PAUL UK’s Magento storefront.",
+  "short": "PAUL UK's Magento storefront, for the French bakery chain's UK business.",
+  "facts": [],
+  "stack": [
+    {
+      "group": "Stack",
+      "items": [
+        {
+          "name": "Magento"
+        },
+        {
+          "name": "PHP"
+        },
+        {
+          "name": "MySQL"
+        }
+      ]
+    }
+  ],
+  "hosting": [],
+  "highlights": [],
+  "overview": [],
+  "images": []
+}

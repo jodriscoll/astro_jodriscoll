@@ -1,0 +1,24 @@
+{
+  "collaborations": "100+",
+  "countries": "10+",
+  "sites": [
+    { "name": "GameKal", "from": "projects" },
+    { "name": "ZEFR", "from": "projects" },
+    { "name": "TruBridge", "from": "projects" },
+    { "name": "Election Center", "from": "projects" },
+    { "name": "AAMI", "from": "projects" },
+    { "name": "APTA", "from": "projects" },
+    { "name": "OCAD University", "from": "projects" },
+    { "name": "Sequoia Capital", "from": "projects" },
+    { "name": "SageLife", "from": "projects" },
+    { "name": "TAK.gov", "from": "projects" },
+    { "name": "i6tix", "from": "projects" },
+    { "name": "Rehab.com", "from": "projects" },
+    { "name": "Energy Rate Calculator", "from": "projects" },
+    { "name": "Angular portfolio", "from": "projects" },
+    { "name": "jodriscoll.com", "from": "technologies" },
+    { "name": "PDA.nyc", "from": "resume" },
+    { "name": "SAUCE.nyc", "from": "resume" },
+    { "name": "incaseofdeath", "from": "resume" }
+  ]
+}

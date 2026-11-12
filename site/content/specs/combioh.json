@@ -1,0 +1,119 @@
+{
+  "slug": "combioh",
+  "org": "nomadic-digital",
+  "kind": "Creator",
+  "role": "Design and Engineering",
+  "period": {
+    "start": "2026-05",
+    "end": "2026-10"
+  },
+  "dek": "Combioh teaches Nioh 3 combos. Pick a style, weapons and a difficulty, and a custom controller tool shows each combo's inputs mapped to your own controller configuration, as button sequences timed to the move, in five languages.",
+  "short": "A Nioh 3 combo trainer: pick a style, weapons and a difficulty, and a custom controller UI shows each combo on your own button layout as timed sequences, in five languages, with every choice shareable from the URL.",
+  "facts": [
+    {
+      "label": "Commits",
+      "value": "50"
+    },
+    {
+      "label": "First commit",
+      "value": "May 11, 2026"
+    },
+    {
+      "label": "Data",
+      "value": "One JSON file of authored combos"
+    },
+    {
+      "label": "Languages",
+      "value": "English, Spanish, Japanese, Chinese, Polish"
+    }
+  ],
+  "stack": [
+    {
+      "group": "App",
+      "items": [
+        {
+          "name": "Next.js",
+          "version": "16.4",
+          "note": "App Router"
+        },
+        {
+          "name": "React",
+          "version": "19.3"
+        },
+        {
+          "name": "TypeScript",
+          "version": "5.9"
+        },
+        {
+          "name": "Tailwind CSS",
+          "version": "3.4"
+        }
+      ]
+    },
+    {
+      "group": "Quality",
+      "items": [
+        {
+          "name": "Vitest",
+          "version": "4.1"
+        },
+        {
+          "name": "ESLint",
+          "version": "9"
+        }
+      ]
+    }
+  ],
+  "hosting": [
+    {
+      "label": "Site",
+      "value": "combioh.com"
+    }
+  ],
+  "highlights": [
+    {
+      "title": "Your controller, your inputs",
+      "text": "A custom controller UI maps every combo to the player's own button configuration, so the glyphs on screen match the pad in their hands."
+    },
+    {
+      "title": "Timed sequences",
+      "text": "Button sequences play back on the combo's own timing, so players learn the rhythm, not just the order."
+    },
+    {
+      "title": "State in the URL",
+      "text": "Class, weapons, difficulty and controller layout persist in the URL, so a combo can be shared as a link."
+    },
+    {
+      "title": "Flags are not languages",
+      "text": "Chinese support arrived on May 24. An October 14 commit replaced flag icons with language names."
+    }
+  ],
+  "overview": [
+    {
+      "group": "Runtime",
+      "rows": [
+        {
+          "label": "Next.js",
+          "value": "16.4",
+          "state": "ok"
+        },
+        {
+          "label": "React",
+          "value": "19.3",
+          "state": "ok"
+        },
+        {
+          "label": "Tests",
+          "value": "Vitest",
+          "state": "ok"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "src": "/work/combioh/home.webp",
+      "alt": "Combioh: style, difficulty and weapon pickers, combo playback with timed button inputs, and the demo video"
+    }
+  ]
+}
